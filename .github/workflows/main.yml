@@ -12,6 +12,7 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
+        path: './zenrush'
         filename: 'zenrush.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'
     - name: Create latest release
