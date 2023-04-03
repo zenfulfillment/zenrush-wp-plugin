@@ -1,0 +1,26 @@
+name: Zip Release
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Create archive of latest release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        filename: 'zenrush.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create github release
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        artifacts: "zenrush.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
+  
