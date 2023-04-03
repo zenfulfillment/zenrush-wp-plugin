@@ -14,13 +14,8 @@ jobs:
         type: 'zip'
         filename: 'zenrush.zip'
         exclusions: '*.git* /*node_modules/* .editorconfig'
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create github release
+    - name: Create latest release
       uses: ncipollo/release-action@v1.12.0
       with:
         artifacts: "zenrush.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
-  
