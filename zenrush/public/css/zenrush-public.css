@@ -1,0 +1,21 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+#zenrush_wrapper {
+    line-height: 1.4;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#zenrush_wrapper .zr-logo {
+    max-height: 12px;
+    padding-right: 10px;
+    display: inline-flex;
+}
+
+#zenrush_wrapper .zr-delivery,
+#zenrush_wrapper .zr-order-time {
+    font-weight: 600;
+}

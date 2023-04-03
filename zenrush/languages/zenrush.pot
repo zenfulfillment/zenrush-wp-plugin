@@ -1,0 +1,11 @@
+msgid "Settings"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "General Configuration"
+msgstr ""
+
+msgid "Missing WC Notice"
+msgstr "The Zenrush integration plugin requires WooCommerce to be installed and active!"
