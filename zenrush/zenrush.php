@@ -18,7 +18,7 @@
  * GitHub Plugin URI: zenfulfillment/zenrush-wp-plugin
  * GitHub Plugin URI: https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
@@ -38,7 +38,7 @@ if ( !defined('WPINC') ) {
 /**
  * Current plugin version
  */
-const ZENRUSH_VERSION = '1.0.2';
+const ZENRUSH_VERSION = '1.0.3';
 
 if ( !function_exists('is_plugin_active') ) {
     include_once(ABSPATH . '/wp-admin/includes/plugin.php');

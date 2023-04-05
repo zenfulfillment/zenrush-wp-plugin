@@ -125,8 +125,10 @@ class Zenrush_Admin
      * @param string $context
      * @return  array
      */
-    public function zenrush_settings_link(array $actions, string $plugin_file, array $plugin_data, string $context): array
+    public function zenrush_settings_link(array $actions, string $plugin_file = '', array $plugin_data = array(), string $context = ''): array
     {
+        if ( empty( $plugin_data ) ) return $actions;
+
         $settings_url = admin_url( 'admin.php?page=wc-settings&tab=zenrush' );
         if ( $plugin_data['Name'] === "WooCommerce" ) {
             $settings_link = array( 'zenrush_settings' => '<a href="' . esc_url( $settings_url ) . '">' . __( 'Zenrush', 'zenrush' ) . '</a>' );
@@ -162,7 +164,7 @@ class Zenrush_Admin
         $shipping_method = strtolower( $order->get_shipping_method() );
 
         if( $shipping_method && str_contains($shipping_method, 'zenrush') ) {
-            $order->update_meta_data( 'is_zenrush', __( 'yes' ) );
+            $order->update_meta_data( 'is_zenrush', 'yes' );
         }
 
     }
@@ -197,14 +199,17 @@ class Zenrush_Admin
      * @param string $status
      * @return array
      */
-    public function zenrush_plugin_row_meta( array $links, string $plugin_file, array $plugin_data, string $status ): array
+    public function zenrush_plugin_row_meta( array $links, string $plugin_file = '', array $plugin_data = array(), string $status = ''): array
     {
+        if ( empty ( $plugin_data ) ) return $links;
+
         if ( $plugin_data['Name'] === 'Zenrush' ) {
             $row_meta = array(
               'docs' => '<a href="' . esc_url( 'https://setup.zenfulfillment.com/zenrush/integration/woocommerce?source=plugin' ) . '" target="_blank" aria-label="' . esc_attr__( 'Zenrush Documentation', 'zenrush' ) . '">' . esc_html__( 'Docs', 'zenrush' ) . '</a>'
             );
             return array_merge( $links, $row_meta );
         }
+
         return $links;
     }
 
