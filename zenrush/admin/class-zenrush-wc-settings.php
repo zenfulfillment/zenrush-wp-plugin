@@ -50,7 +50,7 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
         public function get_sections(): array
         {
             $sections = array(
-                '' => __( 'Settings', 'zenrush' ),
+                '' => __( 'Zenrush Settings', 'zenrush' ),
                 'log' => __( 'Log', 'zenrush' )
             );
 

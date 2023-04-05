@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-04-03 18:01+0200\n"
-"PO-Revision-Date: 2023-04-03 18:06+0200\n"
+"POT-Creation-Date: 2023-04-05 09:56+0200\n"
+"PO-Revision-Date: 2023-04-05 10:47+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -21,14 +21,54 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: admin/class-zenrush-admin.php:129 admin/class-zenrush-wc-settings.php:53
+#. Plugin Name of the plugin/theme
+#: admin/class-zenrush-admin.php:132 admin/class-zenrush-wc-settings.php:33
+msgid "Zenrush"
+msgstr "Zenrush"
+
+#: admin/class-zenrush-admin.php:139
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: admin/class-zenrush-admin.php:140
 msgid "Settings"
 msgstr "Einstellungen"
 
-#. Plugin Name of the plugin/theme
-#: admin/class-zenrush-wc-settings.php:33
-msgid "Zenrush"
-msgstr "Zenrush"
+#: admin/class-zenrush-admin.php:165
+msgid "yes"
+msgstr "yes"
+
+#: admin/class-zenrush-admin.php:178
+msgid "Complete Zenrush setup to activate"
+msgstr "Zenrush vollständig einrichten und aktivieren"
+
+#: admin/class-zenrush-admin.php:179
+msgid ""
+"<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed "
+"the setup, you'll have access to a premium delivery option and shipping "
+"calculation in real-time."
+msgstr ""
+"<b>Zenrush Premiumversand</b> ist fast einsatzbereit! Sobald du die "
+"Einrichtung abgeschlossen hast, hast du Zugriff auf die Premium "
+"Versandoption mit Berechnung der Lieferzeit in Echtzeit."
+
+#: admin/class-zenrush-admin.php:180
+#, fuzzy
+#| msgid "Settings"
+msgid "Go to Settings"
+msgstr "Einstellungen"
+
+#: admin/class-zenrush-admin.php:204
+msgid "Zenrush Documentation"
+msgstr "Zenrush Dokumentation"
+
+#: admin/class-zenrush-admin.php:204
+msgid "Docs"
+msgstr "Docs"
+
+#: admin/class-zenrush-wc-settings.php:53
+msgid "Zenrush Settings"
+msgstr "Zenrush Einstellungen"
 
 #: admin/class-zenrush-wc-settings.php:54
 msgid "Log"
@@ -47,7 +87,7 @@ msgid ""
 "The Key of your Zenfulfillment Store. This Key will be provided to you by "
 "Zenfulfillment Customer Support."
 msgstr ""
-"Der Shop Schlüssel von Zenfulfillment. Dieser Schlüssel wird Ihnen vom "
+"Der Schlüssel für deinen Zenfulfillment-Shop. Dieser Schlüssel wird dir vom "
 "Kundenservice zur Verfügung gestellt."
 
 #: admin/partials/zenrush-settings-main.php:20
@@ -57,7 +97,7 @@ msgstr "Zenrush auf Produktseiten"
 #: admin/partials/zenrush-settings-main.php:23
 msgid "Adds the dynamic Zenrush delivery timer widget to all product pages."
 msgstr ""
-"Fügt das dynamische Zenrush-Lieferzeit-Widget zu allen Produktseiten hinzu."
+"Fügt das dynamische Zenrush Lieferzeit-Widget zu allen Produktseiten hinzu."
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:79
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
@@ -69,21 +109,26 @@ msgstr "Aktivieren/Deaktivieren"
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:97
 msgid "Enable this shipping method"
-msgstr "Aktivieren Sie die Zenrush Premium Versandoption für Ihren Shop"
+msgstr "Aktiviere diese Versandart"
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:103
 #: shipping-method/class-zenrush-wc-shipping-method.php:106
 msgid "Zenrush Premium Delivery"
 msgstr "Zenrush Premiumversand"
 
-#: zenrush.php:63
-msgid "Missing WC Notice"
+#: zenrush.php:66
+msgid ""
+"It seems like your store does not have WooCommerce installed. This is "
+"required to use the Zenrush plugin. Please install or activate WooCommerce "
+"to use Zenrush."
 msgstr ""
-"Das Zenrush Plugin erfordert, dass WooCommerce installiert und aktiviert ist"
+"Es scheint, dass in deinem Shop kein WooCommerce installiert ist. Dies ist "
+"erforderlich, um das Zenrush-Plugin zu verwenden. Bitte installieren oder "
+"aktiviere WooCommerce, um Zenrush zu nutzen."
 
 #. Plugin URI of the plugin/theme
-msgid "https://github.com/zenfulfillment/zenrush-wp-plugin"
-msgstr "https://github.com/zenfulfillment/zenrush-wp-plugin"
+msgid "zenfulfillment/zenrush-wp-plugin"
+msgstr "zenfulfillment/zenrush-wp-plugin"
 
 #. Description of the plugin/theme
 msgid "Integration Plugin for Zenrush Premium Delivery"
@@ -96,3 +141,8 @@ msgstr "Zenfulfillment"
 #. Author URI of the plugin/theme
 msgid "https://zenfulfillment.com"
 msgstr "https://zenfulfillment.com"
+
+#~ msgid "Missing WC Notice"
+#~ msgstr ""
+#~ "Das Zenrush Plugin erfordert, dass WooCommerce installiert und aktiviert "
+#~ "ist"

@@ -28,7 +28,7 @@ class Zenrush_Admin
      *
      * @since    1.0.0
      * @access   private
-     * @var      string $plugin_name The ID of this plugin.
+     * @var      string
      */
     private string $plugin_name;
 
@@ -37,7 +37,7 @@ class Zenrush_Admin
      *
      * @since    1.0.0
      * @access   private
-     * @var      string $version The current version of this plugin.
+     * @var      string
      */
     private string $version;
 
@@ -50,10 +50,8 @@ class Zenrush_Admin
      */
     public function __construct(string $plugin_name, string $version)
     {
-
         $this->plugin_name = $plugin_name;
         $this->version = $version;
-
     }
 
     /**
@@ -120,13 +118,126 @@ class Zenrush_Admin
      *
      * @since   1.0.0
      * @access  public
-     * @param   array $links
+     *
+     * @param string[] $actions
+     * @param string $plugin_file
+     * @param array $plugin_data
+     * @param string $context
      * @return  array
      */
-    public function zenrush_settings_link(array $links): array
+    public function zenrush_settings_link(array $actions, string $plugin_file, array $plugin_data, string $context): array
     {
-        $url = admin_url( 'admin.php?page=wc-settings&tab=zenrush' );
-        $settings_link = array( 'settings' => '<a href="' . esc_url( $url ) . '">' . __('Settings', 'zenrush') . '</a>' );
-        return array_merge($settings_link, $links);
+        $settings_url = admin_url( 'admin.php?page=wc-settings&tab=zenrush' );
+        if ( $plugin_data['Name'] === "WooCommerce" ) {
+            $settings_link = array( 'zenrush_settings' => '<a href="' . esc_url( $settings_url ) . '">' . __( 'Zenrush', 'zenrush' ) . '</a>' );
+            return array_merge( $settings_link, $actions );
+        }
+
+        if ( $plugin_data['Name'] === 'Zenrush' ) {
+            $dashboard_url = 'https://app.zenfulfillment.com/app/dashboard';
+            $settings_link = array(
+                'dashboard' =>  '<a href="' . esc_url( $dashboard_url ) . '">' . __( 'Dashboard', 'zenrush' ) . '</a>',
+                'settings'  =>  '<a href="' . esc_url( $settings_url ) . '">' . __( 'Settings', 'zenrush' ) . '</a>',
+            );
+            return array_merge( $settings_link, $actions );
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Adds a `is_zenrush` custom meta field to the order.
+     * This data be found on the order in the `"meta_data"` array.
+     *
+     * @since 1.0.0
+     * @access public
+     *
+     * @param $order - Instance of WC_Order Class
+     * @param $data - Some data fields of the order
+     * @return void
+     */
+    public function zenrush_add_order_meta_data( WC_Order $order, $data ): void
+    {
+
+        $shipping_method = strtolower( $order->get_shipping_method() );
+
+        if( $shipping_method && str_contains($shipping_method, 'zenrush') ) {
+            $order->update_meta_data( 'is_zenrush', __( 'yes' ) );
+        }
+
+    }
+
+    public function zenrush_enable_auto_update(): bool
+    {
+        return true;
+    }
+
+    public function zenrush_complete_setup_notification(): void
+    {
+        if ( !get_option( 'Zenrush_store_id' ) ) {
+            $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
+            $message = __( '<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed the setup, you\'ll have access to a premium delivery option and shipping calculation in real-time.', 'zenrush' );
+            $settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . __( 'Go to Settings', 'zenrush' ) . '</a>';
+
+            $html = $this->zenrush_get_notification('setup', $title, $message, $settings_link, true);
+
+            print $html;
+        }
+    }
+
+    /**
+     * Adds related links to the plugin meta row in admin backend
+     *
+     * @since 1.0.0
+     * @access public
+     *
+     * @param string[] $links
+     * @param string $plugin_file
+     * @param array $plugin_data
+     * @param string $status
+     * @return array
+     */
+    public function zenrush_plugin_row_meta( array $links, string $plugin_file, array $plugin_data, string $status ): array
+    {
+        if ( $plugin_data['Name'] === 'Zenrush' ) {
+            $row_meta = array(
+              'docs' => '<a href="' . esc_url( 'https://setup.zenfulfillment.com/zenrush/integration/woocommerce?source=plugin' ) . '" target="_blank" aria-label="' . esc_attr__( 'Zenrush Documentation', 'zenrush' ) . '">' . esc_html__( 'Docs', 'zenrush' ) . '</a>'
+            );
+            return array_merge( $links, $row_meta );
+        }
+        return $links;
+    }
+
+    /**
+     * Util to get generate the HTML for a notification banner, to display in the admin backend.
+     *
+     * @since   1.0.0
+     * @access  private
+     * @used-by zenrush_complete_setup_notification
+     *
+     * @param string $type
+     * @param string $title
+     * @param string $message
+     * @param string $btn_link
+     * @param bool   $with_logo
+     * @return string
+     */
+    private function zenrush_get_notification(string $type, string $title, string $message, string $btn_link, bool $with_logo = true ): string
+    {
+        $class_name = "zf-$type-notice";
+        $logo_path = plugins_url( '../static/images/zenrush-logo.svg', __FILE__ );
+        $btn = $btn_link ? "<button class='button button-primary zf-setup-notice__content-btn'>$btn_link</button>" : '';
+        $logo = $with_logo ? "<div class='zf-setup-notice__logo'><img src='$logo_path' alt='Zenrush Logo' style='width: 220px; height: auto;'/></div>" : '';
+
+        return "
+            <div class='notice $class_name'>
+                $logo
+                <div class='zf-setup-notice__content'>
+                    <div class='zf-setup-notice__content-title'><h1>$title</h1></div>
+                    <p class='zf-setup-notice__content-text'>$message</p>
+                    $btn
+                </div>
+            </div>";
     }
 }
+

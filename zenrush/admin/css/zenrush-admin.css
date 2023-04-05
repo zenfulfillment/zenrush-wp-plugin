@@ -2,3 +2,55 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+.notice.zf-setup-notice {
+    display: flex;
+    padding: 0;
+    border: 0;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 1em;
+    padding: 1.5em 2em;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1em 1em 2.5em;
+    margin-left: 1em;
+    color: #707070;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__content-title h1 {
+    color: #00b67a;
+    font-size: 1.6em;
+    font-weight: 600;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__content-text {
+    margin: 0 2.5em 1em 0;
+    line-height: 1.6;
+    font-size: 1.1em;
+    padding: 0;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__content-btn {
+    align-self: flex-start;
+    background-color: #00b67a;
+    border-color: #009564;
+    box-shadow: 0 1px 0 #009564;
+    color: #fff;
+    font-size: 1.2em;
+    height: auto;
+    padding: .45em 1.5em;
+    text-shadow: none;
+}
+
+.notice.zf-setup-notice .zf-setup-notice__content-btn a {
+    color: inherit;
+    text-decoration: none;
+}

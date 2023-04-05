@@ -77,11 +77,13 @@ class Zenrush
         if (defined('ZENRUSH_VERSION')) {
             $this->version = ZENRUSH_VERSION;
         } else {
-            $this->version = '1.0.0-dev';
+            $this->version = '1.0.0';
         }
+
         $this->plugin_name = 'zenrush';
 
         $this->load_dependencies();
+        $this->init_auto_updater();
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
@@ -135,6 +137,12 @@ class Zenrush
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'shipping-method/class-zenrush-shipping-method.php';
 
+        /**
+         * The class responsible for checking the latest release on GitHub and handle auto installs
+         * TODO: Finish implementing the auto updater class!
+         */
+        // require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-updater.php';
+
         $this->loader = new Zenrush_Loader();
     }
 
@@ -157,6 +165,20 @@ class Zenrush
     }
 
     /**
+     * Initialize the Updater class to check for latest releases on github and show a notice.
+     *
+     * @since   1.0.0
+     * @access  private
+     * @return  void
+     */
+    private function init_auto_updater(): void
+    {
+
+        // new Zenrush_Updater( __FILE__, 'zenfulfillment', 'zenrush-wp-plugin', '' );
+
+    }
+
+    /**
      * Register all the hooks related to the admin area functionality
      * of the plugin.
      *
@@ -167,6 +189,12 @@ class Zenrush
     {
         $plugin_admin = new Zenrush_Admin($this->get_plugin_name(), $this->get_version());
 
+        // Enables automatic update checking for the plugin
+        $this->loader->add_filter( 'auto_update_plugin', $plugin_admin, 'zenrush_enable_auto_update' );
+
+        // Show notification when plugin setup is not completed yet
+        $this->loader->add_action( 'admin_notices', $plugin_admin, 'zenrush_complete_setup_notification' );
+
         // Add plugin css / js
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -174,11 +202,19 @@ class Zenrush
         // Add plugin settings to WooCommerce
         $this->loader->add_filter('woocommerce_get_settings_pages', $plugin_admin, 'zenrush_add_settings');
 
-        $this->loader->add_filter('plugin_action_links', $plugin_admin, 'zenrush_settings_link' );
+        // Add 'Settings' link to plugin listing in admin backend
+        $this->loader->add_filter('plugin_action_links', $plugin_admin, 'zenrush_settings_link', 10, 4 );
+
+        // Add other links to plugin meta section in admin backend
+        $this->loader->add_filter(  'plugin_row_meta', $plugin_admin, 'zenrush_plugin_row_meta', 10, 4 );
+
+        // Adds a customer meta field 'zenrush' on the order, if the order is zenrush
+        // This fires before the order is saved to the db.
+        $this->loader->add_action( 'woocommerce_checkout_create_order', $plugin_admin,  'zenrush_add_order_meta_data', 10, 2  );
     }
 
     /**
-     * Register the "Zenrush Premiumversand" shipping method
+     * Register the Zenrush shipping method
      *
      * @since    1.0.0
      * @access   private

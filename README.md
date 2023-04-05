@@ -18,3 +18,6 @@ First: download the latest release from the release page and save it somewhere o
 1. Extract the archive and move the `zenrush` folder into your plugin directory in `/wp-content/plugins`.
 2. Go into your store admin backend and active the Plugin on the plugin page.
 
+## TODO
+
+- [ ] Implement the Zenrush Updater Class to support automatic updates in store installations from github, on new releases.

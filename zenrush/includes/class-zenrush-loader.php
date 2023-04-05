@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Register all actions and filters for the plugin
- *
- * @link       https://zenfulfillment.com
- * @since      1.0.0
- *
- * @package    Zenrush
- * @subpackage Zenrush/includes
- */
-
-/**
  * Register all actions and filters for the plugin.
  *
  * Maintain a list of all hooks that are registered throughout

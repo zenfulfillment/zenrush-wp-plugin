@@ -11,20 +11,23 @@
  * @link              https://zenfulfillment.com
  * @since             1.0.0
  * @package           Zenrush
+ * @author            Zenfulfillment <devs@zenfulfillment.com>
  *
  * @wordpress-plugin
  * Plugin Name:       Zenrush
- * Plugin URI:        https://github.com/zenfulfillment/zenrush-wp-plugin
  * GitHub Plugin URI: zenfulfillment/zenrush-wp-plugin
  * GitHub Plugin URI: https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.0.0
+ * Version:           1.0.2
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           No License
+ * License URI:       https://choosealicense.com/no-permission/
  * Text Domain:       zenrush
  * Domain Path:       /languages
+ * Requires at least: 5.9
+ * Requires PHP:      7.2
+ * Tested up to:      6.2
  */
 
 // If this file is called directly, abort.
@@ -35,7 +38,7 @@ if ( !defined('WPINC') ) {
 /**
  * Current plugin version
  */
-const ZENRUSH_VERSION = '1.0.0';
+const ZENRUSH_VERSION = '1.0.2';
 
 if ( !function_exists('is_plugin_active') ) {
     include_once(ABSPATH . '/wp-admin/includes/plugin.php');
@@ -60,10 +63,10 @@ function zenrush_check_requirements(): bool
 function zenrush_missing_wc_notice(): void
 {
     $class = 'notice notice-error';
-    $message = __( 'Missing WC Notice', 'zenrush' );
-    $imgUrl = plugins_url( 'static/images/zenrush-badge.png', __FILE__ );
+    $message = __( 'It seems like your store does not have WooCommerce installed. This is required to use the Zenrush plugin. Please install or activate WooCommerce to use Zenrush.', 'zenrush' );
+    $img_url = plugins_url( 'static/images/zenrush-badge.png', __FILE__ );
 
-    printf('<div class="%1$s"><img src="%3$s" alt="Zenrush Badge" style="width: 30px; height: auto; margin-top: 0.25rem;"/><p><strong>%2$s</strong></p></div>', esc_attr($class), esc_html($message), $imgUrl);
+    printf('<div class="%1$s"><img src="%3$s" alt="Zenrush Badge" style="width: 30px; height: auto; margin-top: 0.25rem;"/><p><strong>%2$s</strong></p></div>', esc_attr($class), esc_html($message), $img_url);
 }
 
 /**
