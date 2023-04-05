@@ -121,13 +121,13 @@ class Zenrush_Admin
      *
      * @param string[] $actions
      * @param string $plugin_file
-     * @param array $plugin_data
+     * @param array|null $plugin_data
      * @param string $context
      * @return  array
      */
     public function zenrush_settings_link(array $actions, string $plugin_file = '', array $plugin_data = array(), string $context = ''): array
     {
-        if ( empty( $plugin_data ) ) return $actions;
+        if ( is_null ( $plugin_data ) || empty( $plugin_data ) ) return $actions;
 
         $settings_url = admin_url( 'admin.php?page=wc-settings&tab=zenrush' );
         if ( $plugin_data['Name'] === "WooCommerce" ) {
@@ -195,13 +195,13 @@ class Zenrush_Admin
      *
      * @param string[] $links
      * @param string $plugin_file
-     * @param array $plugin_data
+     * @param array|null $plugin_data
      * @param string $status
      * @return array
      */
     public function zenrush_plugin_row_meta( array $links, string $plugin_file = '', array $plugin_data = array(), string $status = ''): array
     {
-        if ( empty ( $plugin_data ) ) return $links;
+        if ( is_null ( $plugin_data ) || empty ( $plugin_data ) ) return $links;
 
         if ( $plugin_data['Name'] === 'Zenrush' ) {
             $row_meta = array(
