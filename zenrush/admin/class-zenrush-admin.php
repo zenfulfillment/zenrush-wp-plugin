@@ -125,7 +125,7 @@ class Zenrush_Admin
      * @param string $context
      * @return  array
      */
-    public function zenrush_settings_link(array $actions, string $plugin_file = '', array $plugin_data = array(), string $context = ''): array
+    public function zenrush_settings_link(array $actions, string $plugin_file, array|null $plugin_data, string $context): array
     {
         if ( is_null ( $plugin_data ) || empty( $plugin_data ) ) return $actions;
 
@@ -199,7 +199,7 @@ class Zenrush_Admin
      * @param string $status
      * @return array
      */
-    public function zenrush_plugin_row_meta( array $links, string $plugin_file = '', array $plugin_data = array(), string $status = ''): array
+    public function zenrush_plugin_row_meta( array $links, string $plugin_file, array|null $plugin_data, string $status): array
     {
         if ( is_null ( $plugin_data ) || empty ( $plugin_data ) ) return $links;
 
