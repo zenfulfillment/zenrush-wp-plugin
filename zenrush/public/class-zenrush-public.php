@@ -131,7 +131,7 @@ class Zenrush_Public
     }
 
     /**
-     * Registers the JavaScript for zenrush snippet
+     * Registers the JavaScript for the Zenrush Element
      * Checks if the store_id is set and is valid, otherwise the script will not be injected
      *
      * @since    1.0.0
@@ -163,21 +163,23 @@ class Zenrush_Public
 
     public function zenrush_add_element_to_product_listing($add_to_cart_html, $product, $args): string
     {
-        // TODO: Add these settings
-        // $showOnProductListing = get_option($this->prefix . 'show_on_product_listing');
-        // $showDeliveryDate = get_option($this->prefix . 'show_delivery_date_on_listing');
-        // $beforeAddToCart = get_option($this->prefix . 'before_add_to_cart_on_listing');
-        // $before = '...'
-        // $after = '...'
-        // return $before . $add_to_cart_html . $after
-        if ( $product->is_in_stock() ) {
-            return '<zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge" showdeliverydate></zf-zenrush>' . $add_to_cart_html;
+        $showOnProductListing = get_option($this->prefix . 'show_on_product_listing');
+        $hideDeliveryDate = get_option($this->prefix . 'hide_delivery_date_on_listing');
+
+        if ( $showOnProductListing && $product->is_in_stock() ) {
+            if ( $hideDeliveryDate ) {
+                return '<zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge"></zf-zenrush>' . $add_to_cart_html;
+            } else {
+                return '<zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge" showdeliverydate></zf-zenrush>' . $add_to_cart_html;
+            }
         }
+
         return $add_to_cart_html;
     }
 
     public function zenrush_add_element_to_checkout(): void {
         // TODO: Add checkout for woocommerce to element
-        echo '<zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'" type="checkout" debug></zf-zenrush>';
+        //  echo '<zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'" type="checkout" debug></zf-zenrush>';
     }
+
 }

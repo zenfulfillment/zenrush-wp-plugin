@@ -1,12 +1,7 @@
 <?php
 
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
+ * Zenrush Plugin Bootstrap
  *
  * @link              https://zenfulfillment.com
  * @since             1.0.0
@@ -62,11 +57,30 @@ function zenrush_check_requirements(): bool
  */
 function zenrush_missing_wc_notice(): void
 {
-    $class = 'notice notice-error';
-    $message = __( 'It seems like your store does not have WooCommerce installed. This is required to use the Zenrush plugin. Please install or activate WooCommerce to use Zenrush.', 'zenrush' );
+    $cur_screen = get_current_screen();
+
+    if ( $cur_screen && 'update' === $cur_screen->id && 'plugins' === $cur_screen->parent_base ) {
+        // dont show while updating plugins
+        return;
+    }
+
+    $error_message = __( 'Zenrush requires <strong>WooCommerce</strong> to be installed and active.', 'zenrush' );
     $img_url = plugins_url( 'static/images/zenrush-badge.png', __FILE__ );
 
-    printf('<div class="%1$s"><img src="%3$s" alt="Zenrush Badge" style="width: 30px; height: auto; margin-top: 0.25rem;"/><p><strong>%2$s</strong></p></div>', esc_attr($class), esc_html($message), $img_url);
+    if ( current_user_can( 'install_plugins' ) ) {
+        if ( is_wp_error( validate_plugin( 'woocommerce/woocommerce.php' ) ) ) {
+            // WooCommerce is not installed.
+            $activate_url  = wp_nonce_url( admin_url( 'update.php?action=install-plugin&plugin=woocommerce' ), 'install-plugin_woocommerce' );
+            $activate_text = __( 'Install WooCommerce', 'zenrush' );
+        } else {
+            // WooCommerce is installed, so it just needs to be enabled.
+            $activate_url  = wp_nonce_url( admin_url( 'plugins.php?action=activate&plugin=woocommerce/woocommerce.php' ), 'activate-plugin_woocommerce/woocommerce.php' );
+            $activate_text = __( 'Activate WooCommerce', 'zenrush' );
+        }
+        $error_message .= ' <a href="' . $activate_url . '">' . $activate_text . '</a>';
+    }
+
+    printf('<div class="notice notice-error" style="display: flex; padding-top: 6px; padding-bottom: 6px;"><img src="%2$s" alt="Zenrush Badge" style="width: auto; height: 34px;position: relative;top: -2px;margin-right: 8px;"/><p><strong>%1$s</strong></p></div>', $error_message, $img_url);
 }
 
 /**

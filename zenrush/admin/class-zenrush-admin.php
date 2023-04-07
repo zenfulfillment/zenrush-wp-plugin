@@ -127,7 +127,7 @@ class Zenrush_Admin
      */
     public function zenrush_settings_link(array $actions, string $plugin_file, array|null $plugin_data, string $context): array
     {
-        if ( is_null ( $plugin_data ) || empty( $plugin_data ) ) return $actions;
+        if ( empty( $plugin_data ) ) return $actions;
 
         $settings_url = admin_url( 'admin.php?page=wc-settings&tab=zenrush' );
         if ( $plugin_data['Name'] === "WooCommerce" ) {
@@ -201,7 +201,7 @@ class Zenrush_Admin
      */
     public function zenrush_plugin_row_meta( array $links, string $plugin_file, array|null $plugin_data, string $status): array
     {
-        if ( is_null ( $plugin_data ) || empty ( $plugin_data ) ) return $links;
+        if ( empty ( $plugin_data ) ) return $links;
 
         if ( $plugin_data['Name'] === 'Zenrush' ) {
             $row_meta = array(
@@ -214,7 +214,7 @@ class Zenrush_Admin
     }
 
     /**
-     * Util to get generate the HTML for a notification banner, to display in the admin backend.
+     * Util to generate the HTML for a notification banner in the admin backend.
      *
      * @since   1.0.0
      * @access  private

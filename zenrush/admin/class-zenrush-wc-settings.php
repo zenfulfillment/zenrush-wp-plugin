@@ -68,6 +68,7 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
         public function get_settings(): array
         {
             global $current_section;
+
             $settings = array();
 
             switch ( $current_section ) {
@@ -79,6 +80,7 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
                     break;
                 default:
                     include 'partials/zenrush-settings-main.php';
+                    break;
             }
 
             return apply_filters( 'woocommerce_get_settings_' . $this->id, $settings, $current_section );
