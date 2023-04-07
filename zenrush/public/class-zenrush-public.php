@@ -143,12 +143,18 @@ class Zenrush_Public
 
         if ( $idIsValid ) {
             $snippet_src = 'https://zenrush.zenfulfillment.com/client/' . $this->snippet_name . '.js';
-            wp_enqueue_script( $this->snippet_name, $snippet_src, null, null, false );
+            wp_enqueue_script( $this->snippet_name, $snippet_src, array(), $this->version, false );
         } else {
             error_log( 'Zenrush Store Key is invalid!' );
         }
     }
 
+    /**
+     * Adds the zenrush element to the product details page
+     * Note: Requires automatic integration to be enabled in settings
+     *
+     * @since    1.0.0
+     */
     public function zenrush_add_element_to_product_page(): void
     {
         global $product;
@@ -160,7 +166,17 @@ class Zenrush_Public
         }
     }
 
-
+    /**
+     * Adds the zenrush element to the product listings (including category pages & related products)
+     * Note: Requires automatic integration to be enabled in settings
+     *
+     * @since   1.0.0
+     * 
+     * @param   $add_to_cart_html
+     * @param   $product
+     * @param   $args
+     * @return  string
+     */
     public function zenrush_add_element_to_product_listing($add_to_cart_html, $product, $args): string
     {
         $showOnProductListing = get_option($this->prefix . 'show_on_product_listing');

@@ -138,10 +138,9 @@ class Zenrush
         require_once plugin_dir_path(dirname(__FILE__)) . 'shipping-method/class-zenrush-shipping-method.php';
 
         /**
-         * The class responsible for checking the latest release on GitHub and handle auto installs
-         * TODO: Finish implementing the auto updater class!
+         * The class responsible for getting updates from repo
          */
-        // require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-updater.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-updater.php';
 
         $this->loader = new Zenrush_Loader();
     }
@@ -174,7 +173,13 @@ class Zenrush
     private function init_auto_updater(): void
     {
 
-        // new Zenrush_Updater( __FILE__, 'zenfulfillment', 'zenrush-wp-plugin', '' );
+        $plugin_updater = new Zenrush_Updater( ZENRUSH_PLUGIN_FILE );
+
+        // TODO: set values for username, repository and token
+        $plugin_updater->set_username( '' );
+        $plugin_updater->set_repository( '' );
+        $plugin_updater->authorize( '' );
+        $plugin_updater->initialize();
 
     }
 

@@ -48,7 +48,7 @@ class Zenrush_Admin
      * @param   string $version     The version of this plugin.
      * @since   1.0.0
      */
-    public function __construct(string $plugin_name, string $version)
+    public function __construct($plugin_name, $version)
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
@@ -125,7 +125,7 @@ class Zenrush_Admin
      * @param string $context
      * @return  array
      */
-    public function zenrush_settings_link(array $actions, string $plugin_file, array|null $plugin_data, string $context): array
+    public function zenrush_settings_link($actions, $plugin_file, $plugin_data, $context): array
     {
         if ( empty( $plugin_data ) ) return $actions;
 
@@ -199,7 +199,7 @@ class Zenrush_Admin
      * @param string $status
      * @return array
      */
-    public function zenrush_plugin_row_meta( array $links, string $plugin_file, array|null $plugin_data, string $status): array
+    public function zenrush_plugin_row_meta($links, $plugin_file, $plugin_data, $status): array
     {
         if ( empty ( $plugin_data ) ) return $links;
 
