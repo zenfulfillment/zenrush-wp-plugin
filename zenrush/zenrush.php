@@ -10,13 +10,12 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Zenrush
- * GitHub Plugin URI: zenfulfillment/zenrush-wp-plugin
+ * Plugin URI:        https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
  * Version:           1.0.3
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
- * License URI:       https://choosealicense.com/no-permission/
  * Text Domain:       zenrush
  * Domain Path:       /languages
  * Requires at least: 5.9
@@ -29,12 +28,19 @@ if ( !defined('WPINC') ) {
     die;
 }
 
+// Define plugin const's
 /**
- * Define plugin const's
+ * Current plugin version.
+ * 
+ * @since    1.0.0
  */
-// current version
 const ZENRUSH_VERSION = '1.0.3';
-// plugin file path
+
+/**
+ * Plugin file path.
+ * 
+ * @since    1.0.0
+ */
 const ZENRUSH_PLUGIN_FILE = __FILE__;
 
 if ( !function_exists('is_plugin_active') ) {
@@ -43,10 +49,12 @@ if ( !function_exists('is_plugin_active') ) {
 
 /**
  * Check for the existence of WooCommerce and any other requirements
+ * 
+ * @since    1.0.0
  */
 function zenrush_check_requirements(): bool
 {
-    if ( is_plugin_active('woocommerce/woocommerce.php') ) {
+    if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
         return true;
     } else {
         add_action( 'admin_notices', 'zenrush_missing_wc_notice' );
@@ -56,6 +64,8 @@ function zenrush_check_requirements(): bool
 
 /**
  * Display a message advising WooCommerce is required
+ * 
+ * @since    1.0.0
  */
 function zenrush_missing_wc_notice(): void
 {
@@ -88,6 +98,8 @@ function zenrush_missing_wc_notice(): void
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-zenrush-activator.php
+ * 
+ * @since    1.0.0
  */
 function activate_zenrush(): void
 {
@@ -98,6 +110,8 @@ function activate_zenrush(): void
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-zenrush-deactivator.php
+ * 
+ * @since    1.0.0
  */
 function deactivate_zenrush(): void
 {
@@ -112,6 +126,8 @@ register_deactivation_hook( __FILE__, 'deactivate_zenrush' );
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, shipping method, and public-facing site hooks.
+ * 
+ * @since    1.0.0
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-zenrush.php';
 

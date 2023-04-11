@@ -16,7 +16,7 @@ $settings = apply_filters( 'zenrush_settings',
                 'id'        =>  $prefix . 'store_id',
                 'name'      =>  __( 'Store Key', 'zenrush' ),
                 'type'      =>  'text',
-                'desc_tip'  =>  __( 'The Key of your Zenfulfillment Store. This Key will be provided to you by Zenfulfillment Customer Support.', 'zenrush' )
+                'desc_tip'  =>  __( 'The unique Store Key for the Zenrush Plugin. This Key will be provided to you by Zenfulfillment Customer Support.', 'zenrush' )
             ),
 
         array(
@@ -27,7 +27,7 @@ $settings = apply_filters( 'zenrush_settings',
         array(
             'title' =>  __( 'Zenrush Element Options', 'zenrush' ),
             'type'  =>  'title',
-            'desc'  =>  __( 'Note: If the automatic integration is disabled, you need to add the Zenrush Element to the theme yourself. <a href="https://docs">Docs</a>', 'zenrush' ),
+            'desc'  =>  __( 'Note: If the automatic integration is disabled, you need to add the Zenrush Element to your store theme manually. <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce">Docs</a>', 'zenrush' ),
             'id'    =>  $prefix . 'element_options',
         ),
 

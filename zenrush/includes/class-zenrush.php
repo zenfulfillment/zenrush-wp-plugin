@@ -164,7 +164,7 @@ class Zenrush
     }
 
     /**
-     * Initialize the Updater class to check for latest releases on github and show a notice.
+     * Initialize the Updater class to check for latest releases and show a notice.
      *
      * @since   1.0.0
      * @access  private
@@ -172,15 +172,15 @@ class Zenrush
      */
     private function init_auto_updater(): void
     {
-
         $plugin_updater = new Zenrush_Updater( ZENRUSH_PLUGIN_FILE );
 
-        // TODO: set values for username, repository and token
-        $plugin_updater->set_username( '' );
-        $plugin_updater->set_repository( '' );
-        $plugin_updater->authorize( '' );
-        $plugin_updater->initialize();
+        $this->loader->add_action('admin_init', $plugin_updater, 'set_plugin_properties');
 
+        $plugin_updater->set_repository( 'zenfulfillment/zenrush-wp-plugin' );
+
+        $this->loader->add_filter('pre_set_site_transient_update_plugins', $plugin_updater, 'check_for_update', 10, 1);
+        $this->loader->add_filter('plugins_api', $plugin_updater, 'plugin_popup', 10, 3);
+        $this->loader->add_filter('upgrader_post_install', $plugin_updater, 'after_install', 10, 3);
     }
 
     /**

@@ -47,15 +47,6 @@ class Zenrush_Updater {
     private bool    $active;
 
     /**
-     * The username that is the owner of the requested repository
-     *
-     * @since    1.0.4
-     * @access   private
-     * @var      string $username The username that is the owner of the requested repository
-     */
-    private string  $username;
-
-    /**
      * The name of the repository
      *
      * @since    1.0.4
@@ -63,15 +54,6 @@ class Zenrush_Updater {
      * @var      string $repository The name of the repository
      */
     private string  $repository;
-
-    /**
-     * The Access Token to be used to authenticate with the github api
-     *
-     * @since    1.0.4
-     * @access   private
-     * @var      string $authorize_token The Access Token used to authenticate with the github api
-     */
-    private string  $authorize_token;
 
     /**
      * Cache of the response from the github api, so we only need to request it once
@@ -90,9 +72,12 @@ class Zenrush_Updater {
     public function __construct($file)
     {
         $this->file = $file;
-        add_action('admin_init', [$this, 'set_plugin_properties']);
-
         return $this;
+    }
+
+    public function set_repository(string $repository_slug): void
+    {
+        $this->repository = $repository_slug;
     }
 
     /**
@@ -111,45 +96,6 @@ class Zenrush_Updater {
     }
 
     /**
-     * Sets the username
-     *
-     * @since 1.0.4
-     *
-     * @param string $username Username
-     * @return void
-     */
-    public function set_username(string $username): void
-    {
-        $this->username = $username;
-    }
-
-    /**
-     * Sets the repository name
-     *
-     * @since 1.0.4
-     *
-     * @param string $repository Repository name
-     * @return void
-     */
-    public function set_repository(string $repository): void
-    {
-        $this->repository = $repository;
-    }
-
-    /**
-     * Sets the access_token for api requests
-     *
-     * @since 1.0.4
-     *
-     * @param string $token Access Token
-     * @return void
-     */
-    public function authorize(string $token): void
-    {
-        $this->authorize_token = $token;
-    }
-
-    /**
      * Fetches the latest release info from GitHub repository and stores it in $this->github_response
      *
      * @since 1.0.4
@@ -158,58 +104,16 @@ class Zenrush_Updater {
      */
     private function get_repository_info(): void
     {
-        if ( empty( $this->github_response ) && !empty( $this->authorize_token ) ) {
-            $request_uri = sprintf('https://api.github.com/repos/%s/%s/releases', $this->username, $this->repository);
+        if ( empty( $this->github_response ) ) {
+            $request_uri = "https://api.github.com/repos/$this->repository/releases";
 
-            // Uses Authentication in Headers for GitHub API v3
-            $curl = curl_init();
-
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $request_uri,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => [
-                    "Authorization: token " . $this->authorize_token,
-                    "User-Agent: WPZenrush_Updater/" . ZENRUSH_VERSION,
-                ]
-            ]);
-
-            $response = curl_exec( $curl );
-
-            curl_close( $curl );
-
-            $response = json_decode( $response, true );
+            $response = json_decode( wp_remote_retrieve_body( wp_remote_get( $request_uri ) ), true );
 
             if ( is_array( $response ) ) {
                 $response = current( $response );
             }
 
             $this->github_response = $response;
-        }
-    }
-
-    /**
-     * Initializes the Updater with WordPress and registers all required filters
-     *
-     * @since 1.0.4
-     *
-     * @hooked pre_set_site_transient_update_plugins - $this->modify_transient
-     * @hooked plugins_api - $this->plugin_popup
-     * @hooked upgrader_post_install - $this->after_install
-     *
-     * @return void
-     */
-    public function initialize(): void
-    {
-        if ( !empty( $this->authorize_token ) ) {
-            add_filter('pre_set_site_transient_update_plugins', [$this, 'modify_transient'], 10, 1);
-            add_filter('plugins_api', [$this, 'plugin_popup'], 10, 3);
-            add_filter('upgrader_post_install', [$this, 'after_install'], 10, 3);
         }
     }
 
@@ -221,27 +125,26 @@ class Zenrush_Updater {
      * @param $transient
      * @return mixed
      */
-    public function modify_transient($transient): mixed
+    public function check_for_update($transient): mixed
     {
         if ( property_exists( $transient, 'checked' ) ) {
-            if ($checked = $transient->checked) {
-                $this->get_repository_info();
+            $checked = $transient->checked;
+            $this->get_repository_info();
+           $latest_version = $this->github_response['tag_name'];
+            $out_of_date = version_compare($latest_version, $checked[$this->basename], 'gt');
 
-                $out_of_date = version_compare($this->github_response['tag_name'], $checked[$this->basename], 'gt');
+            if ( $out_of_date ) {
+                $new_files = "https://github.com/zenfulfillment/zenrush-wp-plugin/releases/download/$latest_version/zenrush.zip";
+                $slug = current(explode('/', $this->basename));
 
-                if ($out_of_date) {
-                    $new_files = $this->github_response['zipball_url'];
-                    $slug = current(explode('/', $this->basename));
+                $plugin = [
+                    'url' => $this->plugin['PluginURI'],
+                    'slug' => $slug,
+                    'package' => $new_files,
+                    'new_version' => $this->github_response['tag_name']
+                ];
 
-                    $plugin = [
-                        'url' => $this->plugin['PluginURI'],
-                        'slug' => $slug,
-                        'package' => $new_files,
-                        'new_version' => $this->github_response['tag_name']
-                    ];
-
-                    $transient->response[$this->basename] = (object) $plugin;
-                }
+                $transient->response[$this->basename] = (object) $plugin;
             }
         }
 
