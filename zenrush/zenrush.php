@@ -11,7 +11,7 @@
  * @wordpress-plugin
  * Plugin Name:       Zenrush
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.0.5
+ * Version:           1.0.6
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
