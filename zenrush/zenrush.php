@@ -10,9 +10,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Zenrush
- * Plugin URI:        https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.0.4
+ * Version:           1.0.5
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
