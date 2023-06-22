@@ -139,7 +139,7 @@ msgid ""
 "Do not show delivery date on product category pages. Only the zenrush icon will be shown."
 msgstr ""
 "Deaktiviere die Anzeige des Lieferdatums in den Produktkategorieseiten."
- Nur das Zenrush Icon wird angezeigt."
+"Nur das Zenrush Icon wird angezeigt."
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:79
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
