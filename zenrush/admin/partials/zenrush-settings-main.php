@@ -14,9 +14,9 @@ $settings = apply_filters( 'zenrush_settings',
 
             array(
                 'id'        =>  $prefix . 'store_id',
-                'name'      =>  __( 'Store Key', 'zenrush' ),
+                'name'      =>  __( 'Merchant Key', 'zenrush' ),
                 'type'      =>  'text',
-                'desc_tip'  =>  __( 'The unique Store Key for the Zenrush Plugin. This Key will be provided to you by Zenfulfillment Customer Support.', 'zenrush' )
+                'desc_tip'  =>  __( 'The unique Merchant Key for the Zenrush Plugin. This Key will be provided to you by Zenfulfillment Customer Support.', 'zenrush' )
             ),
 
         array(
@@ -25,9 +25,9 @@ $settings = apply_filters( 'zenrush_settings',
         ),
 
         array(
-            'title' =>  __( 'Zenrush Element Options', 'zenrush' ),
+            'title' =>  __( 'Zenrush Store Front-End Integration', 'zenrush' ),
             'type'  =>  'title',
-            'desc'  =>  __( 'Note: If the automatic integration is disabled, you need to add the Zenrush Element to your store theme manually. <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce">Docs</a>', 'zenrush' ),
+            'desc'  =>  __( 'Note: If the automatic front-end integration is disabled, you need to add the Zenrush snippet to your store theme manually. <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce">Docs</a>', 'zenrush' ),
             'id'    =>  $prefix . 'element_options',
         ),
 
@@ -42,8 +42,8 @@ $settings = apply_filters( 'zenrush_settings',
             ),
 
                 array(
-                    'desc'              =>  __( 'On Product Pages', 'zenrush' ),
-                    'desc_tip'          =>  __( 'Show Zenrush on all product pages', 'zenrush' ),
+                    'desc'              =>  __( 'On Product Detail Pages', 'zenrush' ),
+                    'desc_tip'          =>  __( 'Show Zenrush on all product detail pages', 'zenrush' ),
                     'default'           =>  'yes',
                     'type'              =>  'checkbox',
                     'checkboxgroup'     =>  '',
@@ -53,8 +53,8 @@ $settings = apply_filters( 'zenrush_settings',
                 ),
 
                 array(
-                    'desc'              => __( 'Product Listings', 'zenrush' ),
-                    'desc_tip'          => __( 'Show Zenrush on all Product Listings. This includes the product category pages and "Related products"', 'zenrush' ),
+                    'desc'              => __( 'Product Category Listings', 'zenrush' ),
+                    'desc_tip'          => __( 'Show Zenrush on all product listings. This includes the product category pages and "related products"', 'zenrush' ),
                     'default'           => 'yes',
                     'type'              => 'checkbox',
                     'checkboxgroup'     => '',
@@ -65,7 +65,7 @@ $settings = apply_filters( 'zenrush_settings',
 
                 array(
                     'desc'              => __( 'Only display Zenrush Badge on product listings', 'zenrush' ),
-                    'desc_tip'          => __( 'Disable the delivery timer text and only show a badge for product listings', 'zenrush' ),
+                    'desc_tip'          => __( 'Do not show delivery date on product category pages. Only the zenrush icon will be shown.', 'zenrush' ),
                     'default'           => 'no',
                     'type'              => 'checkbox',
                     'checkboxgroup'     => 'end',
