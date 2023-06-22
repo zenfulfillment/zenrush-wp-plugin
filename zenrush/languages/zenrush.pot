@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-06-22 16:02+0200\n"
-"PO-Revision-Date: 2023-06-22 16:02+0200\n"
+"POT-Creation-Date: 2023-06-22 17:06+0200\n"
+"PO-Revision-Date: 2023-06-22 17:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,24 +70,24 @@ msgid "General Options"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:17
-msgid "Store Key"
+msgid "Merchant Key"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:19
 msgid ""
-"The unique Store Key for the Zenrush Plugin. This Key will be provided to "
+"The unique Merchant Key for the Zenrush Plugin. This Key will be provided to "
 "you by Zenfulfillment Customer Support."
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:28
-msgid "Zenrush Element Options"
+msgid "Zenrush Store Front-End Integration"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:30
 msgid ""
-"Note: If the automatic integration is disabled, you need to add the Zenrush "
-"Element to your store theme manually. <a href=\"https://setup.zenfulfillment."
-"com/zenrush/integration/woocommerce\">Docs</a>"
+"Note: If the automatic front-end integration is disabled, you need to add "
+"the Zenrush snippet to your store theme manually. <a href=\"https://setup."
+"zenfulfillment.com/zenrush/integration/woocommerce\">Docs</a>"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:35
@@ -99,21 +99,21 @@ msgid "Enable Automatic Integration"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:45
-msgid "On Product Pages"
+msgid "On Product Detail Pages"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:46
-msgid "Show Zenrush on all product pages"
+msgid "Show Zenrush on all product detail pages"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:56
-msgid "Product Listings"
+msgid "Product Category Listings"
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:57
 msgid ""
-"Show Zenrush on all Product Listings. This includes the product category "
-"pages and \"Related products\""
+"Show Zenrush on all product listings. This includes the product category "
+"pages and \"related products\""
 msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:67
@@ -122,7 +122,8 @@ msgstr ""
 
 #: admin/partials/zenrush-settings-main.php:68
 msgid ""
-"Disable the delivery timer text and only show a badge for product listings"
+"Do not show delivery date on product category pages. Only the zenrush icon "
+"will be shown."
 msgstr ""
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:79
