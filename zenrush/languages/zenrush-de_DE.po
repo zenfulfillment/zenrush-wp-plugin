@@ -78,57 +78,57 @@ msgstr "Allgemeine Einstellungen"
 
 #: admin/partials/zenrush-settings-main.php:17
 msgid "Store Key"
-msgstr "Shop Schlüssel"
+msgstr "Merchant Key"
 
 #: admin/partials/zenrush-settings-main.php:19
 msgid ""
 "The unique Store Key for the Zenrush Plugin. This Key will be provided to "
 "you by Zenfulfillment Customer Support."
 msgstr ""
-"Der Schlüssel für dein Zenrush Plugin. Dieser Schlüssel wird dir vom "
-"Kundenservice zur Verfügung gestellt."
+"Der Merchant Key für dein Zenrush Plugin. Dieser Key wird dir vom "
+"Zenfulfillment Kundenservice zur Verfügung gestellt."
 
 #: admin/partials/zenrush-settings-main.php:28
-msgid "Zenrush Element Options"
-msgstr "Zenrush Element Optionen"
+msgid "Zenrush Store Front-End Integration"
+msgstr "Zenrush Store Front-End Integration"
 
 #: admin/partials/zenrush-settings-main.php:30
 msgid ""
-"Note: If the automatic integration is disabled, you need to add the Zenrush "
-"Element to your store theme manually. <a href=\"https://setup.zenfulfillment."
+"Note: If the automatic front-end integration is disabled, you need to add the Zenrush "
+"snippet to your store theme manually. <a href=\"https://setup.zenfulfillment."
 "com/zenrush/integration/woocommerce\">Docs</a>"
 msgstr ""
-"Hinweis: Wenn die automatische Integration deaktiviert ist, musst du das "
-"Zenrush-Element manuell in deinem Shop-Theme hinzufügen. <a href=\"https://"
+"Hinweis: Wenn die automatische Front-End Integration deaktiviert ist, musst du das "
+"Zenrush Snippet manuell in deinem Shop-Theme hinzufügen. <a href=\"https://"
 "setup.zenfulfillment.com/zenrush/integration/woocommerce\">Dokumentation</a>"
 
 #: admin/partials/zenrush-settings-main.php:35
 msgid "Automatic Integration"
-msgstr "Automatische Integration"
+msgstr "Automatische Store-Front Integration"
 
 #: admin/partials/zenrush-settings-main.php:36
 msgid "Enable Automatic Integration"
 msgstr "Automatische Integration aktivieren"
 
 #: admin/partials/zenrush-settings-main.php:45
-msgid "On Product Pages"
-msgstr "Auf den Produktseiten"
+msgid "On Product Detail Pages"
+msgstr "Auf den Produktdetailseiten"
 
 #: admin/partials/zenrush-settings-main.php:46
-msgid "Show Zenrush on all product pages"
-msgstr "Zeigt das Zenrush Element auf allen Produktseiten an"
+msgid "Show Zenrush on all product pages below the add to cart button"
+msgstr "Zeigt Zenrush auf allen Produktdetailseiten unter dem add to cart button an"
 
 #: admin/partials/zenrush-settings-main.php:56
-msgid "Product Listings"
-msgstr "Produkt Kategorien"
+msgid "Product Category Listing"
+msgstr "Produkt Kategorie-Seite"
 
 #: admin/partials/zenrush-settings-main.php:57
 msgid ""
 "Show Zenrush on all Product Listings. This includes the product category "
 "pages and \"Related products\""
 msgstr ""
-"Zeigt das Zenrush Element auf allen Produktlisten an. Dies gilt auch für die "
-"Produktkategorieseiten und „Verwandte Produkte“."
+"Zeigt das Zenrush Element auf allen Produktkategorie-Seiten an. Dies gilt auch für  "
+"„Verwandte Produkte“."
 
 #: admin/partials/zenrush-settings-main.php:67
 msgid "Only display Zenrush Badge on product listings"
@@ -136,10 +136,10 @@ msgstr "Zeigt das Zenrush Element nur als Abzeichen an"
 
 #: admin/partials/zenrush-settings-main.php:68
 msgid ""
-"Disable the delivery timer text and only show a badge for product listings"
+"Do not show delivery date on product category pages. Only the zenrush icon will be shown."
 msgstr ""
-"Deaktiviert den Text für den Liefertermin und zeigt nur ein Abzeichen für "
-"Produktangebote an"
+"Deaktiviere die Anzeige des Lieferdatums in den Produktkategorieseiten."
+ Nur das Zenrush Icon wird angezeigt."
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:79
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
