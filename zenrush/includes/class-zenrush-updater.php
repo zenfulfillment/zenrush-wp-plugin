@@ -35,7 +35,7 @@ class Zenrush_Updater {
      * @access   private
      * @var      string $basename zenrush/zenrush.php
      */
-    private string  $basename;
+    private string  $basename = 'zenrush/zenrush.php';
 
     /**
      * Boolean to indicate if the plugin is currently activated or not
@@ -130,7 +130,7 @@ class Zenrush_Updater {
         if ( property_exists( $transient, 'checked' ) ) {
             $checked = $transient->checked;
             $this->get_repository_info();
-           $latest_version = $this->github_response['tag_name'];
+            $latest_version = $this->github_response['tag_name'];
             $out_of_date = version_compare($latest_version, $checked[$this->basename], 'gt');
 
             if ( $out_of_date ) {
