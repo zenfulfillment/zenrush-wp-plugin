@@ -88,6 +88,7 @@ class Zenrush
         $this->define_admin_hooks();
         $this->define_public_hooks();
         $this->define_shipping_method();
+        $this->define_zenrush_api();
     }
 
     /**
@@ -122,6 +123,12 @@ class Zenrush
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-i18n.php';
 
         /**
+         * The class responsible for defining the REST API functionality
+         * of the plugin.
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-api.php';
+
+        /**
          * The class responsible for defining all actions that occur in the admin area.
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-zenrush-admin.php';
@@ -138,7 +145,7 @@ class Zenrush
         require_once plugin_dir_path(dirname(__FILE__)) . 'shipping-method/class-zenrush-shipping-method.php';
 
         /**
-         * The class responsible for getting updates from repo
+         * The class responsible for handling plugin updates
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-updater.php';
 
@@ -161,6 +168,19 @@ class Zenrush
 
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 
+    }
+
+    /**
+     * Registers all api routes for the plugin
+     * 
+     * @since   1.0.8
+     * @access  private
+     */
+    private function define_zenrush_api(): void
+    {
+        $plugin_rest = new Zenrush_Api();
+
+        $this->loader->add_action('rest_api_init', $plugin_rest, 'register_routes');
     }
 
     /**
