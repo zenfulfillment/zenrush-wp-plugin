@@ -1,23 +1,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-04-11 13:39+0200\n"
-"PO-Revision-Date: 2023-06-22 16:45+0200\n"
+"POT-Creation-Date: 2023-06-29 21:58+0200\n"
+"PO-Revision-Date: 2023-06-29 22:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "X-Generator: Poedit 3.3.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: zenrush.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;"
-"esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;"
-"__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
@@ -34,28 +34,49 @@ msgstr "Dashboard"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-zenrush-admin.php:180
+#: admin/class-zenrush-admin.php:287
+msgid "Enter your Merchant ID"
+msgstr "Geben deinen Merchant Key ein"
+
+#: admin/class-zenrush-admin.php:288 admin/class-zenrush-admin.php:296
+msgid "Enable Zenrush for the Germany shipping zone"
+msgstr "Zenrush für die Versandzone Deutschland aktivieren"
+
+#: admin/class-zenrush-admin.php:289
+msgid "Enable Zenrush for your payment methods"
+msgstr "Zenrush für die Zahlungsmethoden aktivieren"
+
+#: admin/class-zenrush-admin.php:294
+msgid "Add a shipping zone for Germany"
+msgstr "Versandzone für Deutschland hinzufügen"
+
+#: admin/class-zenrush-admin.php:303
 msgid "Complete Zenrush setup to activate"
 msgstr "Zenrush vollständig einrichten und aktivieren"
 
-#: admin/class-zenrush-admin.php:181
+#: admin/class-zenrush-admin.php:304
 msgid ""
-"<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed the setup, "
-"you'll have access to a premium delivery option and shipping calculation in real-time."
+"<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed "
+"the setup, you'll have access to a premium delivery option and shipping "
+"calculation in real-time."
 msgstr ""
-"<b>Zenrush Premiumversand</b> ist fast einsatzbereit! Sobald du die Einrichtung "
-"abgeschlossen hast, hast du Zugriff auf die Premium Versandoption mit Berechnung der "
-"Lieferzeit in Echtzeit."
+"<b>Zenrush Premiumversand</b> ist fast einsatzbereit! Sobald du die "
+"Einrichtung abgeschlossen hast, hast du Zugriff auf die Premium "
+"Versandoption mit Berechnung der Lieferzeit in Echtzeit."
 
-#: admin/class-zenrush-admin.php:182
-msgid "Go to Settings"
-msgstr "Einstellungen"
+#: admin/class-zenrush-admin.php:307
+msgid "To get started"
+msgstr "Zum Start der Einrichtung"
 
-#: admin/class-zenrush-admin.php:208
+#: admin/class-zenrush-admin.php:307
+msgid "follow the setup documentation"
+msgstr "folge der Setup-Dokumentation"
+
+#: admin/class-zenrush-admin.php:358
 msgid "Zenrush Documentation"
 msgstr "Zenrush Dokumentation"
 
-#: admin/class-zenrush-admin.php:208
+#: admin/class-zenrush-admin.php:358
 msgid "Docs"
 msgstr "Docs"
 
@@ -72,30 +93,31 @@ msgid "General Options"
 msgstr "Allgemeine Einstellungen"
 
 #: admin/partials/zenrush-settings-main.php:17
-msgid "Store Key"
+msgid "Merchant Key"
 msgstr "Merchant Key"
 
 #: admin/partials/zenrush-settings-main.php:19
 msgid ""
-"The unique Store Key for the Zenrush Plugin. This Key will be provided to you by "
-"Zenfulfillment Customer Support."
+"The unique Merchant Key for the Zenrush Plugin. This Key will be provided to "
+"you by Zenfulfillment Customer Support."
 msgstr ""
-"Der Merchant Key für dein Zenrush Plugin. Dieser Key wird dir vom Zenfulfillment "
-"Kundenservice zur Verfügung gestellt."
+"Der Merchant Key für dein Zenrush Plugin. Dieser Key wird dir vom "
+"Zenfulfillment Kundenservice zur Verfügung gestellt."
 
 #: admin/partials/zenrush-settings-main.php:28
 msgid "Zenrush Store Front-End Integration"
-msgstr "Zenrush Store Front-End Integration"
+msgstr "Zenrush Store-Front Integration"
 
 #: admin/partials/zenrush-settings-main.php:30
 msgid ""
-"Note: If the automatic front-end integration is disabled, you need to add the Zenrush "
-"snippet to your store theme manually. <a href=\"https://setup.zenfulfillment.com/zenrush/"
-"integration/woocommerce\">Docs</a>"
+"Note: If the automatic front-end integration is disabled, you need to add "
+"the Zenrush snippet to your store theme manually. <a href=\"https://setup."
+"zenfulfillment.com/zenrush/integration/woocommerce\">Docs</a>"
 msgstr ""
-"Hinweis: Wenn die automatische Front-End Integration deaktiviert ist, musst du das "
-"Zenrush Snippet manuell in deinem Shop-Theme hinzufügen. <a href=\"https://setup."
-"zenfulfillment.com/zenrush/integration/woocommerce\">Dokumentation</a>"
+"Hinweis: Wenn die automatische Frontend-Integration deaktiviert ist, muss "
+"das Zenrush-Snippet manuell zum Shop-Theme hinzufügt werden. <a "
+"href=\"https://setup.zenfulfillment.com/zenrush/integration/"
+"woocommerce\">Dokumentation</a>"
 
 #: admin/partials/zenrush-settings-main.php:35
 msgid "Automatic Integration"
@@ -107,23 +129,24 @@ msgstr "Automatische Integration aktivieren"
 
 #: admin/partials/zenrush-settings-main.php:45
 msgid "On Product Detail Pages"
-msgstr "Auf den Produktdetailseiten"
+msgstr "Auf Produktdetailseiten"
 
 #: admin/partials/zenrush-settings-main.php:46
-msgid "Show Zenrush on all product pages below the add to cart button"
-msgstr "Zeigt Zenrush auf allen Produktdetailseiten unter dem add to cart button an"
+msgid "Show Zenrush on all product detail pages"
+msgstr ""
+"Zeigt Zenrush auf allen Produktdetailseiten unter dem add to cart button an"
 
 #: admin/partials/zenrush-settings-main.php:56
-msgid "Product Category Listing"
+msgid "Product Category Listings"
 msgstr "Produkt Kategorie-Seite"
 
 #: admin/partials/zenrush-settings-main.php:57
 msgid ""
-"Show Zenrush on all Product Listings. This includes the product category pages and "
-"\"Related products\""
+"Show Zenrush on all product listings. This includes the product category "
+"pages and \"related products\""
 msgstr ""
-"Zeigt das Zenrush Element auf allen Produktkategorie-Seiten an. Dies gilt auch für  "
-"„Verwandte Produkte“."
+"Zeigt das Zenrush Element auf allen Produktkategorie-Seiten an. Dies gilt "
+"auch für „Verwandte Produkte“"
 
 #: admin/partials/zenrush-settings-main.php:67
 msgid "Only display Zenrush Badge on product listings"
@@ -131,10 +154,11 @@ msgstr "Zeigt das Zenrush Element nur als Abzeichen an"
 
 #: admin/partials/zenrush-settings-main.php:68
 msgid ""
-"Do not show delivery date on product category pages. Only the zenrush icon will be shown."
+"Do not show delivery date on product category pages. Only the zenrush icon "
+"will be shown."
 msgstr ""
-"Deaktiviere die Anzeige des Lieferdatums in den Produktkategorieseiten.Nur das Zenrush "
-"Icon wird angezeigt."
+"Zeigt das Lieferdatum nicht auf Produktkategorieseiten an. Es wird nur das "
+"Zenrush-Logo angezeigt."
 
 #: shipping-method/class-zenrush-wc-shipping-method.php:79
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
@@ -154,8 +178,11 @@ msgid "Zenrush Premium Delivery"
 msgstr "Zenrush Premiumversand"
 
 #: zenrush.php:79
-msgid "Zenrush requires <strong>WooCommerce</strong> to be installed and active."
-msgstr "Zenrush erfordert, dass <strong>WooCommerce</strong> installiert und aktiv ist."
+msgid ""
+"Zenrush requires <strong>WooCommerce</strong> to be installed and active."
+msgstr ""
+"Zenrush erfordert, dass <strong>WooCommerce</strong> im Shop installiert und "
+"aktiviert it."
 
 #: zenrush.php:86
 msgid "Install WooCommerce"
@@ -180,20 +207,3 @@ msgstr "Zenfulfillment"
 #. Author URI of the plugin/theme
 msgid "https://zenfulfillment.com"
 msgstr "https://zenfulfillment.com"
-
-#~ msgid "yes"
-#~ msgstr "yes"
-
-#~ msgid "Adds the dynamic Zenrush delivery timer widget to all product pages."
-#~ msgstr "Fügt das dynamische Zenrush Lieferzeit-Widget zu allen Produktseiten hinzu."
-
-#~ msgid ""
-#~ "It seems like your store does not have WooCommerce installed. This is required to use "
-#~ "the Zenrush plugin. Please install or activate WooCommerce to use Zenrush."
-#~ msgstr ""
-#~ "Es scheint, dass in deinem Shop kein WooCommerce installiert ist. Dies ist "
-#~ "erforderlich, um das Zenrush-Plugin zu verwenden. Bitte installieren oder aktiviere "
-#~ "WooCommerce, um Zenrush zu nutzen."
-
-#~ msgid "Missing WC Notice"
-#~ msgstr "Das Zenrush Plugin erfordert, dass WooCommerce installiert und aktiviert ist"
