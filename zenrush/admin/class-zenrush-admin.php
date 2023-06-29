@@ -280,56 +280,56 @@ class Zenrush_Admin
         $store_id_error = !get_option( 'Zenrush_store_id' );
         $shipping_zone_status = $this->zenrush_check_shipping_rates();
         $payment_methods_status = $this->zenrush_check_payment_methods();
-        $shipping_zone_error = $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
-        $payment_methods_error = $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
+        $shipping_zone_error = true || $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
+        $payment_methods_error = true || $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
 
-        $setup_incomplete = $store_id_error || $shipping_zone_error || $payment_methods_error;
+        $todos = array(
+            'store_id' => __( 'Enter your Merchant ID', 'zenrush' ),
+            'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
+            'payment_methods' => __( 'Enable Zenrush for your payment methods', 'zenrush' ),
+        );
+
+        if( $shipping_zone_error ) {
+            if( $shipping_zone_status === 'NO_DE_SHIPPING_ZONES' ) {
+                $todos['shipping_zone'] = __( 'Add a shipping zone for Germany', 'zenrush' );
+            } else {
+                $todos['shipping_zone'] = __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' );
+            }
+        }
+
+        $setup_incomplete = true || $store_id_error || $shipping_zone_error || $payment_methods_error;
 
         if ( $setup_incomplete ) {
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
             $message = __( '<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed the setup, you\'ll have access to a premium delivery option and shipping calculation in real-time.', 'zenrush' );
 
-            $todos = array(
-                'store_id' => __( 'Enter your Merchant ID', 'zenrush' ),
-                'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
-                'payment_methods' => __( 'Enable Zenrush for your payment methods', 'zenrush' ),
-            );
-    
-            if( $shipping_zone_error ) {
-                if( $shipping_zone_status === 'NO_DE_SHIPPING_ZONES' ) {
-                    $todos['shipping_zone'] = __( 'Add a shipping zone for Germany', 'zenrush' );
-                } else {
-                    $todos['shipping_zone'] = __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' );
+            if ( count( $todos) > 0 ) {
+                $message .= '<br>' . __( 'To get started', 'zenrush' ) . ' <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce" style="margin-top: 1rem">' . __( 'follow the setup documentation', 'zenrush' ) . '</a><br>';
+
+                foreach( $todos as $todo ) {
+                    $isChecked = false;
+                    $link = null;
+                    switch($todo) {
+                        case $todos['store_id']:
+                            $isChecked = !$store_id_error;
+                            $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . $todo . '</a>';
+                            break;
+                        case $todos['shipping_zone']:
+                            $isChecked = !$shipping_zone_error;
+                            $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
+                            break;
+                        case $todos['payment_methods']:
+                            $isChecked = !$payment_methods_error;
+                            $link = $isChecked ? $todo :'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
+                            break;
+                    };
+
+                    $message .= '<div class="todo">
+                        <input type="checkbox" id="'. $todo .'" name="'. $todo .'" value="" '. ($isChecked ? 'checked' : '') .' class="checkbox">
+                        <label class="label">' . $link . '</label>
+                    </div>';
                 }
             }
-
-            $message .= '<br><b>' . __( 'To get started, you need to:', 'zenrush' ) . '</b><br>';
-
-            foreach( $todos as $todo ) {
-                $isChecked = false;
-                $link = null;
-                switch($todo) {
-                    case $todos['store_id']:
-                        $isChecked = !$store_id_error;
-                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . $todo . '</a>';
-                        break;
-                    case $todos['shipping_zone']:
-                        $isChecked = !$shipping_zone_error;
-                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
-                        break;
-                    case $todos['payment_methods']:
-                        $isChecked = !$payment_methods_error;
-                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
-                        break;
-                };
-
-                $message .= '<div class="todo">
-                    <input type="checkbox" id="'. $todo .'" name="'. $todo .'" value="'. $todo .'" '. ($isChecked ? 'checked' : '') .' class="checkbox">
-                    <label class="label">' . $link . '</label>
-                </div>';
-            }
-
-            $message .= '<a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce?source=plugin" style="margin-top: 1rem">' . __( 'Plugin setup documentation', 'zenrush' ) . '</a>';
 
             $html = $this->zenrush_get_notification('setup', $title, $message, '', true);
 
