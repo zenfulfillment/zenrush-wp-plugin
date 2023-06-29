@@ -2,8 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-06-22 17:06+0200\n"
-"PO-Revision-Date: 2023-06-22 17:06+0200\n"
+"POT-Creation-Date: 2023-06-29 21:58+0200\n"
+"PO-Revision-Date: 2023-06-29 21:57+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,26 +34,46 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: admin/class-zenrush-admin.php:180
+#: admin/class-zenrush-admin.php:287
+msgid "Enter your Merchant ID"
+msgstr ""
+
+#: admin/class-zenrush-admin.php:288 admin/class-zenrush-admin.php:296
+msgid "Enable Zenrush for the Germany shipping zone"
+msgstr ""
+
+#: admin/class-zenrush-admin.php:289
+msgid "Enable Zenrush for your payment methods"
+msgstr ""
+
+#: admin/class-zenrush-admin.php:294
+msgid "Add a shipping zone for Germany"
+msgstr ""
+
+#: admin/class-zenrush-admin.php:303
 msgid "Complete Zenrush setup to activate"
 msgstr ""
 
-#: admin/class-zenrush-admin.php:181
+#: admin/class-zenrush-admin.php:304
 msgid ""
 "<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed "
 "the setup, you'll have access to a premium delivery option and shipping "
 "calculation in real-time."
 msgstr ""
 
-#: admin/class-zenrush-admin.php:182
-msgid "Go to Settings"
+#: admin/class-zenrush-admin.php:307
+msgid "To get started"
 msgstr ""
 
-#: admin/class-zenrush-admin.php:208
+#: admin/class-zenrush-admin.php:307
+msgid "follow the setup documentation"
+msgstr ""
+
+#: admin/class-zenrush-admin.php:358
 msgid "Zenrush Documentation"
 msgstr ""
 
-#: admin/class-zenrush-admin.php:208
+#: admin/class-zenrush-admin.php:358
 msgid "Docs"
 msgstr ""
 
@@ -143,17 +163,21 @@ msgstr ""
 msgid "Zenrush Premium Delivery"
 msgstr ""
 
-#: zenrush.php:78
+#: zenrush.php:79
 msgid ""
 "Zenrush requires <strong>WooCommerce</strong> to be installed and active."
 msgstr ""
 
-#: zenrush.php:85
+#: zenrush.php:86
 msgid "Install WooCommerce"
 msgstr ""
 
-#: zenrush.php:89
+#: zenrush.php:90
 msgid "Activate WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/zenfulfillment/zenrush-wp-plugin"
 msgstr ""
 
 #. Description of the plugin/theme
