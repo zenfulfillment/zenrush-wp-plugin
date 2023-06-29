@@ -311,15 +311,15 @@ class Zenrush_Admin
                 switch($todo) {
                     case $todos['store_id']:
                         $isChecked = !$store_id_error;
-                        $link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . $todo . '</a>';
+                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . $todo . '</a>';
                         break;
                     case $todos['shipping_zone']:
                         $isChecked = !$shipping_zone_error;
-                        $link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
+                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
                         break;
                     case $todos['payment_methods']:
                         $isChecked = !$payment_methods_error;
-                        $link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
+                        $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
                         break;
                 };
 
