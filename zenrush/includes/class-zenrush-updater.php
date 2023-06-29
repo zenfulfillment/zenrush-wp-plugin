@@ -53,7 +53,7 @@ class Zenrush_Updater {
      * @access   private
      * @var      string $repository The name of the repository
      */
-    private string  $repository;
+    private string  $repository = 'zenfulfillment/zenrush-wp-plugin';
 
     /**
      * Cache of the response from the github api, so we only need to request it once
@@ -128,6 +128,9 @@ class Zenrush_Updater {
     public function check_for_update($transient): mixed
     {
         if ( property_exists( $transient, 'checked' ) ) {
+            if(!isset($this->plugin)) {
+                $this->set_plugin_properties($this->file);
+            }
             $checked = $transient->checked;
             $this->get_repository_info();
             $latest_version = $this->github_response['tag_name'];

@@ -169,19 +169,169 @@ class Zenrush_Admin
 
     }
 
+    /**
+     * Enables auto-updates for the plugin
+     * 
+     * @since 1.0.0
+     * @return bool
+     */
     public function zenrush_enable_auto_update(): bool
     {
         return true;
     }
 
+    /**
+     * Returns all configured shipping zones of the store
+     * 
+     * @since 1.0.8
+     * @return array
+     */
+    public function zenrush_get_all_shipping_zones(): array
+    {
+        $data_store = WC_Data_Store::load( 'shipping-zone' );
+        $raw_zones = $data_store->get_zones();
+        foreach ( $raw_zones as $raw_zone ) {
+            $zones[] = new WC_Shipping_Zone( $raw_zone );
+        }
+        return $zones;
+    }
+
+    /**
+     * Returns all configured payment methods of the store
+     * 
+     * @since 1.0.8
+     * @return array
+     */
+    public function zenrush_get_all_payment_methods(): array
+    {
+        $installed_payment_methods = WC()->payment_gateways()->payment_gateways();
+        foreach( $installed_payment_methods as $method ) {
+            if( $method->enabled === 'yes' ) {
+                $available_payment_methods[$method->title] = $method;
+            }
+        }
+        return $available_payment_methods;
+    }
+
+    /**
+     * Checks if Zenrush is enabled for at least one payment method
+     * Used for the todos list in the setup banner
+     * 
+     * @since 1.0.8
+     * @return string
+     */
+    public function zenrush_check_payment_methods(): string
+    {
+        $available_payment_methods = $this->zenrush_get_all_payment_methods();
+        if( count( $available_payment_methods ) === 0 ) {
+            return 'NO_PAYMENT_METHODS_AVAILABLE';
+        };
+        foreach( $available_payment_methods as $method ) {
+            $hasZenrush = array_filter($method->enable_for_methods, function($enabled_method_id) {
+                return $enabled_method_id === 'zenrush_premiumversand';
+            });
+        }
+        return count( $hasZenrush ) > 0 ? 'ZENRUSH_ENABLED_PAYMENT_METHOD' : 'NO_ZENRUSH_ENABLED_PAYMENT_METHOD';
+    }
+
+    /**
+     * Checks if Zenrush is enabled for at least one shipping zone, and the shipping zone is configured to be in Germany
+     * 
+     * @since 1.0.8
+     * @return string
+     */
+    public function zenrush_check_shipping_rates(): string
+    {
+        $foundDEZone = false;
+        $shipping_zone = null;
+
+        foreach ( $this->zenrush_get_all_shipping_zones() as $zone ) {
+            $zone_locations = $zone->get_zone_locations();
+            $isDE = array_filter($zone_locations, function($location) {
+                $location_arr = (array) $location;
+                return $location_arr['code'] === 'DE';
+            });
+
+            if ( $isDE ) {
+                $foundDEZone = true;
+                $shipping_zone = $zone;
+            }
+        }
+
+        if ( !$shipping_zone ) {
+            return 'NO_DE_SHIPPING_ZONES';
+        }
+
+        $zone_shipping_methods = $shipping_zone->get_shipping_methods();
+        foreach ( $zone_shipping_methods as $index => $method ) {
+            if(get_class( $method ) === 'WC_Zenrush_Premiumversand') {
+                return 'ZENRUSH_FOUND_FOR_DE';
+            }
+        }
+
+        return 'NO_ZENRUSH_FOUND_FOR_DE';
+    }
+
+    /**
+     * Renders the setup banner in the admin backend
+     */
     public function zenrush_complete_setup_notification(): void
     {
-        if ( !get_option( 'Zenrush_store_id' ) ) {
+        $store_id_error = !get_option( 'Zenrush_store_id' );
+        $shipping_zone_status = $this->zenrush_check_shipping_rates();
+        $payment_methods_status = $this->zenrush_check_payment_methods();
+        $shipping_zone_error = true || $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
+        $payment_methods_error = true || $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
+
+        $todos = array(
+            'store_id' => __( 'Enter your Merchant ID', 'zenrush' ),
+            'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
+            'payment_methods' => __( 'Enable Zenrush for your payment methods', 'zenrush' ),
+        );
+
+        if( $shipping_zone_error ) {
+            if( $shipping_zone_status === 'NO_DE_SHIPPING_ZONES' ) {
+                $todos['shipping_zone'] = __( 'Add a shipping zone for Germany', 'zenrush' );
+            } else {
+                $todos['shipping_zone'] = __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' );
+            }
+        }
+
+        $setup_incomplete = true || $store_id_error || $shipping_zone_error || $payment_methods_error;
+
+        if ( $setup_incomplete ) {
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
             $message = __( '<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed the setup, you\'ll have access to a premium delivery option and shipping calculation in real-time.', 'zenrush' );
-            $settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . __( 'Go to Settings', 'zenrush' ) . '</a>';
 
-            $html = $this->zenrush_get_notification('setup', $title, $message, $settings_link, true);
+            if ( count( $todos) > 0 ) {
+                $message .= '<br>' . __( 'To get started', 'zenrush' ) . ' <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce" style="margin-top: 1rem">' . __( 'follow the setup documentation', 'zenrush' ) . '</a><br>';
+
+                foreach( $todos as $todo ) {
+                    $isChecked = false;
+                    $link = null;
+                    switch($todo) {
+                        case $todos['store_id']:
+                            $isChecked = !$store_id_error;
+                            $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=zenrush' ) ) . '">' . $todo . '</a>';
+                            break;
+                        case $todos['shipping_zone']:
+                            $isChecked = !$shipping_zone_error;
+                            $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
+                            break;
+                        case $todos['payment_methods']:
+                            $isChecked = !$payment_methods_error;
+                            $link = $isChecked ? $todo :'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
+                            break;
+                    };
+
+                    $message .= '<div class="todo">
+                        <input type="checkbox" id="'. $todo .'" name="'. $todo .'" value="" '. ($isChecked ? 'checked' : '') .' class="checkbox">
+                        <label class="label">' . $link . '</label>
+                    </div>';
+                }
+            }
+
+            $html = $this->zenrush_get_notification('setup', $title, $message, '', true);
 
             print $html;
         }
@@ -245,4 +395,3 @@ class Zenrush_Admin
             </div>";
     }
 }
-
