@@ -27,6 +27,9 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.1.2 =
+* Fixed a bug that caused the plugin to run into a type error when no payment methods could be found
+
 = 1.0.7 =
 * Updated some translations
 
