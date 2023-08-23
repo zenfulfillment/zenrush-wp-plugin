@@ -4,7 +4,7 @@ Plugin Integration of Zenrush for Wordpress / WooCommerce Stores.
 
 ## Installation
 
-First: download the latest release from the release page and save it somewhere on your laptop.
+First: download the [latest release](https://github.com/zenfulfillment/zenrush-wp-plugin/releases/latest) from the release page.
 
 ### Upload in Wordpress
 
@@ -18,6 +18,7 @@ First: download the latest release from the release page and save it somewhere o
 1. Extract the archive and move the `zenrush` folder into your plugin directory in `/wp-content/plugins`.
 2. Go into your store admin backend and active the Plugin on the plugin page.
 
-## TODO
+## Plugin Setup
 
-- [ ] Implement the Zenrush Updater Class to support automatic updates in store installations from github, on new releases.
+To setup the plugin to be used in your store follow the [setup guide](https://setup.zenfulfillment.com/zenrush/integration/woocommerce?source=github)
+
