@@ -284,7 +284,7 @@ class Zenrush_Admin
         $payment_methods_error = true || $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
 
         $todos = array(
-            'store_id' => __( 'Enter your Merchant ID', 'zenrush' ),
+            'store_id' => __( 'Enter your Merchant Key', 'zenrush' ),
             'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
             'payment_methods' => __( 'Enable Zenrush for your payment methods', 'zenrush' ),
         );
