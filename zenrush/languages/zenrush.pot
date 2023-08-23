@@ -35,7 +35,7 @@ msgid "Settings"
 msgstr ""
 
 #: admin/class-zenrush-admin.php:287
-msgid "Enter your Merchant ID"
+msgid "Enter your Merchant Key"
 msgstr ""
 
 #: admin/class-zenrush-admin.php:288 admin/class-zenrush-admin.php:296
