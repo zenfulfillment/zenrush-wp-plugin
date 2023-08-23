@@ -26,7 +26,7 @@ class Zenrush_Updater {
      * @access   private
      * @var      string[] $plugin Array of plugin headers defined in zenrush.php
      */
-    private array   $plugin;
+    private ?array   $plugin = null;
 
     /**
      * Plugin basename
@@ -44,7 +44,7 @@ class Zenrush_Updater {
      * @access   private
      * @var      bool $active If the plugin is activated or not
      */
-    private bool    $active;
+    private ?bool    $active = false;
 
     /**
      * The name of the repository
@@ -62,7 +62,7 @@ class Zenrush_Updater {
      * @access   private
      * @var      array|null $github_response Cache of the latest response from the github api
      */
-    private array|null  $github_response;
+    private array|null  $github_response = null;
 
     /**
      * Class constructor

@@ -213,7 +213,7 @@ class Zenrush_Admin
         return $available_payment_methods;
     }
 
-    /**
+    /**$
      * Checks if Zenrush is enabled for at least one payment method
      * Used for the todos list in the setup banner
      * 
@@ -223,7 +223,7 @@ class Zenrush_Admin
     public function zenrush_check_payment_methods(): string
     {
         $available_payment_methods = $this->zenrush_get_all_payment_methods();
-        if( count( $available_payment_methods ) === 0 ) {
+        if( !is_array( $available_payment_methods) || count( $available_payment_methods ) === 0 ) {
             return 'NO_PAYMENT_METHODS_AVAILABLE';
         };
         foreach( $available_payment_methods as $method ) {
