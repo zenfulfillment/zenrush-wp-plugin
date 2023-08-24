@@ -170,21 +170,11 @@ class Zenrush_Admin
     }
 
     /**
-     * Enables auto-updates for the plugin
-     * 
-     * @since 1.0.0
-     * @return bool
-     */
-    public function zenrush_enable_auto_update(): bool
-    {
-        return true;
-    }
-
-    /**
      * Returns all configured shipping zones of the store
-     * 
-     * @since 1.0.8
+     *
      * @return array
+     * @throws Exception
+     * @since 1.0.8
      */
     public function zenrush_get_all_shipping_zones(): array
     {
@@ -200,11 +190,11 @@ class Zenrush_Admin
      * Returns all configured payment methods of the store
      * 
      * @since 1.0.8
-     * @return array
      */
     public function zenrush_get_all_payment_methods(): array
     {
         $installed_payment_methods = WC()->payment_gateways()->payment_gateways();
+        $available_payment_methods = array();
         foreach( $installed_payment_methods as $method ) {
             if( $method->enabled === 'yes' ) {
                 $available_payment_methods[$method->title] = $method;
@@ -213,7 +203,7 @@ class Zenrush_Admin
         return $available_payment_methods;
     }
 
-    /**$
+    /**
      * Checks if Zenrush is enabled for at least one payment method
      * Used for the todos list in the setup banner
      * 
@@ -223,15 +213,21 @@ class Zenrush_Admin
     public function zenrush_check_payment_methods(): string
     {
         $available_payment_methods = $this->zenrush_get_all_payment_methods();
-        if( !is_array( $available_payment_methods ) || count( $available_payment_methods ) === 0 ) {
+        $has_zenrush_enabled = array();
+        if( count( $available_payment_methods ) === 0 ) {
             return 'NO_PAYMENT_METHODS_AVAILABLE';
         };
         foreach( $available_payment_methods as $method ) {
-            $hasZenrush = array_filter($method->enable_for_methods, function($enabled_method_id) {
-                return $enabled_method_id === 'zenrush_premiumversand';
-            });
+            if( method_exists( $method, 'enable_for_methods ' ) ) {
+                $enabled_methods = $method->enable_for_methods;
+                if( is_array ( $enabled_methods ) ) {
+                    $has_zenrush_enabled[] = array_filter($method->enable_for_methods, function($enabled_method_id) {
+                        return $enabled_method_id === 'zenrush_premiumversand';
+                    });
+                }
+            }
         }
-        return count( $hasZenrush ) > 0 ? 'ZENRUSH_ENABLED_PAYMENT_METHOD' : 'NO_ZENRUSH_ENABLED_PAYMENT_METHOD';
+        return count( $has_zenrush_enabled ) > 0 ? 'ZENRUSH_ENABLED_PAYMENT_METHOD' : 'NO_ZENRUSH_ENABLED_PAYMENT_METHOD';
     }
 
     /**
@@ -242,20 +238,24 @@ class Zenrush_Admin
      */
     public function zenrush_check_shipping_rates(): string
     {
-        $foundDEZone = false;
+        $found_DE_zone = false;
         $shipping_zone = null;
 
-        foreach ( $this->zenrush_get_all_shipping_zones() as $zone ) {
-            $zone_locations = $zone->get_zone_locations();
-            $isDE = array_filter($zone_locations, function($location) {
-                $location_arr = (array) $location;
-                return $location_arr['code'] === 'DE';
-            });
+        try {
+            foreach ($this->zenrush_get_all_shipping_zones() as $zone) {
+                $zone_locations = $zone->get_zone_locations();
+                $is_DE = array_filter($zone_locations, function ($location) {
+                    $location_arr = (array)$location;
+                    return $location_arr['code'] === 'DE';
+                });
 
-            if ( $isDE ) {
-                $foundDEZone = true;
-                $shipping_zone = $zone;
+                if ($is_DE) {
+                    $found_DE_zone = true;
+                    $shipping_zone = $zone;
+                }
             }
+        } catch (Exception $e) {
+            return 'NO_DE_SHIPPING_ZONES';
         }
 
         if ( !$shipping_zone ) {
@@ -272,16 +272,29 @@ class Zenrush_Admin
         return 'NO_ZENRUSH_FOUND_FOR_DE';
     }
 
+    function zenrush_complete_setup_notification_dismissed(): void
+    {
+        $user_id = get_current_user_id();
+        if( isset( $_GET['dismiss-zf-setup-notice'] ) ) {
+            add_user_meta( $user_id, 'zenrush_setup_notice_dismissed', 'true', true );
+        }
+    }
+
     /**
      * Renders the setup banner in the admin backend
      */
     public function zenrush_complete_setup_notification(): void
     {
+        $user_id = get_current_user_id();
+        if( !get_user_meta( $user_id, 'zenrush_setup_notice_dismissed' ) ) {
+            return;
+        }
+
         $store_id_error = !get_option( 'Zenrush_store_id' );
         $shipping_zone_status = $this->zenrush_check_shipping_rates();
         $payment_methods_status = $this->zenrush_check_payment_methods();
-        $shipping_zone_error = true || $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
-        $payment_methods_error = true || $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
+        $shipping_zone_error = $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
+        $payment_methods_error = $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
 
         $todos = array(
             'store_id' => __( 'Enter your Merchant Key', 'zenrush' ),
@@ -297,7 +310,7 @@ class Zenrush_Admin
             }
         }
 
-        $setup_incomplete = true || $store_id_error || $shipping_zone_error || $payment_methods_error;
+        $setup_incomplete = false || $store_id_error || $shipping_zone_error || $payment_methods_error;
 
         if ( $setup_incomplete ) {
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
@@ -379,13 +392,16 @@ class Zenrush_Admin
      */
     private function zenrush_get_notification(string $type, string $title, string $message, string $btn_link, bool $with_logo = true ): string
     {
-        $class_name = "zf-$type-notice";
+        $class_name = "zf-$type-notice show";
         $logo_path = plugins_url( '../static/images/zenrush-logo.svg', __FILE__ );
         $btn = $btn_link ? "<button class='button button-primary zf-setup-notice__content-btn'>$btn_link</button>" : '';
         $logo = $with_logo ? "<div class='zf-setup-notice__logo'><img src='$logo_path' alt='Zenrush Logo' style='width: 220px; height: auto;'/></div>" : '';
 
         return "
-            <div class='notice $class_name'>
+            <div class='notice $class_name is-dismissible'>
+                <a href='?dismiss-zf-setup-notice' class='button notice-dismiss dismiss-btn'>
+                    <span class='screen-reader-text'>Diese Meldung ausblenden.</span>
+                </a>
                 $logo
                 <div class='zf-setup-notice__content'>
                     <div class='zf-setup-notice__content-title'><h1>$title</h1></div>
@@ -395,3 +411,4 @@ class Zenrush_Admin
             </div>";
     }
 }
+

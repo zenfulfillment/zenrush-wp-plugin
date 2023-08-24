@@ -214,24 +214,23 @@ class Zenrush
     {
         $plugin_admin = new Zenrush_Admin($this->get_plugin_name(), $this->get_version());
 
-        // Enables automatic update checking for the plugin
-        $this->loader->add_filter( 'auto_update_plugin', $plugin_admin, 'zenrush_enable_auto_update' );
-
         // Show notification when plugin setup is not completed yet
         $this->loader->add_action( 'admin_notices', $plugin_admin, 'zenrush_complete_setup_notification' );
+        // Dismissal function for setup notification
+        $this->loader->add_action( 'admin_init', $plugin_admin, 'zenrush_complete_setup_notification_dismissed' );
 
         // Add plugin css / js
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
-        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
         // Add plugin settings to WooCommerce
-        $this->loader->add_filter('woocommerce_get_settings_pages', $plugin_admin, 'zenrush_add_settings');
+        $this->loader->add_filter( 'woocommerce_get_settings_pages', $plugin_admin, 'zenrush_add_settings' );
 
         // Add 'Settings' link to plugin listing in admin backend
-        $this->loader->add_filter('plugin_action_links', $plugin_admin, 'zenrush_settings_link', 10, 4 );
+        $this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'zenrush_settings_link', 10, 4 );
 
         // Add other links to plugin meta section in admin backend
-        $this->loader->add_filter(  'plugin_row_meta', $plugin_admin, 'zenrush_plugin_row_meta', 10, 4 );
+        $this->loader->add_filter( 'plugin_row_meta', $plugin_admin, 'zenrush_plugin_row_meta', 10, 4 );
 
         // Adds a customer meta field 'zenrush' on the order, if the order is zenrush
         // This fires before the order is saved to the db.
