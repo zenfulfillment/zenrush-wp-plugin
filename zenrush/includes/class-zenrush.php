@@ -77,7 +77,7 @@ class Zenrush
         if (defined('ZENRUSH_VERSION')) {
             $this->version = ZENRUSH_VERSION;
         } else {
-            $this->version = '1.0.0';
+            $this->version = 'UNKNOWN';
         }
 
         $this->plugin_name = 'zenrush';
@@ -88,6 +88,7 @@ class Zenrush
         $this->define_admin_hooks();
         $this->define_public_hooks();
         $this->define_shipping_method();
+        $this->define_zenrush_elementor_widget();
         $this->define_zenrush_api();
     }
 
@@ -149,6 +150,11 @@ class Zenrush
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-zenrush-updater.php';
 
+        /**
+         * The class responsible for creating and injecting the zenrush elementor widget
+         */
+        require_once plugin_dir_path(dirname(__FILE__)) . 'elementor-widget/class-zenrush-elementor.php';
+
         $this->loader = new Zenrush_Loader();
     }
 
@@ -181,6 +187,22 @@ class Zenrush
         $plugin_rest = new Zenrush_Api();
 
         $this->loader->add_action('rest_api_init', $plugin_rest, 'register_routes');
+    }
+
+    /**
+     * Registers the zenrush elementor widget
+     *
+     * @since   1.1.6
+     * @access  private
+     */
+    private function define_zenrush_elementor_widget(): void
+    {
+        $plugin_elementor = new Zenrush_Elementor();
+
+        if( $this->get_elementor_plugin() && did_action( 'elementor/loaded' ) ) {
+            $this->loader->add_action( 'elementor/elements/categories_registered', $plugin_elementor, 'zenrush_add_elementor_widget_categories' );
+            $this->loader->add_action( 'elementor/widgets/register', $plugin_elementor, 'zenrush_register_elementor_widget' );
+        }
     }
 
     /**
@@ -324,4 +346,15 @@ class Zenrush
         return $this->version;
     }
 
+    /**
+     * Helper function to check for dependency on elementor plugin for the custom elementor widget
+     *
+     * Returns true when either Elementor or Elementor Pro is installed AND active in the store.
+     *
+     * @return bool
+     */
+    public function get_elementor_plugin(): bool
+    {
+        return is_plugin_active( 'elementor/elementor.php' ) || is_plugin_active( 'elementor-pro/elementor-pro.php' );
+    }
 }

@@ -286,7 +286,7 @@ class Zenrush_Admin
     public function zenrush_complete_setup_notification(): void
     {
         $user_id = get_current_user_id();
-        if( !get_user_meta( $user_id, 'zenrush_setup_notice_dismissed' ) ) {
+        if( get_user_meta( $user_id, 'zenrush_setup_notice_dismissed' ) ) {
             return;
         }
 
@@ -310,7 +310,7 @@ class Zenrush_Admin
             }
         }
 
-        $setup_incomplete = false || $store_id_error || $shipping_zone_error || $payment_methods_error;
+        $setup_incomplete = $store_id_error || $shipping_zone_error || $payment_methods_error;
 
         if ( $setup_incomplete ) {
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
