@@ -24,6 +24,24 @@ if (!defined('ABSPATH')) {
 class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 {
     /**
+     * The url to fetch custom zenrush rate rules from
+     *
+     * @since    1.1.5
+     * @access   private
+     * @var string Zenrush Rates url
+     */
+    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/rates';
+
+    /**
+     * The url to fetch cutoff time from, to display on checkout
+     *
+     * @since    1.1.5
+     * @access   private
+     * @var string Zenrush Cutoff Time url
+     */
+    private string $cutoff_time_url = 'https://zenrush.zenfulfillment.com/api/zenrush/timer';
+
+    /**
      * The prefix for options to use
      *
      * @since    1.0.0
@@ -57,7 +75,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access private
      * @var array $cutoff_time_msg Zenrush Cutoff Message
      */
-    private $cutoff_time_msg;
+    private array $cutoff_time_msg;
 
     /**
      * Constructor for your shipping class
@@ -90,20 +108,12 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // Plugin ID, used as prefix for settings
         $this->plugin_id = $this->prefix;
 
-        $this->instance_form_fields = array(
-            'enabled' => array(
-                'title' 		=> __( 'Enable/Disable' ),
-                'type' 			=> 'checkbox',
-                'label' 		=> __( 'Enable this shipping method' ),
-                'default' 		=> 'yes',
-            ),
-        );
-
         // Title shown in store
         $this->title = __( 'Zenrush Premium Delivery', 'zenrush' );
-
         // Title shown in admin backend
         $this->method_title = __( 'Zenrush Premium Delivery', 'zenrush' );
+
+        $this->enabled = get_option($this->prefix . 'store_id') ? 'yes' : 'no';
 
         $this->init();
     }
@@ -118,8 +128,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // Initialize Settings API
         $this->init_form_fields();
         $this->init_settings();
-
-        $this->enabled = $this->get_option( 'enabled' );
 
         // Fetch Zenrush Data
         $rates = $this->fetchCustomRates();
@@ -159,9 +167,8 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @return array
      */
     private function fetchCustomRates(): array {
-//        $storeId = get_option($this->prefix . 'store_id');
-//        $url = 'https://zenrush.zenfulfillment.com/api/rates?storeId=' . $storeId;
-        $url = 'http://host.docker.internal:6969/api/zenrush/rates?storeId=5f6dbc26604f5f002604410e';
+        $storeId = get_option($this->prefix . 'store_id');
+        $url = $this->rates_url . '?storeId=' . $storeId;
         $response = wp_remote_get( $url );
         $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
         $status_code = wp_remote_retrieve_response_code( $response );
@@ -207,9 +214,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
                 'Content-Type' => 'application/json'
             ),
         );
-//        $url = 'https://zenrush.zenfulfillment.com/api/rates?' . $query;
-
-        $url = 'http://host.docker.internal:6969/api/zenrush/timer?' . $query;
+        $url = $this->cutoff_time_url . '?' . $query;
         $response = wp_remote_get( $url, $req_args );
         $response_code = wp_remote_retrieve_response_code( $response );
 
@@ -292,7 +297,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
             'id'        =>  $this->id . $this->instance_id,
             'label'     =>  $rate_title,
             'cost'      =>  $cost,
-            'package'   =>  $package,
+//            'package'   =>  $package,
         );
 
         $this->add_rate( $rate );
