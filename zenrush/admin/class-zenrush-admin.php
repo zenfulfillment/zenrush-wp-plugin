@@ -310,7 +310,7 @@ class Zenrush_Admin
             }
         }
 
-        $setup_incomplete = $store_id_error || $shipping_zone_error || $payment_methods_error;
+        $setup_incomplete = $store_id_error || $shipping_zone_error;
 
         if ( $setup_incomplete ) {
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
