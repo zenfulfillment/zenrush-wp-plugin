@@ -141,10 +141,15 @@ class Zenrush_Updater {
                 $slug = current(explode('/', $this->basename));
 
                 $plugin = [
-                    'url' => $this->plugin['PluginURI'],
-                    'slug' => $slug,
-                    'package' => $new_files,
-                    'new_version' => $this->github_response['tag_name']
+                    'url'           => $this->plugin['PluginURI'],
+                    'slug'          => $slug,
+                    'package'       => $new_files,
+                    'new_version'   => $this->github_response['tag_name'],
+                    'icons'         => array(
+                        'svg'   => 'https://public.zenfulfillment.com/zenrush/icon.svg',
+                        '2x'    => 'https://public.zenfulfillment.com/zenrush/icon-256x256.png',
+                        '1x'    => 'https://public.zenfulfillment.com/zenrush/icon-128x128.png'
+                    ),
                 ];
 
                 $transient->response[$this->basename] = (object) $plugin;
