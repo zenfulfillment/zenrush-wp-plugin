@@ -27,6 +27,9 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.1.8 =
+* Add plugin icons
+
 = 1.1.7 =
 * Updated translations
 * Updated shipping method to fetch custom rates correctly
