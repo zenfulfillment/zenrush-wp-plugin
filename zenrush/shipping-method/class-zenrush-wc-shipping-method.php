@@ -297,7 +297,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
             'id'        =>  $this->id . $this->instance_id,
             'label'     =>  $rate_title,
             'cost'      =>  $cost,
-//            'package'   =>  $package,
+            'package'   =>  $package,
         );
 
         $this->add_rate( $rate );
