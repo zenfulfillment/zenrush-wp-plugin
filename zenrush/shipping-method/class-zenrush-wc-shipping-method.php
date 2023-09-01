@@ -75,7 +75,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access private
      * @var array $cutoff_time_msg Zenrush Cutoff Message
      */
-    private array $cutoff_time_msg;
+    private $cutoff_time_msg;
 
     /**
      * Constructor for your shipping class
