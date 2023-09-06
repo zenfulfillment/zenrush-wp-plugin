@@ -32,10 +32,9 @@
                 .wrap( "<div id='zenrush_wrapper'></div>")
                 .css({
                     "color": "#00b67a",
-                    "font-weight": "600",
-                    "display": "flex",
-                    "align-items": "center",
-                    "flex-wrap": "wrap"
+                    "font-weight": "500",
+                    "margin-bottom": "0",
+                    "padding-left": "25px"
                 });
 
             const updatedLabelText = $(zenrushLabel).text().replace('Zenrush', '');
