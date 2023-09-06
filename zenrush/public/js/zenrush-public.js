@@ -2,30 +2,54 @@
     'use strict';
 
     /**
-     * All of the code for your public-facing JavaScript source
-     * should reside in this file.
-     *
-     * Note: It has been assumed you will write jQuery code here, so the
-     * $ function reference has been prepared for usage within the scope
-     * of this function.
-     *
-     * This enables you to define handlers, for when the DOM is ready:
-     *
-     * $(function() {
-     *
-     * });
-     *
-     * When the window is loaded:
-     *
-     * $( window ).load(function() {
-     *
-     * });
-     *
-     * ...and/or other possibilities.
-     *
-     * Ideally, it is not considered the best practise to attach more than a
-     * single DOM-ready or window-load handler for a particular page.
-     * Although scripts in the WordPress core, Plugins and Themes may be
-     * practising this, we should strive to set a better example in our own work.
+     * Zenrush styling for checkout pages
      */
+
+    if (!$) {
+        return;
+    }
+
+    const IMG_SRC = 'https://public.zenfulfillment.com/zenrush/zenrush-logo.svg';
+
+    function isCheckoutPage() {
+        return $('form[name="checkout"]').length > 0;
+    }
+
+    function addHeadStyles() {
+        if ($("style[id='zenrush-checkout']").length < 1) {
+            const fontSize = parseInt($("body").css("font-size"), 10) || 16;
+            const logoMaxHeight = fontSize - 2;
+            $('head').append(`<style type="text/css" id="zenrush-checkout">#zenrush_wrapper{font-size: clamp(12px, 1em, 16px)} #zenrush_wrapper .zr-logo{max-height: ${logoMaxHeight}px;padding-right: 10px;float: left;width: auto;}</style>`);
+        }
+    }
+
+    function updateZenrushLabel() {
+        const zenrushLabel = $('label[for*="zenrush_premiumversand"]');
+
+        if (zenrushLabel) {
+            const $img = $('<img>', {class:'zr-logo', src: IMG_SRC, alt: "Zenrush"});
+            $(zenrushLabel)
+                .wrap( "<div id='zenrush_wrapper'></div>")
+                .css({
+                    "color": "#00b67a",
+                    "font-weight": "600",
+                    "display": "flex",
+                    "align-items": "center",
+                    "flex-wrap": "wrap"
+                });
+
+            const updatedLabelText = $(zenrushLabel).text().replace('Zenrush', '');
+            $(zenrushLabel).text(updatedLabelText);
+            $(zenrushLabel).prepend($img);
+        }
+    }
+
+    $(document).ready(function() {
+        const onCheckout = isCheckoutPage();
+        if (onCheckout) {
+            addHeadStyles();
+            updateZenrushLabel();
+            $(document.body).on('updated_checkout', updateZenrushLabel);
+        }
+    })
 })(jQuery);
