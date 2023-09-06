@@ -9,7 +9,7 @@
  * @subpackage Zenrush/shipping-method
  */
 
-if (!defined('ABSPATH')) {
+if ( !defined('ABSPATH') ) {
     exit; // Exit if accessed directly.
 }
 
@@ -33,15 +33,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     private string $rates_url = 'https://zenrush.zenfulfillment.com/api/rates';
 
     /**
-     * The url to fetch cutoff time from, to display on checkout
-     *
-     * @since    1.1.5
-     * @access   private
-     * @var string Zenrush Cutoff Time url
-     */
-    private string $cutoff_time_url = 'https://zenrush.zenfulfillment.com/api/zenrush/timer';
-
-    /**
      * The prefix for options to use
      *
      * @since    1.0.0
@@ -57,7 +48,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access private
      * @var int $base_rate The default rate for Zenrush
      */
-    private int $base_rate;
+    private int $base_rate = 699;
 
     /**
      * Array of custom pricing rates for zenrush defined for this store
@@ -67,15 +58,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @var array $custom_rates The custom rates set for this store
      */
     private array $custom_rates = array();
-
-    /**
-     * Array of the cutoff time message, used to display underneath the title in store
-     *
-     * @since 1.0.0
-     * @access private
-     * @var array $cutoff_time_msg Zenrush Cutoff Message
-     */
-    private $cutoff_time_msg;
 
     /**
      * Constructor for your shipping class
@@ -91,18 +73,12 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $this->id = 'zenrush_premiumversand';
 
         // Instance ID
-        $this->instance_id = absint($instance_id);
+        $this->instance_id = absint( $instance_id );
 
         // Description shown in admin
-        $this->method_description = __('Powered by Zenfulfillment.com - Ordered today, delivered tomorrow', 'zenrush');
+        $this->method_description = __( 'Powered by Zenfulfillment.com - Ordered today, delivered tomorrow', 'zenrush' );
 
-        /**
-         * Features this method supports. Possible features used by core:
-         * - shipping-zones - Shipping zone functionality + instances
-         * - instance-settings - Instance settings screens.
-         * - settings Non-instance settings screens. - Enabled by default for BW compatibility with methods before instances existed.
-         * - instance-settings-modal - Allows the instance settings to be loaded within a modal in the zones UI.
-         */
+        // Supported features
         $this->supports = ['shipping-zones', 'instance-settings', 'instance-settings-modal'];
 
         // Plugin ID, used as prefix for settings
@@ -110,10 +86,12 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
         // Title shown in store
         $this->title = __( 'Zenrush Premium Delivery', 'zenrush' );
+
         // Title shown in admin backend
         $this->method_title = __( 'Zenrush Premium Delivery', 'zenrush' );
 
-        $this->enabled = get_option($this->prefix . 'store_id') ? 'yes' : 'no';
+        // Initially defaults the shipping option to be enabled, could be overwritten after init()
+        $this->enabled = 'yes';
 
         $this->init();
     }
@@ -125,63 +103,48 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      */
     function init(): void
     {
-        // Initialize Settings API
+        // Initialize WC_Shipping_Method settings API
         $this->init_form_fields();
         $this->init_settings();
 
-        // Fetch Zenrush Data
-        $rates = $this->fetchCustomRates();
-        $cutoff_time = $this->fetchCutoffTime();
+        // If shipping option is enabled or not via option in admin backend
+        $this->enabled = get_option( $this->prefix . 'store_id' ) ? $this->get_option( 'enabled' ) : 'no';
 
-        if( !empty($rates) ) {
-            $this->base_rate = $rates['base_rate'];
-            $this->custom_rates = $rates['custom_rates'];
-        }
+        // Fetch store specific zenrush pricing rules
+        $rates = $this->fetch_zenrush_pricing_rules();
 
-        if ( $cutoff_time ) {
-            $this->cutoff_time_msg = $cutoff_time;
-        }
+        // Set zenrush pricing rules to be calculated later based on cart total value
+        $this->base_rate = $rates['base_rate'];
+        $this->custom_rates = $rates['custom_rates'];
 
-        add_action('woocommerce_update_options_shipping_' . $this->id, array($this, 'process_admin_options'));
+        add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
 
     /**
-     * Util to get the correct rate price from int to euros, e.g. 299 => 2.99
-     *
-     * @since 1.0.0
-     * @access private
-     * @param $rate
-     * @return float|int
-     */
-    private function calcPrice($rate): float|int {
-        if ($rate === 0) return $rate;
-        return $rate / 100;
-    }
-
-
-    /**
-     * Fetches current configured zenrush pricing rates for the store
+     * Fetches current configured zenrush pricing rules for the store
+     * and parses them to an array with `base_rate` and `custom_rates`
      *
      * @since 1.0.0
      * @access private
      * @return array
      */
-    private function fetchCustomRates(): array {
-        $storeId = get_option($this->prefix . 'store_id');
+    private function fetch_zenrush_pricing_rules(): array
+    {
+        $storeId = get_option( $this->prefix . 'store_id' );
         $url = $this->rates_url . '?storeId=' . $storeId;
+
         $response = wp_remote_get( $url );
         $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
         $status_code = wp_remote_retrieve_response_code( $response );
-
         if ( is_wp_error( $response ) || $status_code !== 200 ) {
+            error_log( 'Failed to fetch zenrush pricing rules' );
             return array(
-                'base_rate'     =>  499,
+                'base_rate'     =>  699,
                 'custom_rates'  =>  array()
             );
         }
 
         $data = $decoded_data['data'];
-
         return array(
             'base_rate'     =>  $data['base_rate'],
             'custom_rates'  =>  $data['rules']
@@ -189,96 +152,52 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     }
 
     /**
-     * Fetches the cutoff delivery time to be displayed in the store
-     *
-     * @since 1.0.0
-     * @access private
-     * @return array
-     */
-    private function fetchCutoffTime(): array
-    {
-        global $wp;
-
-        $storeId = get_option( $this->prefix . 'store_id' );
-        $locale = strtok( get_locale() , '_');
-        $origin = strval( home_url( $wp->request ) );
-        $data = array(
-            'storeId' => $storeId,
-            'locale' => $locale,
-            'props' => json_encode( ['store' => $storeId, 'variant' => 'primary'] ),
-            'origin' => $origin
-        );
-        $query = http_build_query( $data, NULL, '&', PHP_QUERY_RFC3986 );
-        $req_args = array(
-            'headers' => array(
-                'Content-Type' => 'application/json'
-            ),
-        );
-        $url = $this->cutoff_time_url . '?' . $query;
-        $response = wp_remote_get( $url, $req_args );
-        $response_code = wp_remote_retrieve_response_code( $response );
-
-        if ( is_wp_error( $response ) || $response_code !== 200 ) {
-            return [];
-        }
-
-        return json_decode( wp_remote_retrieve_body( $response ), true )['message'];
-    }
-
-    /**
-     * Calculates the shipping rate.
+     * Calculates the shipping rate to be displayed in store frontend
      *
      * @access public
      * @param array $package Package information.
      * @return void
      */
-    public function calculate_shipping($package = array()): void {
-        // this is the price of the cart without shipping costs & taxes, includes discounts!
+    public function calculate_shipping($package = array()): void
+    {
+        // this is the total price of the cart, includes discounts!
         $cart_price = WC()->cart->get_cart_contents_total();
 
-        // check stock of cart items
-        $products_in_stock = true;
-        foreach ($package['contents'] as $item) {
-            $product = $item['data'];
-            if (!$product->is_in_stock()) {
-                $products_in_stock = false;
-                break;
-            }
-        }
-
+        // check if all products in the cart are in stock
+        $products_in_stock = $this->check_stock_in_cart( $package );
         if ( !$products_in_stock ) {
-            error_log('Not displaying Zenrush - One or more products are out of stock!');
+            error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
             return;
         }
 
-        $cost = $this->calcPrice( $this->base_rate );
+        $cost = $this->calc_cost( $this->base_rate );
         $rates = $this->custom_rates;
 
         if ( !empty($rates) ) {
              foreach ( $rates as $rate ) {
-                 $rule_definition = key($rate["definition"]);
-                 $rule_cost = reset($rate["definition"]);
-                 $rule_price = $rate['price'];
+                 $rule_definition = key( $rate['definition'] );
+                 $rule_cost = reset( $rate['definition'] );
+                 $rule_price = (int) $rate['price'];
 
                  switch( $rule_definition ) {
                      case '$gte':
                         if ( $cart_price >= $rule_cost ) {
-                            $cost = $this->calcPrice( $rule_price );
+                            $cost = $this->calc_cost( $rule_price );
                         }
                         break;
                      case '$gt':
                          if ( $cart_price > $rule_cost ) {
-                             $cost = $this->calcPrice( $rule_price );
+                             $cost = $this->calc_cost( $rule_price );
                          }
                          break;
                      case '$lte':
                         if ( $cart_price <= $rule_cost ) {
-                            $cost = $this->calcPrice( $rule_price );
+                            $cost = $this->calc_cost( $rule_price );
                         }
                         break;
                      case '$lt':
                          if ( $cart_price < $rule_cost ) {
-                             $cost = $this->calcPrice( $rule_price );
+                             $cost = $this->calc_cost( $rule_price );
                          }
                          break;
                      default:
@@ -289,10 +208,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
         $rate_title = $this->title;
 
-        if ( !empty( $this->cutoff_time_msg ) ) {
-            $rate_title = $rate_title . " - " . implode( ' ', $this->cutoff_time_msg );
-        }
-
         $rate = array(
             'id'        =>  $this->id . $this->instance_id,
             'label'     =>  $rate_title,
@@ -300,7 +215,44 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
             'package'   =>  $package,
         );
 
+        // registers the shipping option with the calculated price to be displayed on checkout / cart
         $this->add_rate( $rate );
     }
-}
 
+    /**
+     * Util to transform the rate price from cents to euros, e.g. 299 => 2.99
+     *
+     * @param int $rule_price
+     * @return float|int
+     * @since 1.0.0
+     * @access private
+     */
+    private function calc_cost(int $rule_price): float|int
+    {
+        if ($rule_price === 0) {
+            return $rule_price;
+        }
+        return $rule_price / 100;
+    }
+
+    /**
+     * Util to check if at least one of the items in the current cart is out of stock
+     *
+     * @param $package
+     * @return bool
+     */
+    private function check_stock_in_cart($package): bool
+    {
+        $all_products_in_stock = true;
+
+        foreach ( $package['contents'] as $item ) {
+            $product = $item['data'];
+            if ( !$product->is_in_stock() ) {
+                $all_products_in_stock = false;
+                break;
+            }
+        }
+
+        return $all_products_in_stock;
+    }
+}
