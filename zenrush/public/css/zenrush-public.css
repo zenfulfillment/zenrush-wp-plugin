@@ -1,4 +1,23 @@
 /**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
+ * CSS for the store integration of the zenrush plugin.
+ * Allows easy styling of element position.
  */
+
+/**
+ * Container for Zenrush on Product Listing with just the icon enabled
+ */
+#zenrush_product_listing_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: .5407911001em;
+}
+
+/**
+ * Container for Zenrush on Product Listing with delivery date timer enabled
+ */
+#zenrush_product_listing_timer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: .5407911001em;
+}

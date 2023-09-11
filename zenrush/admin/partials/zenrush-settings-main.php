@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * The available plugin specific options being displayed in the admin.
+ *
+ * @package    Zenrush
+ * @subpackage Zenrush/admin/partials
+ * @author     Zenfulfillment <devs@zenfulfillment.com>
+ * @since      1.0.0
+ */
+
 $prefix = 'Zenrush_';
 
 $settings = apply_filters( 'zenrush_settings',
@@ -53,7 +62,7 @@ $settings = apply_filters( 'zenrush_settings',
                 ),
 
                 array(
-                    'desc'              => __( 'Product Category Listings', 'zenrush' ),
+                    'desc'              => __( 'On Product Category Listings', 'zenrush' ),
                     'desc_tip'          => __( 'Show Zenrush on all product listings. This includes the product category pages and "related products"', 'zenrush' ),
                     'default'           => 'yes',
                     'type'              => 'checkbox',
@@ -64,12 +73,23 @@ $settings = apply_filters( 'zenrush_settings',
                 ),
 
                 array(
-                    'desc'              => __( 'Only display Zenrush Badge on product listings', 'zenrush' ),
-                    'desc_tip'          => __( 'Do not show delivery date on product category pages. Only the zenrush icon will be shown.', 'zenrush' ),
+                    'desc'              => __( 'Disable delivery date on product listings', 'zenrush' ),
+                    'desc_tip'          => __( 'Do not show delivery date on product category pages. Only the Zenrush icon will be shown, if enabled:', 'zenrush' ) . ' ' . __( 'On Product Category Listings', 'zenrush' ),
                     'default'           => 'no',
                     'type'              => 'checkbox',
-                    'checkboxgroup'     => 'end',
+                    'checkboxgroup'     => '',
                     'id'                => $prefix . 'hide_delivery_date_on_listing',
+                    'show_if_checked'   => 'yes',
+                    'autoload'          => false,
+                ),
+
+                array(
+                    'desc'              => __( 'Enable Styling on Checkout', 'zenrush' ),
+                    'desc_tip'          => __( 'Adds additional styling to the Zenrush shipping option on checkout', 'zenrush' ),
+                    'default'           => 'yes',
+                    'type'              => 'checkbox',
+                    'checkboxgroup'     => 'end',
+                    'id'                => $prefix . 'enable_checkout_styling',
                     'show_if_checked'   => 'yes',
                     'autoload'          => false,
                 ),

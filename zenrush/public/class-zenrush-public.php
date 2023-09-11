@@ -3,22 +3,10 @@
 /**
  * The public-facing functionality of the plugin.
  *
- * @link       https://zenfulfillment.com
- * @since      1.0.0
- *
- * @package    Zenrush
- * @subpackage Zenrush/public
- */
-
-/**
- * The public-facing functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the public-facing stylesheet and JavaScript.
- *
  * @package    Zenrush
  * @subpackage Zenrush/public
  * @author     Zenfulfillment <devs@zenfulfillment.com>
+ * @since      1.0.0
  */
 class Zenrush_Public
 {
@@ -103,21 +91,7 @@ class Zenrush_Public
      */
     public function enqueue_styles(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Zenrush_Loader as all the hooks are defined
-         * in that particular class.
-         *
-         * The Zenrush_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_style( $this->plugin_name, plugin_dir_url(__FILE__) . 'css/zenrush-public.css', array(), $this->version, 'all' );
-
     }
 
     /**
@@ -127,7 +101,11 @@ class Zenrush_Public
      */
     public function enqueue_scripts(): void
     {
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-public.js', array('jquery'), $this->version, false );
+        $checkout_styling_enabled = get_option( $this->prefix . 'enable_checkout_styling' ) === 'yes';
+
+        if ( $checkout_styling_enabled ) {
+            wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-public.js', array('jquery'), $this->version, false );
+        }
     }
 
     /**
@@ -145,7 +123,7 @@ class Zenrush_Public
             $snippet_src = 'https://zenrush.zenfulfillment.com/client/' . $this->snippet_name . '.js';
             wp_enqueue_script( $this->snippet_name, $snippet_src, array(), $this->version, false );
         } else {
-            error_log( 'Zenrush Store Key is invalid!' );
+            error_log( 'Zenrush Merchant Key is invalid! - Please check the Zenrush Settings Page at WooCommerce -> Settings -> Zenrush' );
         }
     }
 
@@ -162,7 +140,7 @@ class Zenrush_Public
         $showOnProductPage = get_option( $this->prefix . 'show_on_product_page' ) === 'yes';
 
         if ( $showOnProductPage && $product->is_in_stock() ) {
-            echo '<zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'"></zf-zenrush>';
+            echo '<div id="zenrush_product_details"><zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'"></zf-zenrush></div>';
         }
     }
 
@@ -179,23 +157,18 @@ class Zenrush_Public
      */
     public function zenrush_add_element_to_product_listing($add_to_cart_html, $product, $args): string
     {
-        $showOnProductListing = get_option($this->prefix . 'show_on_product_listing');
-        $hideDeliveryDate = get_option($this->prefix . 'hide_delivery_date_on_listing');
+        $showOnProductListing = get_option($this->prefix . 'show_on_product_listing') === 'yes';
+        $hideDeliveryDate = get_option($this->prefix . 'hide_delivery_date_on_listing') === 'yes';
 
         if ( $showOnProductListing && $product->is_in_stock() ) {
             if ( $hideDeliveryDate ) {
-                return '<zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge"></zf-zenrush>' . $add_to_cart_html;
+                return '<div id="zenrush_product_listing_icon"><zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge"></zf-zenrush></div>' . $add_to_cart_html;
             } else {
-                return '<zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge" showdeliverydate></zf-zenrush>' . $add_to_cart_html;
+                return '<div id="zenrush_product_listing_timer"><zf-zenrush store="'. $this->store_id  .'" locale="'. $this->element_locale .'" variant="badge" showdeliverydate></zf-zenrush></div>' . $add_to_cart_html;
             }
         }
 
         return $add_to_cart_html;
-    }
-
-    public function zenrush_add_element_to_checkout(): void {
-        // TODO: Add checkout for woocommerce to element
-        //  echo '<zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'" type="checkout" debug></zf-zenrush>';
     }
 
 }

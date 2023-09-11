@@ -3,22 +3,10 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       https://zenfulfillment.com
- * @since      1.0.0
- *
- * @package    Zenrush
- * @subpackage Zenrush/admin
- */
-
-/**
- * The admin-specific functionality of the plugin.
- *
- * Defines the plugin name, version, and two examples hooks for how to
- * enqueue the admin-specific stylesheet and JavaScript.
- *
  * @package    Zenrush
  * @subpackage Zenrush/admin
  * @author     Zenfulfillment <devs@zenfulfillment.com>
+ * @since      1.0.0
  */
 class Zenrush_Admin
 {
@@ -61,21 +49,7 @@ class Zenrush_Admin
      */
     public function enqueue_styles(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Zenrush_Loader as all the hooks are defined
-         * in that particular class.
-         *
-         * The Zenrush_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_style( $this->plugin_name, plugin_dir_url(__FILE__) . 'css/zenrush-admin.css', array(), $this->version, 'all' );
-
     }
 
     /**
@@ -85,21 +59,7 @@ class Zenrush_Admin
      */
     public function enqueue_scripts(): void
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Zenrush_Loader as all the hooks are defined
-         * in that particular class.
-         *
-         * The Zenrush_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-admin.js', array('jquery'), $this->version, false );
-
     }
 
     /**
@@ -187,50 +147,6 @@ class Zenrush_Admin
     }
 
     /**
-     * Returns all configured payment methods of the store
-     * 
-     * @since 1.0.8
-     */
-    public function zenrush_get_all_payment_methods(): array
-    {
-        $installed_payment_methods = WC()->payment_gateways()->payment_gateways();
-        $available_payment_methods = array();
-        foreach( $installed_payment_methods as $method ) {
-            if( $method->enabled === 'yes' ) {
-                $available_payment_methods[$method->title] = $method;
-            }
-        }
-        return $available_payment_methods;
-    }
-
-    /**
-     * Checks if Zenrush is enabled for at least one payment method
-     * Used for the todos list in the setup banner
-     * 
-     * @since 1.0.8
-     * @return string
-     */
-    public function zenrush_check_payment_methods(): string
-    {
-        $available_payment_methods = $this->zenrush_get_all_payment_methods();
-        $has_zenrush_enabled = array();
-        if( count( $available_payment_methods ) === 0 ) {
-            return 'NO_PAYMENT_METHODS_AVAILABLE';
-        };
-        foreach( $available_payment_methods as $method ) {
-            if( method_exists( $method, 'enable_for_methods ' ) ) {
-                $enabled_methods = $method->enable_for_methods;
-                if( is_array ( $enabled_methods ) ) {
-                    $has_zenrush_enabled[] = array_filter($method->enable_for_methods, function($enabled_method_id) {
-                        return $enabled_method_id === 'zenrush_premiumversand';
-                    });
-                }
-            }
-        }
-        return count( $has_zenrush_enabled ) > 0 ? 'ZENRUSH_ENABLED_PAYMENT_METHOD' : 'NO_ZENRUSH_ENABLED_PAYMENT_METHOD';
-    }
-
-    /**
      * Checks if Zenrush is enabled for at least one shipping zone, and the shipping zone is configured to be in Germany
      * 
      * @since 1.0.8
@@ -238,19 +154,19 @@ class Zenrush_Admin
      */
     public function zenrush_check_shipping_rates(): string
     {
-        $found_DE_zone = false;
         $shipping_zone = null;
 
         try {
-            foreach ($this->zenrush_get_all_shipping_zones() as $zone) {
+            foreach ( $this->zenrush_get_all_shipping_zones() as $zone ) {
                 $zone_locations = $zone->get_zone_locations();
-                $is_DE = array_filter($zone_locations, function ($location) {
-                    $location_arr = (array)$location;
-                    return $location_arr['code'] === 'DE';
-                });
+                $is_DE = array_filter( $zone_locations,
+                    function ($location) {
+                        $location_arr = (array) $location;
+                        return $location_arr['code'] === 'DE';
+                    }
+                );
 
                 if ($is_DE) {
-                    $found_DE_zone = true;
                     $shipping_zone = $zone;
                 }
             }
@@ -264,7 +180,7 @@ class Zenrush_Admin
 
         $zone_shipping_methods = $shipping_zone->get_shipping_methods();
         foreach ( $zone_shipping_methods as $index => $method ) {
-            if(get_class( $method ) === 'WC_Zenrush_Premiumversand') {
+            if( get_class( $method ) === 'WC_Zenrush_Premiumversand' ) {
                 return 'ZENRUSH_FOUND_FOR_DE';
             }
         }
@@ -286,20 +202,19 @@ class Zenrush_Admin
     public function zenrush_complete_setup_notification(): void
     {
         $user_id = get_current_user_id();
-        if( get_user_meta( $user_id, 'zenrush_setup_notice_dismissed' ) ) {
+        $store_id = get_option( 'Zenrush_store_id' );
+        $idIsValid = $store_id && strlen( $store_id ) === 24 && strspn( $store_id, '0123456789ABCDEFabcdef' ) === 24;
+        $store_id_error = !$store_id || !$idIsValid;
+        $shipping_zone_status = $this->zenrush_check_shipping_rates();
+        $shipping_zone_error = $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
+
+        if( !$store_id_error && get_user_meta( $user_id, 'zenrush_setup_notice_dismissed' ) ) {
             return;
         }
-
-        $store_id_error = !get_option( 'Zenrush_store_id' );
-        $shipping_zone_status = $this->zenrush_check_shipping_rates();
-        $payment_methods_status = $this->zenrush_check_payment_methods();
-        $shipping_zone_error = $shipping_zone_status !== 'ZENRUSH_FOUND_FOR_DE';
-        $payment_methods_error = $payment_methods_status !== 'ZENRUSH_ENABLED_PAYMENT_METHOD';
 
         $todos = array(
             'store_id' => __( 'Enter your Merchant Key', 'zenrush' ),
             'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
-            'payment_methods' => __( 'Enable Zenrush for your payment methods', 'zenrush' ),
         );
 
         if( $shipping_zone_error ) {
@@ -316,7 +231,7 @@ class Zenrush_Admin
             $title = __( 'Complete Zenrush setup to activate', 'zenrush' );
             $message = __( '<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed the setup, you\'ll have access to a premium delivery option and shipping calculation in real-time.', 'zenrush' );
 
-            if ( count( $todos) > 0 ) {
+            if ( count( $todos ) > 0 ) {
                 $message .= '<br>' . __( 'To get started', 'zenrush' ) . ' <a href="https://setup.zenfulfillment.com/zenrush/integration/woocommerce" style="margin-top: 1rem">' . __( 'follow the setup documentation', 'zenrush' ) . '</a><br>';
 
                 foreach( $todos as $todo ) {
@@ -330,10 +245,6 @@ class Zenrush_Admin
                         case $todos['shipping_zone']:
                             $isChecked = !$shipping_zone_error;
                             $link = $isChecked ? $todo : '<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=shipping' ) ) . '">' . $todo . '</a>';
-                            break;
-                        case $todos['payment_methods']:
-                            $isChecked = !$payment_methods_error;
-                            $link = $isChecked ? $todo :'<a href="' . esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ) . '">' . $todo . '</a>';
                             break;
                     };
 
