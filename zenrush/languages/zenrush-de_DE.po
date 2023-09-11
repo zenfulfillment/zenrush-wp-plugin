@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-09-01 00:02+0200\n"
-"PO-Revision-Date: 2023-09-01 00:02+0200\n"
+"POT-Creation-Date: 2023-09-11 14:32+0200\n"
+"PO-Revision-Date: 2023-09-11 14:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -21,40 +21,36 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
 #. Plugin Name of the plugin/theme
-#: admin/class-zenrush-admin.php:134 admin/class-zenrush-wc-settings.php:33
+#: admin/class-zenrush-admin.php:94 admin/class-zenrush-wc-settings.php:33
 #: elementor-widget/class-zenrush-elementor-widget.php:22
 msgid "Zenrush"
 msgstr "Zenrush"
 
-#: admin/class-zenrush-admin.php:141
+#: admin/class-zenrush-admin.php:101
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: admin/class-zenrush-admin.php:142
+#: admin/class-zenrush-admin.php:102
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-zenrush-admin.php:300
+#: admin/class-zenrush-admin.php:216
 msgid "Enter your Merchant Key"
 msgstr "Geben deinen Merchant Key ein"
 
-#: admin/class-zenrush-admin.php:301 admin/class-zenrush-admin.php:309
+#: admin/class-zenrush-admin.php:217 admin/class-zenrush-admin.php:224
 msgid "Enable Zenrush for the Germany shipping zone"
 msgstr "Zenrush für die Versandzone Deutschland aktivieren"
 
-#: admin/class-zenrush-admin.php:302
-msgid "Enable Zenrush for your payment methods"
-msgstr "Zenrush für die Zahlungsmethoden aktivieren"
-
-#: admin/class-zenrush-admin.php:307
+#: admin/class-zenrush-admin.php:222
 msgid "Add a shipping zone for Germany"
 msgstr "Versandzone für Deutschland hinzufügen"
 
-#: admin/class-zenrush-admin.php:316
+#: admin/class-zenrush-admin.php:231
 msgid "Complete Zenrush setup to activate"
 msgstr "Zenrush vollständig einrichten und aktivieren"
 
-#: admin/class-zenrush-admin.php:317
+#: admin/class-zenrush-admin.php:232
 msgid ""
 "<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed "
 "the setup, you'll have access to a premium delivery option and shipping "
@@ -64,19 +60,19 @@ msgstr ""
 "Einrichtung abgeschlossen hast, hast du Zugriff auf die Premium "
 "Versandoption mit Berechnung der Lieferzeit in Echtzeit."
 
-#: admin/class-zenrush-admin.php:320
+#: admin/class-zenrush-admin.php:235
 msgid "To get started"
 msgstr "Zum Start der Einrichtung"
 
-#: admin/class-zenrush-admin.php:320
+#: admin/class-zenrush-admin.php:235
 msgid "follow the setup documentation"
 msgstr "folge der Setup-Dokumentation"
 
-#: admin/class-zenrush-admin.php:371
+#: admin/class-zenrush-admin.php:282
 msgid "Zenrush Documentation"
 msgstr "Zenrush Dokumentation"
 
-#: admin/class-zenrush-admin.php:371
+#: admin/class-zenrush-admin.php:282
 msgid "Docs"
 msgstr "Docs"
 
@@ -88,15 +84,15 @@ msgstr "Zenrush Einstellungen"
 msgid "Log"
 msgstr "Protokoll"
 
-#: admin/partials/zenrush-settings-main.php:10
+#: admin/partials/zenrush-settings-main.php:19
 msgid "General Options"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/partials/zenrush-settings-main.php:17
+#: admin/partials/zenrush-settings-main.php:26
 msgid "Merchant Key"
 msgstr "Merchant Key"
 
-#: admin/partials/zenrush-settings-main.php:19
+#: admin/partials/zenrush-settings-main.php:28
 msgid ""
 "The unique Merchant Key for the Zenrush Plugin. This Key will be provided to "
 "you by Zenfulfillment Customer Support."
@@ -104,11 +100,11 @@ msgstr ""
 "Der Merchant Key für dein Zenrush Plugin. Dieser Key wird dir vom "
 "Zenfulfillment Kundenservice zur Verfügung gestellt."
 
-#: admin/partials/zenrush-settings-main.php:28
+#: admin/partials/zenrush-settings-main.php:37
 msgid "Zenrush Store Front-End Integration"
 msgstr "Zenrush Store-Front Integration"
 
-#: admin/partials/zenrush-settings-main.php:30
+#: admin/partials/zenrush-settings-main.php:39
 msgid ""
 "Note: If the automatic front-end integration is disabled, you need to add "
 "the Zenrush snippet to your store theme manually. <a href=\"https://setup."
@@ -119,28 +115,29 @@ msgstr ""
 "href=\"https://setup.zenfulfillment.com/zenrush/integration/"
 "woocommerce\">Dokumentation</a>"
 
-#: admin/partials/zenrush-settings-main.php:35
+#: admin/partials/zenrush-settings-main.php:44
 msgid "Automatic Integration"
 msgstr "Automatische Store-Front Integration"
 
-#: admin/partials/zenrush-settings-main.php:36
+#: admin/partials/zenrush-settings-main.php:45
 msgid "Enable Automatic Integration"
 msgstr "Automatische Integration aktivieren"
 
-#: admin/partials/zenrush-settings-main.php:45
+#: admin/partials/zenrush-settings-main.php:54
 msgid "On Product Detail Pages"
 msgstr "Auf Produktdetailseiten"
 
-#: admin/partials/zenrush-settings-main.php:46
+#: admin/partials/zenrush-settings-main.php:55
 msgid "Show Zenrush on all product detail pages"
 msgstr ""
 "Zeigt Zenrush auf allen Produktdetailseiten unter dem add to cart button an"
 
-#: admin/partials/zenrush-settings-main.php:56
-msgid "Product Category Listings"
-msgstr "Produkt Kategorie-Seite"
+#: admin/partials/zenrush-settings-main.php:65
+#: admin/partials/zenrush-settings-main.php:77
+msgid "On Product Category Listings"
+msgstr "Auf Produkt Kategorie-Seite"
 
-#: admin/partials/zenrush-settings-main.php:57
+#: admin/partials/zenrush-settings-main.php:66
 msgid ""
 "Show Zenrush on all product listings. This includes the product category "
 "pages and \"related products\""
@@ -148,17 +145,25 @@ msgstr ""
 "Zeigt das Zenrush Element auf allen Produktkategorie-Seiten an. Dies gilt "
 "auch für „Verwandte Produkte“"
 
-#: admin/partials/zenrush-settings-main.php:67
-msgid "Only display Zenrush Badge on product listings"
-msgstr "Zeigt das Zenrush Element nur als Abzeichen an"
+#: admin/partials/zenrush-settings-main.php:76
+msgid "Disable delivery date on product listings"
+msgstr "Lieferdatum auf Produkt Kategorie-Seiten deaktivieren"
 
-#: admin/partials/zenrush-settings-main.php:68
+#: admin/partials/zenrush-settings-main.php:77
 msgid ""
-"Do not show delivery date on product category pages. Only the zenrush icon "
-"will be shown."
+"Do not show delivery date on product category pages. Only the Zenrush icon "
+"will be shown, if enabled:"
 msgstr ""
 "Zeigt das Lieferdatum nicht auf Produktkategorieseiten an. Es wird nur das "
-"Zenrush-Logo angezeigt."
+"Zenrush Icon angezeigt, wenn die Einstellung aktiviert wurde:"
+
+#: admin/partials/zenrush-settings-main.php:87
+msgid "Enable Styling on Checkout"
+msgstr "Zenrush Styling im Checkout aktivieren"
+
+#: admin/partials/zenrush-settings-main.php:88
+msgid "Adds additional styling to the Zenrush shipping option on checkout"
+msgstr "Fügt der Zenrush-Versandoption im Checkout zusätzliches Styling hinzu"
 
 #: elementor-widget/class-zenrush-elementor-widget.php:52
 msgid "Options"
@@ -221,27 +226,27 @@ msgstr "Aus"
 msgid "Zenfulfillment"
 msgstr "Zenfulfillment"
 
-#: shipping-method/class-zenrush-wc-shipping-method.php:97
+#: shipping-method/class-zenrush-wc-shipping-method.php:79
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
 msgstr "Powered by Zenfulfillment.com - Heute bestellt. Morgen geliefert"
 
-#: shipping-method/class-zenrush-wc-shipping-method.php:112
-#: shipping-method/class-zenrush-wc-shipping-method.php:114
+#: shipping-method/class-zenrush-wc-shipping-method.php:88
+#: shipping-method/class-zenrush-wc-shipping-method.php:91
 msgid "Zenrush Premium Delivery"
 msgstr "Zenrush Premiumversand"
 
-#: zenrush.php:79
+#: zenrush.php:80
 msgid ""
 "Zenrush requires <strong>WooCommerce</strong> to be installed and active."
 msgstr ""
 "Zenrush erfordert, dass <strong>WooCommerce</strong> im Shop installiert und "
 "aktiviert it."
 
-#: zenrush.php:86
+#: zenrush.php:87
 msgid "Install WooCommerce"
 msgstr "WooCommerce installieren"
 
-#: zenrush.php:90
+#: zenrush.php:91
 msgid "Activate WooCommerce"
 msgstr "WooCommerce aktivieren"
 
@@ -256,6 +261,9 @@ msgstr "Integrations-Plugin für Zenrush Premiumversand"
 #. Author URI of the plugin/theme
 msgid "https://zenfulfillment.com"
 msgstr "https://zenfulfillment.com"
+
+#~ msgid "Enable Zenrush for your payment methods"
+#~ msgstr "Zenrush für die Zahlungsmethoden aktivieren"
 
 #~ msgid "Enable/Disable"
 #~ msgstr "Aktivieren/Deaktivieren"
