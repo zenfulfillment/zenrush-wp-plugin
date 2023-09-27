@@ -30,7 +30,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access   private
      * @var string Zenrush Rates url
      */
-    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/rates';
+    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates';
 
     /**
      * The prefix for options to use
