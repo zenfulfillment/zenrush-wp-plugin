@@ -110,13 +110,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // If shipping option is enabled or not via option in admin backend
         $this->enabled = get_option( $this->prefix . 'store_id' ) ? $this->get_option( 'enabled' ) : 'no';
 
-        // Fetch store specific zenrush pricing rules
-        $rates = $this->fetch_zenrush_pricing_rules();
-
-        // Set zenrush pricing rules to be calculated later based on cart total value
-        $this->base_rate = $rates['base_rate'];
-        $this->custom_rates = $rates['custom_rates'];
-
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
 
@@ -169,6 +162,11 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
             error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
             return;
         }
+
+        // Fetch store specific zenrush pricing rules
+        $raw_rates = $this->fetch_zenrush_pricing_rules();
+        $this->base_rate = $raw_rates['base_rate'];
+        $this->custom_rates = $raw_rates['custom_rates'];
 
         $cost = $this->calc_cost( $this->base_rate );
         $rates = $this->custom_rates;
