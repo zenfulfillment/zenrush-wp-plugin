@@ -42,24 +42,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     private string $prefix = 'Zenrush_';
 
     /**
-     * The default rate to use for Zenrush, from the pricing config
-     *
-     * @since 1.0.0
-     * @access private
-     * @var int $base_rate The default rate for Zenrush
-     */
-    private int $base_rate = 699;
-
-    /**
-     * Array of custom pricing rates for zenrush defined for this store
-     *
-     * @since 1.0.0
-     * @access private
-     * @var array $custom_rates The custom rates set for this store
-     */
-    private array $custom_rates = array();
-
-    /**
      * Constructor for your shipping class
      *
      * @access public
@@ -121,10 +103,10 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access private
      * @return array
      */
-    private function fetch_zenrush_pricing_rules(): array
+    private function fetch_zenrush_pricing_rules($cart_price): array
     {
         $storeId = get_option( $this->prefix . 'store_id' );
-        $url = $this->rates_url . '?storeId=' . $storeId;
+        $url = $this->rates_url . '?storeId=' . $storeId . '&cartPrice=' . $cart_price;
 
         $response = wp_remote_get( $url );
         $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -164,12 +146,9 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         }
 
         // Fetch store specific zenrush pricing rules
-        $raw_rates = $this->fetch_zenrush_pricing_rules();
-        $this->base_rate = $raw_rates['base_rate'];
-        $this->custom_rates = $raw_rates['custom_rates'];
-
-        $cost = $this->calc_cost( $this->base_rate );
-        $rates = $this->custom_rates;
+        $raw_rates = $this->fetch_zenrush_pricing_rules( $cart_price );
+        $cost = $this->calc_cost( $raw_rates['base_rate'] );
+        $rates = $raw_rates['custom_rates'];
 
         if ( !empty($rates) ) {
              foreach ( $rates as $rate ) {
