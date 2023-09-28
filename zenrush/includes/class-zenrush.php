@@ -298,8 +298,6 @@ class Zenrush
         $this->loader->add_action('woocommerce_before_add_to_cart_button', $plugin_public, 'zenrush_add_element_to_product_page');
         // -> Listing/Category Pages & Related Articles
         $this->loader->add_action('woocommerce_loop_add_to_cart_link', $plugin_public, 'zenrush_add_element_to_product_listing', 10, 3);
-        // -> Checkout Page
-        $this->loader->add_action('woocommerce_after_checkout_shipping_form', $plugin_public, 'zenrush_add_element_to_checkout');
     }
 
     /**
