@@ -153,9 +153,11 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      */
     public function calculate_shipping($package = array()): void
     {
-        // this is the total price of the cart, includes discounts!
-        $cart_price = floatval(WC()->cart->get_cart_contents_total());
-        $cart_tax = floatval(WC()->cart->get_taxes_total());
+        // total products price of the cart, includes discounts!
+        $cart_price = floatval( WC()->cart->get_cart_contents_total() );
+        // total amount of taxes
+        $cart_tax = floatval( WC()->cart->get_taxes_total() );
+        // this is the final cart price (products + taxes)
         $cart_total = $cart_price + $cart_tax;
         
         // check if all products in the cart are in stock
@@ -171,36 +173,36 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
         if ( !empty($rates) ) {
-             foreach ( $rates as $rate ) {
-                 $rule_definition = key( $rate['definition'] );
-                 $rule_cost = reset( $rate['definition'] );
-                 $rule_price = (int) $rate['price'];
+            foreach ( $rates as $rate ) {
+                $rule_definition = key( $rate['definition'] );
+                $rule_cost = reset( $rate['definition'] );
+                $rule_price = (int) $rate['price'];
 
-                 switch( $rule_definition ) {
-                     case '$gte':
-                        if ( $cart_total >= $rule_cost ) {
+                switch( $rule_definition ) {
+                    case '$gte':
+                    if ( $cart_total >= $rule_cost ) {
+                        $cost = $this->calc_cost( $rule_price );
+                    }
+                    break;
+                    case '$gt':
+                        if ( $cart_total > $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
-                     case '$gt':
-                         if ( $cart_total > $rule_cost ) {
-                             $cost = $this->calc_cost( $rule_price );
-                         }
-                         break;
-                     case '$lte':
-                        if ( $cart_total <= $rule_cost ) {
+                    case '$lte':
+                    if ( $cart_total <= $rule_cost ) {
+                        $cost = $this->calc_cost( $rule_price );
+                    }
+                    break;
+                    case '$lt':
+                        if ( $cart_total < $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
-                     case '$lt':
-                         if ( $cart_total < $rule_cost ) {
-                             $cost = $this->calc_cost( $rule_price );
-                         }
-                         break;
-                     default:
-                         break;
+                    default:
+                        break;
                 }
-             }
+            }
         }
 
         $rate_title = $this->title;
