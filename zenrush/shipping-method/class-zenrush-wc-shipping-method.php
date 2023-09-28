@@ -168,6 +168,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // Fetch store specific zenrush pricing rules
         $raw_rates = $this->fetch_zenrush_pricing_rules();
         $rates = $raw_rates['custom_rates'];
+        $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
         if ( !empty($rates) ) {
              foreach ( $rates as $rate ) {
@@ -200,8 +201,6 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
                          break;
                 }
              }
-        } else {
-            $cost = $this->calc_cost( $raw_rates['base_rate'] );
         }
 
         $rate_title = $this->title;
