@@ -42,6 +42,24 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     private string $prefix = 'Zenrush_';
 
     /**
+     * The default rate to use for Zenrush, from the pricing config
+     *
+     * @since 1.0.0
+     * @access private
+     * @var int $base_rate The default rate for Zenrush
+     */
+    private int $base_rate = 699;
+
+    /**
+     * Array of custom pricing rates for zenrush defined for this store
+     *
+     * @since 1.0.0
+     * @access private
+     * @var array $custom_rates The custom rates set for this store
+     */
+    private array $custom_rates = array();
+
+    /**
      * Constructor for your shipping class
      *
      * @access public
@@ -103,10 +121,10 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access private
      * @return array
      */
-    private function fetch_zenrush_pricing_rules($cart_price): array
+    private function fetch_zenrush_pricing_rules(): array
     {
         $storeId = get_option( $this->prefix . 'store_id' );
-        $url = $this->rates_url . '?storeId=' . $storeId . '&cartPrice=' . $cart_price;
+        $url = $this->rates_url . '?storeId=' . $storeId;
 
         $response = wp_remote_get( $url );
         $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -136,8 +154,10 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     public function calculate_shipping($package = array()): void
     {
         // this is the total price of the cart, includes discounts!
-        $cart_price = WC()->cart->get_cart_contents_total();
-
+        $cart_price = floatval(WC()->cart->get_cart_contents_total());
+        $cart_tax = floatval(WC()->cart->get_taxes_total());
+        $cart_total = $cart_price + $cart_tax;
+        
         // check if all products in the cart are in stock
         $products_in_stock = $this->check_stock_in_cart( $package );
         if ( !$products_in_stock ) {
@@ -146,8 +166,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         }
 
         // Fetch store specific zenrush pricing rules
-        $raw_rates = $this->fetch_zenrush_pricing_rules( $cart_price );
-        $cost = $this->calc_cost( $raw_rates['base_rate'] );
+        $raw_rates = $this->fetch_zenrush_pricing_rules();
         $rates = $raw_rates['custom_rates'];
 
         if ( !empty($rates) ) {
@@ -158,22 +177,22 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
                  switch( $rule_definition ) {
                      case '$gte':
-                        if ( $cart_price >= $rule_cost ) {
+                        if ( $cart_total >= $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
                      case '$gt':
-                         if ( $cart_price > $rule_cost ) {
+                         if ( $cart_total > $rule_cost ) {
                              $cost = $this->calc_cost( $rule_price );
                          }
                          break;
                      case '$lte':
-                        if ( $cart_price <= $rule_cost ) {
+                        if ( $cart_total <= $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
                      case '$lt':
-                         if ( $cart_price < $rule_cost ) {
+                         if ( $cart_total < $rule_cost ) {
                              $cost = $this->calc_cost( $rule_price );
                          }
                          break;
@@ -181,6 +200,8 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
                          break;
                 }
              }
+        } else {
+            $cost = $this->calc_cost( $raw_rates['base_rate'] );
         }
 
         $rate_title = $this->title;
