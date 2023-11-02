@@ -153,17 +153,19 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      */
     public function calculate_shipping($package = array()): void
     {
-        // this is the total price of the cart, includes discounts!
-        $cart_price = floatval(WC()->cart->get_cart_contents_total());
-        $cart_tax = floatval(WC()->cart->get_taxes_total());
+        // total products price of the cart, includes discounts!
+        $cart_price = floatval( WC()->cart->get_cart_contents_total() );
+        // total amount of taxes
+        $cart_tax = floatval( WC()->cart->get_taxes_total() );
+        // this is the final cart price (products + taxes)
         $cart_total = $cart_price + $cart_tax;
         
-        // check if all products in the cart are in stock
-        $products_in_stock = $this->check_stock_in_cart( $package );
-        if ( !$products_in_stock ) {
-            error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
-            return;
-        }
+        // check if all products in the cart are in stock - query API
+        // $products_in_stock = $this->check_stock_in_cart( $package );
+        // if ( !$products_in_stock ) {
+        //     error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
+        //     return;
+        // }
 
         // Fetch store specific zenrush pricing rules
         $raw_rates = $this->fetch_zenrush_pricing_rules();
@@ -171,36 +173,36 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
         if ( !empty($rates) ) {
-             foreach ( $rates as $rate ) {
-                 $rule_definition = key( $rate['definition'] );
-                 $rule_cost = reset( $rate['definition'] );
-                 $rule_price = (int) $rate['price'];
+            foreach ( $rates as $rate ) {
+                $rule_definition = key( $rate['definition'] );
+                $rule_cost = reset( $rate['definition'] );
+                $rule_price = (int) $rate['price'];
 
-                 switch( $rule_definition ) {
-                     case '$gte':
-                        if ( $cart_total >= $rule_cost ) {
+                switch( $rule_definition ) {
+                    case '$gte':
+                    if ( $cart_total >= $rule_cost ) {
+                        $cost = $this->calc_cost( $rule_price );
+                    }
+                    break;
+                    case '$gt':
+                        if ( $cart_total > $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
-                     case '$gt':
-                         if ( $cart_total > $rule_cost ) {
-                             $cost = $this->calc_cost( $rule_price );
-                         }
-                         break;
-                     case '$lte':
-                        if ( $cart_total <= $rule_cost ) {
+                    case '$lte':
+                    if ( $cart_total <= $rule_cost ) {
+                        $cost = $this->calc_cost( $rule_price );
+                    }
+                    break;
+                    case '$lt':
+                        if ( $cart_total < $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
-                     case '$lt':
-                         if ( $cart_total < $rule_cost ) {
-                             $cost = $this->calc_cost( $rule_price );
-                         }
-                         break;
-                     default:
-                         break;
+                    default:
+                        break;
                 }
-             }
+            }
         }
 
         $rate_title = $this->title;
@@ -244,6 +246,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
         foreach ( $package['contents'] as $item ) {
             $product = $item['data'];
+            $product_sku = $product->get_sku();
             if ( !$product->is_in_stock() ) {
                 $all_products_in_stock = false;
                 break;

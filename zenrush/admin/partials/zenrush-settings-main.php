@@ -99,5 +99,24 @@ $settings = apply_filters( 'zenrush_settings',
             'id'    =>  $prefix . 'element_options',
         ),
 
+        array(
+            'title' =>  __( 'Disable Zenrush for some Products', 'zenrush' ),
+            'type'  =>  'title',
+            'desc'  =>  __( 'By default Zenrush will be enabled for all products that are in stock, but here you can configure products that should not be enabled for zenrush', 'zenrush' ),
+            'id'    =>  $prefix . 'filter_skus',
+        ),
+
+            array(
+                'title'             =>  __( 'Disable Zenrush for specific products', 'zenrush' ),
+                'desc'              =>  __( 'Add the products SKU you want to disable Zenrush for', 'zenrush' ),
+                'desc_tip'          =>  __( 'Add multiple SKUs by separating them with a comma like this: SKU-1,SKU-2,SKU-3,...', 'zenrush' ),
+                'type'              =>  'text',
+                'id'                =>  $prefix . 'disabled_skus',
+            ),
+
+        array(
+            'type'  =>  'sectionend',
+            'id'    =>  $prefix . 'filter_skus',
+        ),
     )
 );

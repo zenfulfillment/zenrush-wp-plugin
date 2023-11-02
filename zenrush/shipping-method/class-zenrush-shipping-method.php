@@ -38,4 +38,44 @@ class Zenrush_Shipping_Method
         $methods['zenrush_premiumversand'] = 'WC_Zenrush_Premiumversand';
         return $methods;
     }
+
+    public function zenrush_filter_skus( $rates, $package )
+    {
+        $methods = array_keys( $rates );
+        foreach ($methods as $needle) {
+            if (substr_count($needle, 'zenrush') > 0) {
+                $method_id = $needle;
+            }
+        }
+
+        if ( $method_id ) {
+            $all_products_in_stock = true;
+            $disabled_skus_str = get_option( 'Zenrush_disabled_skus' );
+            $has_disabled_skus = !empty( $disabled_skus_str );
+    
+            if( $has_disabled_skus ) {
+                $disabled_skus = array_map( 'trim', explode( ',', $disabled_skus_str ) );
+            }
+    
+            foreach ( $package['contents'] as $item ) {
+                $product = $item['data'];
+                $sku = $product->get_sku();
+    
+                if ( $has_disabled_skus && in_array( $sku, $disabled_skus ) ) {
+                    $all_products_in_stock = false;
+                    break;
+                }
+                if ( !$product->is_in_stock() ) {
+                    $all_products_in_stock = false;
+                    break;
+                }
+            }
+    
+            if ( !$all_products_in_stock ) {
+                unset( $rates[$method_id] );
+            }
+        }
+        
+        return $rates;
+    }
 }
