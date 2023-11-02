@@ -160,12 +160,12 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // this is the final cart price (products + taxes)
         $cart_total = $cart_price + $cart_tax;
         
-        // check if all products in the cart are in stock
-        $products_in_stock = $this->check_stock_in_cart( $package );
-        if ( !$products_in_stock ) {
-            error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
-            return;
-        }
+        // check if all products in the cart are in stock - query API
+        // $products_in_stock = $this->check_stock_in_cart( $package );
+        // if ( !$products_in_stock ) {
+        //     error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
+        //     return;
+        // }
 
         // Fetch store specific zenrush pricing rules
         $raw_rates = $this->fetch_zenrush_pricing_rules();
@@ -246,6 +246,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
         foreach ( $package['contents'] as $item ) {
             $product = $item['data'];
+            $product_sku = $product->get_sku();
             if ( !$product->is_in_stock() ) {
                 $all_products_in_stock = false;
                 break;

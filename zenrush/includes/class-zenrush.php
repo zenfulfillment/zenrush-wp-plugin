@@ -272,6 +272,7 @@ class Zenrush
         // Add Zenrush Shipping Method to WooCommerce
         $this->loader->add_action('woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_method');
         $this->loader->add_filter('woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_shipping_method');
+        $this->loader->add_filter( 'woocommerce_package_rates', $plugin_shipping, 'zenrush_filter_skus', 10, 2 );
     }
 
 
