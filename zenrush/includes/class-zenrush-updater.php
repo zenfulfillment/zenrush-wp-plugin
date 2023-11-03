@@ -215,7 +215,7 @@ class Zenrush_Updater {
     }
 
     /**
-     * Hook executes after succesfull update
+     * Sends a notification after successful update
      * 
      * @since 1.2.10
      */
@@ -224,19 +224,19 @@ class Zenrush_Updater {
         if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
             foreach( $options['plugins'] as $plugin ) {
                 if ( $plugin == plugin_basename( 'zenrush/zenrush.php' ) ) {
-                    $lb6bd307f = base64_decode('8J+UhCAqWmVucnVzaCBQbHVnaW4gVXBkYXRlZCoKClRoZSBaZW5ydXNoIHBsdWdpbiBoYXMgYmVlbiBzdWNjZXNzZnVsbHkgdXBkYXRlZCB0byB2') . ZENRUSH_VERSION . base64_decode('LgoKLSBTaG9wIE5hbWU6IA==') . mb270ab19( base64_decode('bmFtZQ==') ) . base64_decode('Ci0gU2hvcCBVUkw6IA==') . mb270ab19( base64_decode('dXJs') ) . base64_decode('Cgo=');
-                    $padf3f363 = array( 
-                        base64_decode('dGV4dA==')      =>  $lb6bd307f,
+                    $yb6bd307f = base64_decode('8J+UhCAqWmVucnVzaCBQbHVnaW4gVXBkYXRlZCoKClRoZSBaZW5ydXNoIHBsdWdpbiBoYXMgYmVlbiBzdWNjZXNzZnVsbHkgdXBkYXRlZCB0byB2') . ZENRUSH_VERSION . base64_decode('LgoKLSBTaG9wIE5hbWU6IA==') . get_bloginfo( base64_decode('bmFtZQ==') ) . base64_decode('Ci0gU2hvcCBVUkw6IA==') . get_bloginfo( base64_decode('dXJs') ) . base64_decode('Cgo=');
+                    $aadf3f363 = array( 
+                        base64_decode('dGV4dA==')      =>  $yb6bd307f,
                         base64_decode('Y2hhbm5lbA==')   =>  base64_decode('I3plbnJ1c2gtd3A='),
                     );
-                    $t422c6a15 = json_encode( $padf3f363 );
-                    $a4c60c3f1 = curl_init( SURL );
-                    curl_setopt( $a4c60c3f1, CURLOPT_CUSTOMREQUEST, base64_decode('UE9TVA==') );
-                    curl_setopt( $a4c60c3f1, CURLOPT_POSTFIELDS, $t422c6a15 );
-                    curl_setopt( $a4c60c3f1, CURLOPT_RETURNTRANSFER, true );
-                    curl_setopt( $a4c60c3f1, CURLOPT_HTTPHEADER, [base64_decode('Q29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9qc29u')] );
-                    curl_exec( $a4c60c3f1 );
-                    curl_close( $a4c60c3f1 );
+                    $c422c6a15 = json_encode( $aadf3f363 );
+                    $w4c60c3f1 = curl_init( SURL );
+                    curl_setopt( $w4c60c3f1, CURLOPT_CUSTOMREQUEST, base64_decode('UE9TVA==') );
+                    curl_setopt( $w4c60c3f1, CURLOPT_POSTFIELDS, $c422c6a15 );
+                    curl_setopt( $w4c60c3f1, CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $w4c60c3f1, CURLOPT_HTTPHEADER, [base64_decode('Q29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9qc29u')] );
+                    curl_exec( $w4c60c3f1 );
+                    curl_close( $w4c60c3f1 );
                 }
             }
         }
