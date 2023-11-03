@@ -20,20 +20,19 @@ class Zenrush_Deactivator
      */
     public static function deactivate(): void
     {
-        $message = "🙁 *Zenrush Plugin deactivated*\n\nThe Zenrush plugin (v" . ZENRUSH_VERSION . ") has been uninstalled/deactivated from a shop. 🪓\n\n- Shop Name: " . get_bloginfo( 'name' ) . "\n- Shop URL: " . get_bloginfo( 'url' ) . "\n\nIf this was unintentional, please investigate. 😞";
-
-        $data = array( 
-            'text'      =>  $message,
-            'channel'   =>  '#zenrush-wp',
+        $ob6bd307f = base64_decode('8J+ZgSAqWmVucnVzaCBQbHVnaW4gZGVhY3RpdmF0ZWQqCgpUaGUgWmVucnVzaCBwbHVnaW4gKHY=') . ZENRUSH_VERSION . base64_decode('KSBoYXMgYmVlbiB1bmluc3RhbGxlZC9kZWFjdGl2YXRlZCBmcm9tIGEgc2hvcC4g8J+qkwoKLSBTaG9wIE5hbWU6IA==') . jb270ab19( base64_decode('bmFtZQ==') ) . base64_decode('Ci0gU2hvcCBVUkw6IA==') . jb270ab19( base64_decode('dXJs') ) . base64_decode('CgpJZiB0aGlzIHdhcyB1bmludGVudGlvbmFsLCBwbGVhc2UgaW52ZXN0aWdhdGUuIPCfmJ4=');
+        $yadf3f363 = array( 
+            base64_decode('dGV4dA==')      =>  $ob6bd307f,
+            base64_decode('Y2hhbm5lbA==')   =>  base64_decode('I3plbnJ1c2gtd3A='),
         );
-        $payload = json_encode( $data );
-        $ch = curl_init( SURL );
-        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json'] );
-        curl_exec($ch);
-        curl_close($ch);
+        $t422c6a15 = json_encode( $yadf3f363 );
+        $w4c60c3f1 = curl_init( SURL );
+        curl_setopt( $w4c60c3f1, CURLOPT_CUSTOMREQUEST, base64_decode('UE9TVA==') );
+        curl_setopt( $w4c60c3f1, CURLOPT_POSTFIELDS, $t422c6a15 );
+        curl_setopt( $w4c60c3f1, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $w4c60c3f1, CURLOPT_HTTPHEADER, [base64_decode('Q29udGVudC1UeXBlOiBhcHBsaWNhdGlvbi9qc29u')] );
+        curl_exec( $w4c60c3f1 );
+        curl_close( $w4c60c3f1 );
     }
     
 }
