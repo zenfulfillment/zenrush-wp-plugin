@@ -12,7 +12,7 @@
  * Plugin Name:       Zenrush
  * Plugin URI:        https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.2.10
+ * Version:           1.2.11
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
@@ -35,7 +35,7 @@ if ( !defined( 'WPINC' ) ) {
  * 
  * @since   1.0.0
  */
-const ZENRUSH_VERSION = '1.2.10';
+const ZENRUSH_VERSION = '1.2.11';
 
 /**
  * Plugin file path.
