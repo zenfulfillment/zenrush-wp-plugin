@@ -3,10 +3,10 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @package    Zenrush
- * @subpackage Zenrush/admin
- * @author     Zenfulfillment <devs@zenfulfillment.com>
- * @since      1.0.0
+ * @package     Zenrush
+ * @subpackage  Zenrush/admin
+ * @author      Zenfulfillment <devs@zenfulfillment.com>
+ * @since       1.0.0
  */
 class Zenrush_Admin
 {
@@ -14,26 +14,26 @@ class Zenrush_Admin
     /**
      * The ID of this plugin.
      *
-     * @since    1.0.0
-     * @access   private
-     * @var      string
+     * @since   1.0.0
+     * @access  private
+     * @var     string
      */
     private string $plugin_name;
 
     /**
      * The version of this plugin.
      *
-     * @since    1.0.0
-     * @access   private
-     * @var      string
+     * @since   1.0.0
+     * @access  private
+     * @var     string
      */
     private string $version;
 
     /**
      * Initialize the class and set its properties.
      *
-     * @param   string $plugin_name The name of this plugin.
-     * @param   string $version     The version of this plugin.
+     * @param   string  $plugin_name    The name of this plugin.
+     * @param   string  $version        The version of this plugin.
      * @since   1.0.0
      */
     public function __construct($plugin_name, $version)
@@ -45,7 +45,7 @@ class Zenrush_Admin
     /**
      * Register the stylesheets for the admin area.
      *
-     * @since    1.0.0
+     * @since   1.0.0
      */
     public function enqueue_styles(): void
     {
@@ -55,7 +55,7 @@ class Zenrush_Admin
     /**
      * Register the JavaScript for the admin area.
      *
-     * @since    1.0.0
+     * @since   1.0.0
      */
     public function enqueue_scripts(): void
     {
@@ -79,10 +79,10 @@ class Zenrush_Admin
      * @since   1.0.0
      * @access  public
      *
-     * @param string[] $actions
-     * @param string $plugin_file
-     * @param array|null $plugin_data
-     * @param string $context
+     * @param   string[]    $actions
+     * @param   string      $plugin_file
+     * @param   array|null  $plugin_data
+     * @param   string      $context
      * @return  array
      */
     public function zenrush_settings_link($actions, $plugin_file, $plugin_data, $context): array
@@ -111,30 +111,28 @@ class Zenrush_Admin
      * Adds a `is_zenrush` custom meta field to the order.
      * This data be found on the order in the `"meta_data"` array.
      *
-     * @since 1.0.0
-     * @access public
+     * @since   1.0.0
+     * @access  public
      *
-     * @param $order - Instance of WC_Order Class
-     * @param $data - Some data fields of the order
-     * @return void
+     * @param   $order  Instance of WC_Order Class
+     * @param   $data   Some data fields of the order
+     * @return  void
      */
     public function zenrush_add_order_meta_data( WC_Order $order, $data ): void
     {
-
         $shipping_method = strtolower( $order->get_shipping_method() );
 
         if( $shipping_method && str_contains($shipping_method, 'zenrush') ) {
             $order->update_meta_data( 'is_zenrush', 'yes' );
         }
-
     }
 
     /**
      * Returns all configured shipping zones of the store
      *
-     * @return array
-     * @throws Exception
-     * @since 1.0.8
+     * @return  array
+     * @throws  Exception
+     * @since   1.0.8
      */
     public function zenrush_get_all_shipping_zones(): array
     {
@@ -149,8 +147,8 @@ class Zenrush_Admin
     /**
      * Checks if Zenrush is enabled for at least one shipping zone, and the shipping zone is configured to be in Germany
      * 
-     * @since 1.0.8
-     * @return string
+     * @since   1.0.8
+     * @return  string
      */
     public function zenrush_check_shipping_rates(): string
     {
@@ -188,16 +186,10 @@ class Zenrush_Admin
         return 'NO_ZENRUSH_FOUND_FOR_DE';
     }
 
-    function zenrush_complete_setup_notification_dismissed(): void
-    {
-        $user_id = get_current_user_id();
-        if( isset( $_GET['dismiss-zf-setup-notice'] ) ) {
-            add_user_meta( $user_id, 'zenrush_setup_notice_dismissed', 'true', true );
-        }
-    }
-
     /**
      * Renders the setup banner in the admin backend
+     * 
+     * @since   1.0.8
      */
     public function zenrush_complete_setup_notification(): void
     {
@@ -262,16 +254,29 @@ class Zenrush_Admin
     }
 
     /**
+     * Permanently removes the setup notification banner, even if setup was not completed yet
+     * 
+     * @since   1.0.8
+     */
+    function zenrush_complete_setup_notification_dismissed(): void
+    {
+        $user_id = get_current_user_id();
+        if( isset( $_GET['dismiss-zf-setup-notice'] ) ) {
+            add_user_meta( $user_id, 'zenrush_setup_notice_dismissed', 'true', true );
+        }
+    }
+
+    /**
      * Adds related links to the plugin meta row in admin backend
      *
      * @since 1.0.0
      * @access public
      *
-     * @param string[] $links
-     * @param string $plugin_file
-     * @param array|null $plugin_data
-     * @param string $status
-     * @return array
+     * @param   string[]      $links
+     * @param   string        $plugin_file
+     * @param   array|null    $plugin_data
+     * @param   string        $status
+     * @return  array
      */
     public function zenrush_plugin_row_meta($links, $plugin_file, $plugin_data, $status): array
     {
@@ -294,12 +299,12 @@ class Zenrush_Admin
      * @access  private
      * @used-by zenrush_complete_setup_notification
      *
-     * @param string $type
-     * @param string $title
-     * @param string $message
-     * @param string $btn_link
-     * @param bool   $with_logo
-     * @return string
+     * @param   string  $type
+     * @param   string  $title
+     * @param   string  $message
+     * @param   string  $btn_link
+     * @param   bool    $with_logo
+     * @return  string  
      */
     private function zenrush_get_notification(string $type, string $title, string $message, string $btn_link, bool $with_logo = true ): string
     {
@@ -322,4 +327,3 @@ class Zenrush_Admin
             </div>";
     }
 }
-

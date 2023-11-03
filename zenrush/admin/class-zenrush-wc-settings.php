@@ -9,14 +9,16 @@
  *
  */
 
-if ( !defined('ABSPATH') ) exit; // Exit if accessed directly
+if ( !defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
 
-if ( !class_exists('Zenrush_WC_Settings') ) {
+if ( !class_exists( 'Zenrush_WC_Settings' ) ) {
 
     /**
      * Settings class
      *
-     * @since 1.0.0
+     * @since   1.0.0
      */
     class Zenrush_WC_Settings extends WC_Settings_Page
     {
@@ -24,7 +26,7 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
         /**
          * Constructor
          *
-         * @since  1.0.0
+         * @since   1.0.0
          * @noinspection PhpMissingParentConstructorInspection
          */
         public function __construct()
@@ -72,7 +74,6 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
             $settings = array();
 
             switch ( $current_section ) {
-                // TODO: Implement error logs ?
                 case 'log':
                     $settings = array(
                         array()
@@ -91,7 +92,6 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
          *
          * @since   1.0.0
          * @access  public
-         * @returns void
          */
         public function output(): void
         {
@@ -104,7 +104,6 @@ if ( !class_exists('Zenrush_WC_Settings') ) {
          *
          * @since   1.0.0
          * @access  public
-         * @returns void
          */
         public function save(): void
         {

@@ -40,15 +40,6 @@ class Zenrush_Public
     private string $version;
 
     /**
-     * The prefix for options to use
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string
-     */
-    private string $prefix;
-
-    /**
      * The store id
      *
      * @since    1.0.0
@@ -79,9 +70,8 @@ class Zenrush_Public
         $this->plugin_name = $plugin_name;
         $this->snippet_name = 'zf-zenrush';
         $this->version = $version;
-        $this->prefix = "Zenrush_";
         $this->element_locale = strtok( get_locale() , '_');
-        $this->store_id = get_option( $this->prefix . 'store_id' );
+        $this->store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
     }
 
     /**
@@ -101,7 +91,7 @@ class Zenrush_Public
      */
     public function enqueue_scripts(): void
     {
-        $checkout_styling_enabled = get_option( $this->prefix . 'enable_checkout_styling' ) === 'yes';
+        $checkout_styling_enabled = get_option( ZENRUSH_PREFIX . 'enable_checkout_styling' ) === 'yes';
 
         if ( $checkout_styling_enabled ) {
             wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-public.js', array('jquery'), $this->version, false );
@@ -116,7 +106,7 @@ class Zenrush_Public
      */
     public function zenrush_add_bundle(): void
     {
-        $store_id = get_option( $this->prefix . 'store_id' );
+        $store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
         $idIsValid = $store_id && strlen( $store_id ) === 24 && strspn( $store_id, '0123456789ABCDEFabcdef' ) === 24;
 
         if ( $idIsValid ) {
@@ -137,7 +127,7 @@ class Zenrush_Public
     {
         global $product;
 
-        $showOnProductPage = get_option( $this->prefix . 'show_on_product_page' ) === 'yes';
+        $showOnProductPage = get_option( ZENRUSH_PREFIX . 'show_on_product_page' ) === 'yes';
 
         if ( $showOnProductPage && $product->is_in_stock() ) {
             echo '<div id="zenrush_product_details"><zf-zenrush store="'. $this->store_id .'" locale="'. $this->element_locale .'"></zf-zenrush></div>';
@@ -157,8 +147,8 @@ class Zenrush_Public
      */
     public function zenrush_add_element_to_product_listing($add_to_cart_html, $product, $args): string
     {
-        $showOnProductListing = get_option($this->prefix . 'show_on_product_listing') === 'yes';
-        $hideDeliveryDate = get_option($this->prefix . 'hide_delivery_date_on_listing') === 'yes';
+        $showOnProductListing = get_option(ZENRUSH_PREFIX . 'show_on_product_listing') === 'yes';
+        $hideDeliveryDate = get_option(ZENRUSH_PREFIX . 'hide_delivery_date_on_listing') === 'yes';
 
         if ( $showOnProductListing && $product->is_in_stock() ) {
             if ( $hideDeliveryDate ) {

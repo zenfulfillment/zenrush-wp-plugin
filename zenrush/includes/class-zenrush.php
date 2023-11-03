@@ -13,10 +13,9 @@
  * @subpackage Zenrush/includes
  */
 
-if (!defined('ABSPATH')) {
+if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
-
 
 /**
  * The core plugin class.
@@ -27,10 +26,10 @@ if (!defined('ABSPATH')) {
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      1.0.0
- * @package    Zenrush
- * @subpackage Zenrush/includes
- * @author     Zenfulfillment <devs@zenfulfillment.com>
+ * @since       1.0.0
+ * @package     Zenrush
+ * @subpackage  Zenrush/includes
+ * @author      Zenfulfillment <devs@zenfulfillment.com>
  */
 class Zenrush
 {
@@ -39,38 +38,34 @@ class Zenrush
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      Zenrush_Loader $loader Maintains and registers all hooks for the plugin.
+     * @since   1.0.0
+     * @access  protected
+     * @var     Zenrush_Loader  $loader Maintains and registers all hooks for the plugin.
      */
     protected Zenrush_Loader $loader;
 
     /**
      * The unique identifier of this plugin.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string $plugin_name The string used to uniquely identify this plugin.
+     * @since   1.0.0
+     * @access  protected
+     * @var     string  $plugin_name The string used to uniquely identify this plugin.
      */
     protected string $plugin_name;
 
     /**
      * The current version of the plugin.
      *
-     * @since    1.0.0
-     * @access   protected
-     * @var      string $version The current version of the plugin.
+     * @since   1.0.0
+     * @access  protected
+     * @var     string  $version The current version of the plugin.
      */
     protected string $version;
 
     /**
-     * Define the core functionality of the plugin.
+     * Defines the core functionality of the plugin.
      *
-     * Set the plugin name and the plugin version that can be used throughout the plugin.
-     * Load the dependencies, define the locale, and set the hooks for the admin area and
-     * the public-facing side of the site.
-     *
-     * @since    1.0.0
+     * @since   1.0.0
      */
     public function __construct()
     {
@@ -105,12 +100,11 @@ class Zenrush
      * Create an instance of the loader which will be used to register the hooks
      * with WordPress.
      *
-     * @since    1.0.0
-     * @access   private
+     * @since   1.0.0
+     * @access  private
      */
     private function load_dependencies(): void
     {
-
         /**
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
@@ -164,16 +158,13 @@ class Zenrush
      * Uses the Zenrush_i18n class in order to set the domain and to register the hook
      * with WordPress.
      *
-     * @since    1.0.0
-     * @access   private
+     * @since   1.0.0
+     * @access  private
      */
     private function set_locale(): void
     {
-
         $plugin_i18n = new Zenrush_i18n();
-
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
-
     }
 
     /**
@@ -185,7 +176,6 @@ class Zenrush
     private function define_zenrush_api(): void
     {
         $plugin_rest = new Zenrush_Api();
-
         $this->loader->add_action('rest_api_init', $plugin_rest, 'register_routes');
     }
 
@@ -198,7 +188,6 @@ class Zenrush
     private function define_zenrush_elementor_widget(): void
     {
         $plugin_elementor = new Zenrush_Elementor();
-
         if( $this->get_elementor_plugin() && did_action( 'elementor/loaded' ) ) {
             $this->loader->add_action( 'elementor/elements/categories_registered', $plugin_elementor, 'zenrush_add_elementor_widget_categories' );
             $this->loader->add_action( 'elementor/widgets/register', $plugin_elementor, 'zenrush_register_elementor_widget' );
@@ -229,8 +218,8 @@ class Zenrush
      * Register all the hooks related to the admin area functionality
      * of the plugin.
      *
-     * @since    1.0.0
-     * @access   private
+     * @since   1.0.0
+     * @access  private
      */
     private function define_admin_hooks(): void
     {
@@ -238,6 +227,7 @@ class Zenrush
 
         // Show notification when plugin setup is not completed yet
         $this->loader->add_action( 'admin_notices', $plugin_admin, 'zenrush_complete_setup_notification' );
+
         // Dismissal function for setup notification
         $this->loader->add_action( 'admin_init', $plugin_admin, 'zenrush_complete_setup_notification_dismissed' );
 
@@ -262,17 +252,17 @@ class Zenrush
     /**
      * Register the Zenrush shipping method
      *
-     * @since    1.0.0
-     * @access   private
+     * @since   1.0.0
+     * @access  private
      */
     private function define_shipping_method(): void
     {
         $plugin_shipping = new Zenrush_Shipping_Method();
 
         // Add Zenrush Shipping Method to WooCommerce
-        $this->loader->add_action('woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_method');
-        $this->loader->add_filter('woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_shipping_method');
-        $this->loader->add_filter( 'woocommerce_package_rates', $plugin_shipping, 'zenrush_filter_skus', 10, 2 );
+        $this->loader->add_action( 'woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_method' );
+        $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_shipping_method' );
+        $this->loader->add_filter( 'woocommerce_package_rates', $plugin_shipping, 'zenrush_check_products', 10, 2 );
     }
 
 
@@ -280,31 +270,31 @@ class Zenrush
      * Register all the hooks related to the public-facing functionality
      * of the plugin.
      *
-     * @since    1.0.0
-     * @access   private
+     * @since   1.0.0
+     * @access  private
      */
     private function define_public_hooks(): void
     {
         $plugin_public = new Zenrush_Public($this->get_plugin_name(), $this->get_version());
 
         // Add plugin css / js
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
         // Add zenrush snippet bundle in <head></head> of store
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'zenrush_add_bundle');
+        $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'zenrush_add_bundle' );
 
         // Add <zf-zenrush> element to sections of the store
         // -> Product Page
-        $this->loader->add_action('woocommerce_before_add_to_cart_button', $plugin_public, 'zenrush_add_element_to_product_page');
+        $this->loader->add_action( 'woocommerce_before_add_to_cart_button', $plugin_public, 'zenrush_add_element_to_product_page' );
         // -> Listing/Category Pages & Related Articles
-        $this->loader->add_action('woocommerce_loop_add_to_cart_link', $plugin_public, 'zenrush_add_element_to_product_listing', 10, 3);
+        $this->loader->add_action( 'woocommerce_loop_add_to_cart_link', $plugin_public, 'zenrush_add_element_to_product_listing', 10, 3 );
     }
 
     /**
      * Run the loader to execute all the hooks with WordPress.
      *
-     * @since    1.0.0
+     * @since   1.0.0
      */
     public function run(): void
     {
@@ -315,8 +305,8 @@ class Zenrush
      * The name of the plugin used to uniquely identify it within the context of
      * WordPress and to define internationalization functionality.
      *
-     * @return    string    The name of the plugin.
-     * @since     1.0.0
+     * @return  string  The name of the plugin.
+     * @since   1.0.0
      */
     public function get_plugin_name(): string
     {
@@ -326,8 +316,8 @@ class Zenrush
     /**
      * The reference to the class that orchestrates the hooks with the plugin.
      *
-     * @return    Zenrush_Loader    Orchestrates the hooks of the plugin.
-     * @since     1.0.0
+     * @return  Zenrush_Loader  Orchestrates the hooks of the plugin.
+     * @since   1.0.0
      */
     public function get_loader(): Zenrush_Loader
     {
@@ -337,8 +327,8 @@ class Zenrush
     /**
      * Retrieve the version number of the plugin.
      *
-     * @return    string    The version number of the plugin.
-     * @since     1.0.0
+     * @return  string  The version number of the plugin.
+     * @since   1.0.0
      */
     public function get_version(): string
     {
@@ -350,7 +340,7 @@ class Zenrush
      *
      * Returns true when either Elementor or Elementor Pro is installed AND active in the store.
      *
-     * @return bool
+     * @return  bool
      */
     public function get_elementor_plugin(): bool
     {

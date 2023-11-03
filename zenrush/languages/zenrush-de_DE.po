@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Zenrush\n"
-"POT-Creation-Date: 2023-09-11 14:32+0200\n"
-"PO-Revision-Date: 2023-09-11 14:34+0200\n"
+"POT-Creation-Date: 2023-11-03 17:38+0100\n"
+"PO-Revision-Date: 2023-11-03 17:42+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: zenrush.php\n"
@@ -21,8 +21,8 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
 #. Plugin Name of the plugin/theme
-#: admin/class-zenrush-admin.php:94 admin/class-zenrush-wc-settings.php:33
-#: elementor-widget/class-zenrush-elementor-widget.php:22
+#: admin/class-zenrush-admin.php:94 admin/class-zenrush-wc-settings.php:35
+#: elementor-widget/class-zenrush-elementor-widget.php:33
 msgid "Zenrush"
 msgstr "Zenrush"
 
@@ -34,23 +34,23 @@ msgstr "Dashboard"
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: admin/class-zenrush-admin.php:216
+#: admin/class-zenrush-admin.php:208
 msgid "Enter your Merchant Key"
 msgstr "Geben deinen Merchant Key ein"
 
-#: admin/class-zenrush-admin.php:217 admin/class-zenrush-admin.php:224
+#: admin/class-zenrush-admin.php:209 admin/class-zenrush-admin.php:216
 msgid "Enable Zenrush for the Germany shipping zone"
 msgstr "Zenrush für die Versandzone Deutschland aktivieren"
 
-#: admin/class-zenrush-admin.php:222
+#: admin/class-zenrush-admin.php:214
 msgid "Add a shipping zone for Germany"
 msgstr "Versandzone für Deutschland hinzufügen"
 
-#: admin/class-zenrush-admin.php:231
+#: admin/class-zenrush-admin.php:223
 msgid "Complete Zenrush setup to activate"
 msgstr "Zenrush vollständig einrichten und aktivieren"
 
-#: admin/class-zenrush-admin.php:232
+#: admin/class-zenrush-admin.php:224
 msgid ""
 "<b>Zenrush Premium Delivery</b> is almost ready to go! Once you completed "
 "the setup, you'll have access to a premium delivery option and shipping "
@@ -60,39 +60,39 @@ msgstr ""
 "Einrichtung abgeschlossen hast, hast du Zugriff auf die Premium "
 "Versandoption mit Berechnung der Lieferzeit in Echtzeit."
 
-#: admin/class-zenrush-admin.php:235
+#: admin/class-zenrush-admin.php:227
 msgid "To get started"
 msgstr "Zum Start der Einrichtung"
 
-#: admin/class-zenrush-admin.php:235
+#: admin/class-zenrush-admin.php:227
 msgid "follow the setup documentation"
 msgstr "folge der Setup-Dokumentation"
 
-#: admin/class-zenrush-admin.php:282
+#: admin/class-zenrush-admin.php:287
 msgid "Zenrush Documentation"
 msgstr "Zenrush Dokumentation"
 
-#: admin/class-zenrush-admin.php:282
+#: admin/class-zenrush-admin.php:287
 msgid "Docs"
 msgstr "Docs"
 
-#: admin/class-zenrush-wc-settings.php:53
+#: admin/class-zenrush-wc-settings.php:55
 msgid "Zenrush Settings"
 msgstr "Zenrush Einstellungen"
 
-#: admin/class-zenrush-wc-settings.php:54
+#: admin/class-zenrush-wc-settings.php:56
 msgid "Log"
 msgstr "Protokoll"
 
-#: admin/partials/zenrush-settings-main.php:19
+#: admin/partials/zenrush-settings-main.php:17
 msgid "General Options"
 msgstr "Allgemeine Einstellungen"
 
-#: admin/partials/zenrush-settings-main.php:26
+#: admin/partials/zenrush-settings-main.php:24
 msgid "Merchant Key"
 msgstr "Merchant Key"
 
-#: admin/partials/zenrush-settings-main.php:28
+#: admin/partials/zenrush-settings-main.php:26
 msgid ""
 "The unique Merchant Key for the Zenrush Plugin. This Key will be provided to "
 "you by Zenfulfillment Customer Support."
@@ -100,11 +100,11 @@ msgstr ""
 "Der Merchant Key für dein Zenrush Plugin. Dieser Key wird dir vom "
 "Zenfulfillment Kundenservice zur Verfügung gestellt."
 
-#: admin/partials/zenrush-settings-main.php:37
+#: admin/partials/zenrush-settings-main.php:35
 msgid "Zenrush Store Front-End Integration"
 msgstr "Zenrush Store-Front Integration"
 
-#: admin/partials/zenrush-settings-main.php:39
+#: admin/partials/zenrush-settings-main.php:37
 msgid ""
 "Note: If the automatic front-end integration is disabled, you need to add "
 "the Zenrush snippet to your store theme manually. <a href=\"https://setup."
@@ -115,29 +115,29 @@ msgstr ""
 "href=\"https://setup.zenfulfillment.com/zenrush/integration/"
 "woocommerce\">Dokumentation</a>"
 
-#: admin/partials/zenrush-settings-main.php:44
+#: admin/partials/zenrush-settings-main.php:42
 msgid "Automatic Integration"
 msgstr "Automatische Store-Front Integration"
 
-#: admin/partials/zenrush-settings-main.php:45
+#: admin/partials/zenrush-settings-main.php:43
 msgid "Enable Automatic Integration"
 msgstr "Automatische Integration aktivieren"
 
-#: admin/partials/zenrush-settings-main.php:54
+#: admin/partials/zenrush-settings-main.php:52
 msgid "On Product Detail Pages"
 msgstr "Auf Produktdetailseiten"
 
-#: admin/partials/zenrush-settings-main.php:55
+#: admin/partials/zenrush-settings-main.php:53
 msgid "Show Zenrush on all product detail pages"
 msgstr ""
 "Zeigt Zenrush auf allen Produktdetailseiten unter dem add to cart button an"
 
-#: admin/partials/zenrush-settings-main.php:65
-#: admin/partials/zenrush-settings-main.php:77
+#: admin/partials/zenrush-settings-main.php:63
+#: admin/partials/zenrush-settings-main.php:75
 msgid "On Product Category Listings"
 msgstr "Auf Produkt Kategorie-Seite"
 
-#: admin/partials/zenrush-settings-main.php:66
+#: admin/partials/zenrush-settings-main.php:64
 msgid ""
 "Show Zenrush on all product listings. This includes the product category "
 "pages and \"related products\""
@@ -145,11 +145,11 @@ msgstr ""
 "Zeigt das Zenrush Element auf allen Produktkategorie-Seiten an. Dies gilt "
 "auch für „Verwandte Produkte“"
 
-#: admin/partials/zenrush-settings-main.php:76
+#: admin/partials/zenrush-settings-main.php:74
 msgid "Disable delivery date on product listings"
 msgstr "Lieferdatum auf Produkt Kategorie-Seiten deaktivieren"
 
-#: admin/partials/zenrush-settings-main.php:77
+#: admin/partials/zenrush-settings-main.php:75
 msgid ""
 "Do not show delivery date on product category pages. Only the Zenrush icon "
 "will be shown, if enabled:"
@@ -157,96 +157,126 @@ msgstr ""
 "Zeigt das Lieferdatum nicht auf Produktkategorieseiten an. Es wird nur das "
 "Zenrush Icon angezeigt, wenn die Einstellung aktiviert wurde:"
 
-#: admin/partials/zenrush-settings-main.php:87
+#: admin/partials/zenrush-settings-main.php:85
 msgid "Enable Styling on Checkout"
 msgstr "Zenrush Styling im Checkout aktivieren"
 
-#: admin/partials/zenrush-settings-main.php:88
+#: admin/partials/zenrush-settings-main.php:86
 msgid "Adds additional styling to the Zenrush shipping option on checkout"
 msgstr "Fügt der Zenrush-Versandoption im Checkout zusätzliches Styling hinzu"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:52
+#: admin/partials/zenrush-settings-main.php:101
+msgid "Disable Zenrush for some Products"
+msgstr "Zenrush für einige Produkte deaktivieren"
+
+#: admin/partials/zenrush-settings-main.php:103
+msgid ""
+"By default Zenrush will be enabled for all products that are in stock, but "
+"here you can configure products that should not be enabled for zenrush"
+msgstr ""
+"Standardmäßig ist Zenrush für alle Produkte aktiviert die auf Lager sind. "
+"Hier kann man bestimmte Produkte für Zenrush jedoch trotzdem deaktivieren"
+
+#: admin/partials/zenrush-settings-main.php:108
+msgid "Disable Zenrush for specific products"
+msgstr "Zenrush für folgende Produkte deaktivieren"
+
+#: admin/partials/zenrush-settings-main.php:109
+msgid "Add the products SKU you want to disable Zenrush for"
+msgstr ""
+"Füge die Produkt-SKU (Artikelnummer) hinzu, für die Zenrush deaktivieren "
+"werden soll"
+
+#: admin/partials/zenrush-settings-main.php:110
+msgid ""
+"Add multiple SKUs by separating them with a comma like this: SKU-1,SKU-2,"
+"SKU-3,..."
+msgstr ""
+"Es können auh mehrere SKUs hinzugefügt werden, indem man sie durch ein Komma "
+"wie folgt trennt: SKU-1,SKU-2,SKU-3."
+
+#: elementor-widget/class-zenrush-elementor-widget.php:87
 msgid "Options"
 msgstr "Einstellungen"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:63
+#: elementor-widget/class-zenrush-elementor-widget.php:97
 msgid "Variant"
 msgstr "Variante"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:67
+#: elementor-widget/class-zenrush-elementor-widget.php:101
 msgid "Primary"
 msgstr "Primär"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:70
+#: elementor-widget/class-zenrush-elementor-widget.php:104
 msgid "Badge"
 msgstr "Abzeichen"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:73
+#: elementor-widget/class-zenrush-elementor-widget.php:107
 msgid "Logo"
 msgstr "Logo"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:84
+#: elementor-widget/class-zenrush-elementor-widget.php:118
 msgid "Language"
 msgstr "Sprache"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:88
+#: elementor-widget/class-zenrush-elementor-widget.php:122
 msgid "German"
 msgstr "Deutsch"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:91
+#: elementor-widget/class-zenrush-elementor-widget.php:125
 msgid "English"
 msgstr "Englisch"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:101
+#: elementor-widget/class-zenrush-elementor-widget.php:135
 msgid "Badge Text"
 msgstr "Abzeichen Text"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:103
+#: elementor-widget/class-zenrush-elementor-widget.php:137
 msgid "Powered by"
 msgstr "Powered by"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:104
+#: elementor-widget/class-zenrush-elementor-widget.php:138
 msgid "Add the badge text here"
 msgstr "Fügen Sie hier den Badge-Text hinzu"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:115
+#: elementor-widget/class-zenrush-elementor-widget.php:149
 msgid "Show Delivery Date"
 msgstr "Liefertermin anzeigen"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:117
+#: elementor-widget/class-zenrush-elementor-widget.php:151
 msgid "On"
 msgstr "An"
 
-#: elementor-widget/class-zenrush-elementor-widget.php:118
+#: elementor-widget/class-zenrush-elementor-widget.php:152
 msgid "Off"
 msgstr "Aus"
 
 #. Author of the plugin/theme
-#: elementor-widget/class-zenrush-elementor.php:50
+#: elementor-widget/class-zenrush-elementor.php:49
 msgid "Zenfulfillment"
 msgstr "Zenfulfillment"
 
-#: shipping-method/class-zenrush-wc-shipping-method.php:79
+#: shipping-method/class-zenrush-wc-shipping-method.php:70
 msgid "Powered by Zenfulfillment.com - Ordered today, delivered tomorrow"
 msgstr "Powered by Zenfulfillment.com - Heute bestellt. Morgen geliefert"
 
-#: shipping-method/class-zenrush-wc-shipping-method.php:88
-#: shipping-method/class-zenrush-wc-shipping-method.php:91
+#: shipping-method/class-zenrush-wc-shipping-method.php:79
+#: shipping-method/class-zenrush-wc-shipping-method.php:82
 msgid "Zenrush Premium Delivery"
 msgstr "Zenrush Premiumversand"
 
-#: zenrush.php:80
+#: zenrush.php:88
 msgid ""
 "Zenrush requires <strong>WooCommerce</strong> to be installed and active."
 msgstr ""
 "Zenrush erfordert, dass <strong>WooCommerce</strong> im Shop installiert und "
 "aktiviert it."
 
-#: zenrush.php:87
+#: zenrush.php:95
 msgid "Install WooCommerce"
 msgstr "WooCommerce installieren"
 
-#: zenrush.php:91
+#: zenrush.php:99
 msgid "Activate WooCommerce"
 msgstr "WooCommerce aktivieren"
 
@@ -261,9 +291,6 @@ msgstr "Integrations-Plugin für Zenrush Premiumversand"
 #. Author URI of the plugin/theme
 msgid "https://zenfulfillment.com"
 msgstr "https://zenfulfillment.com"
-
-#~ msgid "Enable Zenrush for your payment methods"
-#~ msgstr "Zenrush für die Zahlungsmethoden aktivieren"
 
 #~ msgid "Enable/Disable"
 #~ msgstr "Aktivieren/Deaktivieren"
