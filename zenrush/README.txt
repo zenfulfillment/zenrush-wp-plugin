@@ -27,6 +27,10 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.2.10 =
+* Code improvements
+* Added Global ZENRUSH_PREFIX const
+
 = 1.2.9 =
 * Add option to disable zenrush for specific products
 
