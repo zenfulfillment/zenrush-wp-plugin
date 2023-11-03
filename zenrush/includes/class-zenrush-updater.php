@@ -223,7 +223,7 @@ class Zenrush_Updater {
     {
         if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
             foreach( $options['plugins'] as $plugin ) {
-                if ( $plugin == plugin_basename( $this->$basename ) ) {
+                if ( $plugin == plugin_basename( 'zenrush/zenrush.php' ) ) {
                     $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
                     $message = "🔄 *Zenrush Plugin Updated*\n\nThe Zenrush plugin has been successfully updated to v" . ZENRUSH_VERSION . ".\n\n- Shop Name: " . get_bloginfo( 'name' ) . "\n- Shop URL: " . get_bloginfo( 'url' ) . "\n\n";
                     $data = array( 
