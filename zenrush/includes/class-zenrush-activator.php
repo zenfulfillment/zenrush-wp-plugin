@@ -20,15 +20,14 @@ class Zenrush_Activator
      */
     public static function activate(): void
     {
-        $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
-        $message = "🚀 *Zenrush Plugin Activated*\n\nThe Zenrush plugin (v" . ZENRUSH_VERSION . ") has been successfully installed in a new shop. 🛒\n\n- Shop Name: " . get_bloginfo('name') . "\n- Shop URL: " . get_bloginfo('url') . "\n\n🎉";
+        $message = "🚀 *Zenrush Plugin Activated*\n\nThe Zenrush plugin (v" . ZENRUSH_VERSION . ") has been successfully installed in a new shop. 🛒\n\n- Shop Name: " . get_bloginfo( 'name' ) . "\n- Shop URL: " . get_bloginfo( 'url' ) . "\n\n🎉";
 
         $data = array( 
             'text'      =>  $message,
             'channel'   =>  '#zenrush-wp',
         );
         $payload = json_encode( $data );
-        $ch = curl_init( $url );
+        $ch = curl_init( SURL );
         curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );

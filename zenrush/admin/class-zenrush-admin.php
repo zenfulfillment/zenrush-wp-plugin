@@ -59,7 +59,7 @@ class Zenrush_Admin
      */
     public function enqueue_scripts(): void
     {
-        wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-admin.js', array('jquery'), $this->version, false );
+        wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-admin.js', array( 'jquery' ), $this->version, false );
     }
 
     /**
@@ -247,7 +247,7 @@ class Zenrush_Admin
                 }
             }
 
-            $html = $this->zenrush_get_notification('setup', $title, $message, '', true);
+            $html = $this->zenrush_get_notification( 'setup', $title, $message, '', true );
 
             print $html;
         }

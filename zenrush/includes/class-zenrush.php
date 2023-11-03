@@ -69,7 +69,7 @@ class Zenrush
      */
     public function __construct()
     {
-        if (defined('ZENRUSH_VERSION')) {
+        if ( defined( 'ZENRUSH_VERSION' ) ) {
             $this->version = ZENRUSH_VERSION;
         } else {
             $this->version = 'UNKNOWN';
@@ -164,7 +164,7 @@ class Zenrush
     private function set_locale(): void
     {
         $plugin_i18n = new Zenrush_i18n();
-        $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
+        $this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
     }
 
     /**
@@ -176,7 +176,7 @@ class Zenrush
     private function define_zenrush_api(): void
     {
         $plugin_rest = new Zenrush_Api();
-        $this->loader->add_action('rest_api_init', $plugin_rest, 'register_routes');
+        $this->loader->add_action( 'rest_api_init', $plugin_rest, 'register_routes' );
     }
 
     /**
@@ -195,7 +195,7 @@ class Zenrush
     }
 
     /**
-     * Initialize the Updater class to check for latest releases and show a notice.
+     * Initializes the Zenrush_Updater class to check for latest releases and notify in admin on new version.
      *
      * @since   1.0.0
      * @access  private
@@ -205,13 +205,14 @@ class Zenrush
     {
         $plugin_updater = new Zenrush_Updater( ZENRUSH_PLUGIN_FILE );
 
-        $this->loader->add_action('admin_init', $plugin_updater, 'set_plugin_properties');
+        $this->loader->add_action( 'admin_init', $plugin_updater, 'set_plugin_properties' );
 
         $plugin_updater->set_repository( 'zenfulfillment/zenrush-wp-plugin' );
 
-        $this->loader->add_filter('pre_set_site_transient_update_plugins', $plugin_updater, 'check_for_update', 10, 1);
-        $this->loader->add_filter('plugins_api', $plugin_updater, 'plugin_popup', 10, 3);
-        $this->loader->add_filter('upgrader_post_install', $plugin_updater, 'after_install', 10, 3);
+        $this->loader->add_filter( 'pre_set_site_transient_update_plugins', $plugin_updater, 'check_for_update', 10, 1 );
+        $this->loader->add_filter( 'plugins_api', $plugin_updater, 'plugin_popup', 10, 3 );
+        $this->loader->add_filter( 'upgrader_post_install', $plugin_updater, 'after_install', 10, 3 );
+        $this->loader->add_action( 'upgrader_process_complete', $plugin_updater, 'update_completed', 10, 2 );
     }
 
     /**

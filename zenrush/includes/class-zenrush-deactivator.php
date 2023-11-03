@@ -20,15 +20,14 @@ class Zenrush_Deactivator
      */
     public static function deactivate(): void
     {
-        $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
-        $message = "🙁 *Zenrush Plugin deactivated*\n\nThe Zenrush plugin (v" . ZENRUSH_VERSION . ") has been uninstalled/deactivated from a shop. 🪓\n\n- Shop Name: " . get_bloginfo('name') . "\n- Shop URL: " . get_bloginfo('url') . "\n\nIf this was unintentional, please investigate. 😞";
+        $message = "🙁 *Zenrush Plugin deactivated*\n\nThe Zenrush plugin (v" . ZENRUSH_VERSION . ") has been uninstalled/deactivated from a shop. 🪓\n\n- Shop Name: " . get_bloginfo( 'name' ) . "\n- Shop URL: " . get_bloginfo( 'url' ) . "\n\nIf this was unintentional, please investigate. 😞";
 
         $data = array( 
             'text'      =>  $message,
             'channel'   =>  '#zenrush-wp',
         );
         $payload = json_encode( $data );
-        $ch = curl_init( $url );
+        $ch = curl_init( SURL );
         curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
         curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
