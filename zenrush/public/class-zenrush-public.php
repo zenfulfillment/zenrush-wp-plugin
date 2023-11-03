@@ -94,7 +94,7 @@ class Zenrush_Public
         $checkout_styling_enabled = get_option( ZENRUSH_PREFIX . 'enable_checkout_styling' ) === 'yes';
 
         if ( $checkout_styling_enabled ) {
-            wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-public.js', array('jquery'), $this->version, false );
+            wp_enqueue_script( $this->plugin_name, plugin_dir_url(__FILE__) . 'js/zenrush-public.js', array( 'jquery' ), $this->version, false );
         }
     }
 

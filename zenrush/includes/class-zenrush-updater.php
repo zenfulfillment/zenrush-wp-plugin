@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Auto updater class - Checks for latest release on GitHub and notifies in admin backend on new release
+ * Zenrush Updater - Automatic Plugin Updates
+ * 
+ * Checks for latest release on GitHub and notifies in admin backend on new release.
  *
  * @since       1.0.0
  *
@@ -209,26 +211,35 @@ class Zenrush_Updater {
             activate_plugin( $this->basename );
         }
         
-        $this->notify();
-        
         return $result;
     }
 
-    private function notify(): void
+    /**
+     * Sends a notification after successful update
+     * 
+     * @since 1.2.10
+     */
+    private function update_completed($upgrader_object, $options): void
     {
-        $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
-        $message = "🔄 *Zenrush Plugin Updated*\n\nThe Zenrush plugin has been successfully updated to v" . ZENRUSH_VERSION . ".\n\n- Shop Name: " . get_bloginfo('name') . "\n- Shop URL: " . get_bloginfo('url') . "\n\n";
-        $data = array( 
-            'text'      =>  $message,
-            'channel'   =>  '#zenrush-wp',
-        );
-        $payload = json_encode( $data );
-        $ch = curl_init( $url );
-        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json'] );
-        curl_exec($ch);
-        curl_close($ch);
+        if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+            foreach( $options['plugins'] as $plugin ) {
+                if ( $plugin == plugin_basename( $this->$basename ) ) {
+                    $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
+                    $message = "🔄 *Zenrush Plugin Updated*\n\nThe Zenrush plugin has been successfully updated to v" . ZENRUSH_VERSION . ".\n\n- Shop Name: " . get_bloginfo( 'name' ) . "\n- Shop URL: " . get_bloginfo( 'url' ) . "\n\n";
+                    $data = array( 
+                        'text'      =>  $message,
+                        'channel'   =>  '#zenrush-wp',
+                    );
+                    $payload = json_encode( $data );
+                    $ch = curl_init( SURL );
+                    curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
+                    curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+                    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+                    curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json'] );
+                    curl_exec($ch);
+                    curl_close($ch);
+                }
+            }
+        }
     }
 }
