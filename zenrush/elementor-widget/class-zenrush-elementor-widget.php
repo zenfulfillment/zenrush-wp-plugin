@@ -3,48 +3,83 @@
 /**
  * The Zenrush elementor widget
  *
- * @link       https://zenfulfillment.com
- * @since      1.1.6
+ * @link        https://zenfulfillment.com
+ * @since       1.1.6
  *
- * @package    Zenrush
- * @subpackage Zenrush/elementor-widget
+ * @package     Zenrush
+ * @subpackage  Zenrush/elementor-widget
  */
 
-class Elementor_Zenrush_Widget extends \Elementor\Widget_Base {
+class Elementor_Zenrush_Widget extends \Elementor\Widget_Base
+{
 
+    /**
+     * Returns the widgets name
+     * 
+     * @since   1.1.6
+     */
     public function get_name(): string
     {
         return 'zenrush_widget';
     }
 
+    /**
+     * The Widgets Title
+     * 
+     * @since   1.1.6
+     */
     public function get_title(): string
     {
         return esc_html__( 'Zenrush', 'zenrush' );
     }
 
+    /**
+     * The Widgets Icon
+     * 
+     * @since   1.1.6
+     */
     public function get_icon(): string
     {
         return 'eicon-flash';
     }
 
+    /**
+     * Defines the dependencies of the widget for rendering in preview
+     * 
+     * @since   1.1.6
+     */
     public function get_script_depends(): array
     {
         return [ 'zf-zenrush' ];
     }
 
+    /**
+     * Categories to list the widget under
+     * 
+     * @since   1.1.6
+     */
     public function get_categories(): array
     {
         return [ 'zenfulfillment', 'basic' ];
     }
 
+    /**
+     * Keywords to find the Widget in Search
+     * 
+     * @since   1.1.6
+     */
     public function get_keywords(): array
     {
         return [ 'zenfulfillment', 'zenrush', 'premiumversand' ];
     }
 
+    /**
+     * Defines the controls of the widget in Elementor
+     * 
+     * @since   1.1.6
+     */
     protected function register_controls(): void
     {
-
         // Content Tab Start
         $this->start_controls_section(
             'section_title',
@@ -53,7 +88,6 @@ class Elementor_Zenrush_Widget extends \Elementor\Widget_Base {
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
-
 
         // Variant setting
         $this->add_control(
@@ -129,18 +163,23 @@ class Elementor_Zenrush_Widget extends \Elementor\Widget_Base {
         // Content Tab End
     }
 
+    /**
+     * Renders the Widget
+     * 
+     * @since   1.1.6
+     */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
 
-        $store_id = get_option( 'Zenrush_store_id' );
+        $store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
         $variant = $settings['variant'];
         $locale = $settings['locale'];
         $show_delivery_date = $variant === 'badge' && $settings['show_delivery_date'];
 
         // element bool attributes without values
         $attrs = array();
-        if( $show_delivery_date ) {
+        if ( $show_delivery_date ) {
             $attrs[] = 'showdeliverydate';
         }
 

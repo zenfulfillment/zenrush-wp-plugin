@@ -9,7 +9,7 @@
  * @subpackage Zenrush/shipping-method
  */
 
-if ( !defined('ABSPATH') ) {
+if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
@@ -26,44 +26,35 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     /**
      * The url to fetch custom zenrush rate rules from
      *
-     * @since    1.1.5
-     * @access   private
-     * @var string Zenrush Rates url
+     * @since   1.1.5
+     * @access  private
+     * @var     string Zenrush Rates url
      */
     private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates';
 
     /**
-     * The prefix for options to use
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string $prefix The prefix to use to access settings and set ids
-     */
-    private string $prefix = 'Zenrush_';
-
-    /**
      * The default rate to use for Zenrush, from the pricing config
      *
-     * @since 1.0.0
-     * @access private
-     * @var int $base_rate The default rate for Zenrush
+     * @since   1.0.0
+     * @access  private
+     * @var     int $base_rate The default rate for Zenrush
      */
     private int $base_rate = 699;
 
     /**
      * Array of custom pricing rates for zenrush defined for this store
      *
-     * @since 1.0.0
-     * @access private
-     * @var array $custom_rates The custom rates set for this store
+     * @since   1.0.0
+     * @access  private
+     * @var     array   $custom_rates The custom rates set for this store
      */
     private array $custom_rates = array();
 
     /**
      * Constructor for your shipping class
      *
-     * @access public
-     * @return void
+     * @access  public
+     * @return  void
      */
     public function __construct($instance_id = 0)
     {
@@ -82,7 +73,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $this->supports = ['shipping-zones', 'instance-settings', 'instance-settings-modal'];
 
         // Plugin ID, used as prefix for settings
-        $this->plugin_id = $this->prefix;
+        $this->plugin_id = ZENRUSH_PREFIX;
 
         // Title shown in store
         $this->title = __( 'Zenrush Premium Delivery', 'zenrush' );
@@ -108,7 +99,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $this->init_settings();
 
         // If shipping option is enabled or not via option in admin backend
-        $this->enabled = get_option( $this->prefix . 'store_id' ) ? $this->get_option( 'enabled' ) : 'no';
+        $this->enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) ? $this->get_option( 'enabled' ) : 'no';
 
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
@@ -117,13 +108,13 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * Fetches current configured zenrush pricing rules for the store
      * and parses them to an array with `base_rate` and `custom_rates`
      *
-     * @since 1.0.0
-     * @access private
-     * @return array
+     * @since   1.0.0
+     * @access  private
+     * @return  array
      */
-    private function fetch_zenrush_pricing_rules(): array
+    private function get_zenrush_rate_rules(): array
     {
-        $storeId = get_option( $this->prefix . 'store_id' );
+        $storeId = get_option( ZENRUSH_PREFIX . 'store_id' );
         $url = $this->rates_url . '?storeId=' . $storeId;
 
         $response = wp_remote_get( $url );
@@ -147,9 +138,9 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     /**
      * Calculates the shipping rate to be displayed in store frontend
      *
-     * @access public
-     * @param array $package Package information.
-     * @return void
+     * @access  public
+     * @param   array   $package    Package information.
+     * @return  void
      */
     public function calculate_shipping($package = array()): void
     {
@@ -159,16 +150,9 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $cart_tax = floatval( WC()->cart->get_taxes_total() );
         // this is the final cart price (products + taxes)
         $cart_total = $cart_price + $cart_tax;
-        
-        // check if all products in the cart are in stock - query API
-        // $products_in_stock = $this->check_stock_in_cart( $package );
-        // if ( !$products_in_stock ) {
-        //     error_log( 'Not displaying Zenrush - One or more products are out of stock!' );
-        //     return;
-        // }
 
         // Fetch store specific zenrush pricing rules
-        $raw_rates = $this->fetch_zenrush_pricing_rules();
+        $raw_rates = $this->get_zenrush_rate_rules();
         $rates = $raw_rates['custom_rates'];
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
@@ -180,20 +164,20 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
 
                 switch( $rule_definition ) {
                     case '$gte':
-                    if ( $cart_total >= $rule_cost ) {
-                        $cost = $this->calc_cost( $rule_price );
-                    }
-                    break;
+                        if ( $cart_total >= $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
                     case '$gt':
                         if ( $cart_total > $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
                         }
                         break;
                     case '$lte':
-                    if ( $cart_total <= $rule_cost ) {
-                        $cost = $this->calc_cost( $rule_price );
-                    }
-                    break;
+                        if ( $cart_total <= $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
                     case '$lt':
                         if ( $cart_total < $rule_cost ) {
                             $cost = $this->calc_cost( $rule_price );
@@ -214,45 +198,20 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
             'package'   =>  $package,
         );
 
-        // registers the shipping option with the calculated price to be displayed on checkout / cart
         $this->add_rate( $rate );
     }
 
     /**
      * Util to transform the rate price from cents to euros, e.g. 299 => 2.99
      *
-     * @param int $rule_price
-     * @return float|int
-     * @since 1.0.0
-     * @access private
+     * @since   1.0.0
+     * @access  private
      */
-    private function calc_cost(int $rule_price): float|int
+    private function calc_cost(int $rule_price)
     {
         if ($rule_price === 0) {
             return $rule_price;
         }
         return $rule_price / 100;
-    }
-
-    /**
-     * Util to check if at least one of the items in the current cart is out of stock
-     *
-     * @param $package
-     * @return bool
-     */
-    private function check_stock_in_cart($package): bool
-    {
-        $all_products_in_stock = true;
-
-        foreach ( $package['contents'] as $item ) {
-            $product = $item['data'];
-            $product_sku = $product->get_sku();
-            if ( !$product->is_in_stock() ) {
-                $all_products_in_stock = false;
-                break;
-            }
-        }
-
-        return $all_products_in_stock;
     }
 }

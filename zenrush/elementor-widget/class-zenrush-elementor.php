@@ -10,30 +10,29 @@
  * @subpackage Zenrush/elementor-widget
  */
 
-if ( !defined('ABSPATH') ) {
+if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
 /**
  * The Elementor widget functionality of the plugin.
  *
- * @package    Zenrush
- * @subpackage Zenrush/elementor-widget
- * @author     Zenfulfillment <devs@zenfulfillment.com>
+ * @package     Zenrush
+ * @subpackage  Zenrush/elementor-widget
+ * @author      Zenfulfillment <devs@zenfulfillment.com>
  */
 class Zenrush_Elementor
 {
     /**
-     * Minimum required Elementor Version
+     * Minimum Required Elementor Version
      *
-     * @since 1.0.0
-     * @var string Minimum Elementor version required to run the zenrush widget.
+     * @since   1.1.6
      */
-    const MINIMUM_ELEMENTOR_VERSION = '3.0.0';
+    private string $MREV = '3.0.0';
 
-    public function zenrush_register_elementor_widget( $widgets_manager ): void
+    public function zenrush_register_elementor_widget($widgets_manager): void
     {
-        if ( ! version_compare( ELEMENTOR_VERSION, self::MINIMUM_ELEMENTOR_VERSION, '>=' ) ) {
+        if ( !version_compare( ELEMENTOR_VERSION, $this->$MREV, '>=' ) ) {
             add_action( 'admin_notices', array( $this, 'zenrush_admin_notice_minimum_elementor_version' ) );
             return;
         }
@@ -42,7 +41,7 @@ class Zenrush_Elementor
         $widgets_manager->register( new \Elementor_Zenrush_Widget() );
     }
 
-    public function zenrush_add_elementor_widget_categories( $elements_manager ): void
+    public function zenrush_add_elementor_widget_categories($elements_manager): void
     {
         $elements_manager->add_category(
             'zenfulfillment',
@@ -57,10 +56,10 @@ class Zenrush_Elementor
     /**
      * Admin notice
      *
-     * Warning when the site doesn't have the minimum required Elementor version.
+     * Renders a warning when the site doesn't have the minimum required elementor version installed.
      *
-     * @since 1.0.0
-     * @access public
+     * @since   1.1.6
+     * @access  public
      */
     public function zenrush_admin_notice_minimum_elementor_version(): string
     {
@@ -77,7 +76,7 @@ class Zenrush_Elementor
             ),
             'Zenrush Elementor Widget',
             'Elementor',
-            self::MINIMUM_ELEMENTOR_VERSION
+            $this->$MREV
         );
     }
 }

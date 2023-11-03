@@ -25,7 +25,7 @@
  */
 
 // If this file is called directly, abort.
-if ( !defined('WPINC') ) {
+if ( !defined( 'WPINC' ) ) {
     die;
 }
 
@@ -33,25 +33,33 @@ if ( !defined('WPINC') ) {
 /**
  * Current plugin version.
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 const ZENRUSH_VERSION = '1.2.9';
 
 /**
  * Plugin file path.
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 const ZENRUSH_PLUGIN_FILE = __FILE__;
 
-if ( !function_exists('is_plugin_active') ) {
-    include_once(ABSPATH . '/wp-admin/includes/plugin.php');
+
+/**
+ * Prefix for options
+ * 
+ * @since   1.3.0
+ */
+const ZENRUSH_PREFIX = 'Zenrush_';
+
+if ( !function_exists( 'is_plugin_active' ) ) {
+    include_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 }
 
 /**
  * Check for the existence of WooCommerce and any other requirements
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 function zenrush_check_requirements(): bool
 {
@@ -66,7 +74,7 @@ function zenrush_check_requirements(): bool
 /**
  * Display a message advising WooCommerce is required
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 function zenrush_missing_wc_notice(): void
 {
@@ -93,14 +101,14 @@ function zenrush_missing_wc_notice(): void
         $error_message .= ' <a href="' . $activate_url . '">' . $activate_text . '</a>';
     }
 
-    printf('<div class="notice notice-error" style="display: flex; padding-top: 6px; padding-bottom: 6px;"><img src="%2$s" alt="Zenrush Badge" style="width: auto; height: 34px;position: relative;top: -2px;margin-right: 8px;"/><p><strong>%1$s</strong></p></div>', $error_message, $img_url);
+    printf( '<div class="notice notice-error" style="display: flex; padding-top: 6px; padding-bottom: 6px;"><img src="%2$s" alt="Zenrush Badge" style="width: auto; height: 34px;position: relative;top: -2px;margin-right: 8px;"/><p><strong>%1$s</strong></p></div>', $error_message, $img_url );
 }
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-zenrush-activator.php
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 function activate_zenrush(): void
 {
@@ -112,7 +120,7 @@ function activate_zenrush(): void
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-zenrush-deactivator.php
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 function deactivate_zenrush(): void
 {
@@ -128,7 +136,7 @@ register_deactivation_hook( __FILE__, 'deactivate_zenrush' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, shipping method, and public-facing site hooks.
  * 
- * @since    1.0.0
+ * @since   1.0.0
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-zenrush.php';
 
@@ -139,7 +147,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-zenrush.php';
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
- * @since    1.0.0
+ * @since   1.0.0
  */
 function run_zenrush(): void
 {

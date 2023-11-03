@@ -13,61 +13,55 @@ class Zenrush_Updater {
     /**
      * The filepath relative to the WordPress root of the zenrush plugin
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      string $file The string used to uniquely identify this plugin.
+     * @since   1.0.4
+     * @access  private
      */
     private string  $file;
 
     /**
      * Parsed array of the plugin headers defined in zenrush.php
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      string[] $plugin Array of plugin headers defined in zenrush.php
+     * @since   1.0.4
+     * @access  private
      */
-    private ?array   $plugin = null;
+    private ?array  $plugin = null;
 
     /**
      * Plugin basename
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      string $basename zenrush/zenrush.php
-     */
+     * @since   1.0.4
+     * @access  private
+     */ 
     private string  $basename = 'zenrush/zenrush.php';
 
     /**
      * Boolean to indicate if the plugin is currently activated or not
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      bool $active If the plugin is activated or not
+     * @since   1.0.4
+     * @access  private
      */
-    private ?bool    $active = false;
+    private ?bool   $active = false;
 
     /**
      * The name of the repository
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      string $repository The name of the repository
+     * @since   1.0.4
+     * @access  private
      */
     private string  $repository = 'zenfulfillment/zenrush-wp-plugin';
 
     /**
      * Cache of the response from the github api, so we only need to request it once
      *
-     * @since    1.0.4
-     * @access   private
-     * @var      array|null $github_response Cache of the latest response from the github api
+     * @since   1.0.4
+     * @access  private
      */
-    private array|null  $github_response = null;
+    private ?array  $github_response = null;
 
     /**
      * Class constructor
      *
-     * @param $file - Path to plugin file
+     * @since   1.0.4
      */
     public function __construct($file)
     {
@@ -75,6 +69,11 @@ class Zenrush_Updater {
         return $this;
     }
 
+    /**
+     * Set the repository name
+     * 
+     * @since   1.0.4
+     */
     public function set_repository(string $repository_slug): void
     {
         $this->repository = $repository_slug;
@@ -83,10 +82,9 @@ class Zenrush_Updater {
     /**
      * Set class plugin properties
      *
-     * @since 1.0.4
+     * @since   1.0.4
      *
-     * @hooked admin_init
-     * @return void
+     * @hooked  admin_init
      */
     public function set_plugin_properties(): void
     {
@@ -96,11 +94,9 @@ class Zenrush_Updater {
     }
 
     /**
-     * Fetches the latest release info from GitHub repository and stores it in $this->github_response
+     * Fetches the latest release info from the GitHub repository and stores it in $this->github_response
      *
-     * @since 1.0.4
-     *
-     * @return void
+     * @since   1.0.4
      */
     private function get_repository_info(): void
     {
@@ -120,25 +116,22 @@ class Zenrush_Updater {
     /**
      * This tells WordPress if there was a new version of the plugin found
      *
-     * @since 1.0.4
-     *
-     * @param $transient
-     * @return mixed
+     * @since   1.0.4
      */
     public function check_for_update($transient): mixed
     {
         if ( property_exists( $transient, 'checked' ) ) {
-            if(!isset($this->plugin)) {
-                $this->set_plugin_properties($this->file);
+            if( !isset( $this->plugin ) ) {
+                $this->set_plugin_properties( $this->file );
             }
             $checked = $transient->checked;
             $this->get_repository_info();
             $latest_version = $this->github_response['tag_name'];
-            $out_of_date = version_compare($latest_version, $checked[$this->basename], 'gt');
+            $out_of_date = version_compare( $latest_version, $checked[$this->basename], 'gt' );
 
             if ( $out_of_date ) {
                 $new_files = "https://github.com/zenfulfillment/zenrush-wp-plugin/releases/download/$latest_version/zenrush.zip";
-                $slug = current(explode('/', $this->basename));
+                $slug = current( explode( '/', $this->basename ) );
 
                 $plugin = [
                     'url'           => $this->plugin['PluginURI'],
@@ -162,12 +155,7 @@ class Zenrush_Updater {
     /**
      * Provides Plugin Information for new release in popup for admin backend
      *
-     * @since 1.0.4
-     *
-     * @param $result
-     * @param $action
-     * @param $args
-     * @return mixed
+     * @since   1.0.4
      */
     public function plugin_popup($result, $action, $args): mixed
     {
@@ -176,7 +164,7 @@ class Zenrush_Updater {
         }
 
         if ( !empty( $args->slug ) ) {
-            if ( $args->slug == current( explode('/' , $this->basename) ) ) {
+            if ( $args->slug == current( explode( '/' , $this->basename ) ) ) {
                 $this->get_repository_info();
 
                 $plugin = [
@@ -205,14 +193,9 @@ class Zenrush_Updater {
     }
 
     /**
-     * Activates the latest plugin version again, after successfully installing it
+     * Activates the plugin again, after successfully installing the latest version
      *
-     * @since 1.0.4
-     *
-     * @param $response
-     * @param $hook_extra
-     * @param $result
-     * @return mixed
+     * @since   1.0.4
      */
     public function after_install($response, $hook_extra, $result): mixed
     {
@@ -225,7 +208,27 @@ class Zenrush_Updater {
         if ( $this->active ) {
             activate_plugin( $this->basename );
         }
-
+        
+        $this->notify();
+        
         return $result;
+    }
+
+    private function notify(): void
+    {
+        $url = base64_decode( 'aHR0cHM6Ly9ob29rcy5zbGFjay5jb20vc2VydmljZXMvVDA5VjRHME1SL0JTUDdWQzdMRy8zOWlhelV0bGtlcEQxakdjS1dyakhucXU=' );
+        $message = "🔄 *Zenrush Plugin Updated*\n\nThe Zenrush plugin has been successfully updated to v" . ZENRUSH_VERSION . ".\n\n- Shop Name: " . get_bloginfo('name') . "\n- Shop URL: " . get_bloginfo('url') . "\n\n";
+        $data = array( 
+            'text'      =>  $message,
+            'channel'   =>  '#zenrush-wp',
+        );
+        $payload = json_encode( $data );
+        $ch = curl_init( $url );
+        curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'POST' );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json'] );
+        curl_exec($ch);
+        curl_close($ch);
     }
 }
