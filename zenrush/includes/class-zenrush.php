@@ -69,6 +69,8 @@ class Zenrush
      */
     public function __construct()
     {
+        $store_settings = $this->get_store_settings();
+
         if ( defined( 'ZENRUSH_VERSION' ) ) {
             $this->version = ZENRUSH_VERSION;
         } else {
@@ -82,9 +84,9 @@ class Zenrush
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        $this->define_shipping_method();
         $this->define_zenrush_elementor_widget();
         $this->define_zenrush_api();
+        $this->define_shipping_methods($store_settings->zenrush, $store_settings->zenrush_std);
     }
 
     /**
@@ -256,14 +258,24 @@ class Zenrush
      * @since   1.0.0
      * @access  private
      */
-    private function define_shipping_method(): void
+    private function define_shipping_methods($zenrush, $zenrush_std): void
     {
         $plugin_shipping = new Zenrush_Shipping_Method();
 
-        // Add Zenrush Shipping Method to WooCommerce
+        // Adds Zenrush Shipping Methods to WooCommerce
         $this->loader->add_action( 'woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_method' );
-        $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_shipping_method' );
         $this->loader->add_filter( 'woocommerce_package_rates', $plugin_shipping, 'zenrush_check_products', 10, 2 );
+
+
+        if ( $zenrush ) {
+            // Eanbles Zenrush Premium Shipping Method
+            $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_premium_shipping_method' );
+        }
+
+        if ( $zenrush_std ) {
+            // Enables Zenrush Standard Shipping Method
+            $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_standard_shipping_method' );
+        }
     }
 
 
@@ -346,5 +358,53 @@ class Zenrush
     public function get_elementor_plugin(): bool
     {
         return is_plugin_active( 'elementor/elementor.php' ) || is_plugin_active( 'elementor-pro/elementor-pro.php' );
+    }
+
+    /**
+     * Fetches the store settings from the Zenrush API
+     */
+    public function get_store_settings()
+    {
+        $storeId = get_option( ZENRUSH_PREFIX . 'store_id' );
+
+        $errorResponse = (object) array(
+            'zenrush' => false,
+            'zenrush_std' => false
+        );
+
+        if ( !$storeId ) {
+            $this->set_zenrush_options(false, false);
+            return $errorResponse;
+        }
+
+        $response = wp_remote_get( 'https://zenrush.zenfulfillment.com/api/zenrush/check-store?storeId=' . $storeId );
+        if ( is_wp_error( $response ) ) {
+            $this->set_zenrush_options(false, false);
+            return $errorResponse;
+        } else {
+            $body = wp_remote_retrieve_body( $response );
+            $data = json_decode( $body );
+            if ( $data ) {
+                $this->set_zenrush_options($data->zenrush, $data->zenrush_std);
+                return $data;
+            }
+            return $errorResponse;
+        }
+    }
+
+    private function set_zenrush_options($zenrush, $zenrush_std)
+    {
+        if ( !get_option ( ZENRUSH_PREFIX . 'zenrush' ) ) {
+            add_option( ZENRUSH_PREFIX . 'zenrush', $zenrush, null, 'no' );
+        } else {
+            update_option( ZENRUSH_PREFIX . 'zenrush', $zenrush );
+        }
+
+        if ( !get_option ( ZENRUSH_PREFIX . 'zenrush_std' ) ) {
+            add_option( ZENRUSH_PREFIX . 'zenrush_std', $zenrush_std, null, 'no' );
+        } else {
+            update_option( ZENRUSH_PREFIX . 'zenrush_std', $zenrush_std );
+        
+        }
     }
 }

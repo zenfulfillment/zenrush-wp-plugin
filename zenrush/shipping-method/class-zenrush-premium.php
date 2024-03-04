@@ -1,0 +1,218 @@
+<?php
+
+/**
+ * The file that defines the zenrush premium shipping method class
+ *
+ * @since      1.0.0
+ *
+ * @package    Zenrush
+ * @subpackage Zenrush/shipping-method
+ */
+
+if ( !defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
+/**
+ * The premium shipping method class
+ *
+ * @since      1.0.0
+ * @package    Zenrush
+ * @subpackage Zenrush/admin
+ * @author     Zenfulfillment <devs@zenfulfillment.com>
+ */
+class WC_Zenrush_Premiumversand extends WC_Shipping_Method
+{
+    /**
+     * The url to fetch custom zenrush rate rules from
+     *
+     * @since   1.1.5
+     * @access  private
+     * @var     string Zenrush Rates url
+     */
+    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates?zenrush_type=premium';
+
+    /**
+     * The default rate to use for Zenrush, from the pricing config
+     *
+     * @since   1.0.0
+     * @access  private
+     * @var     int $base_rate The default rate for Zenrush
+     */
+    private int $base_rate = 699;
+
+    /**
+     * Array of custom pricing rates for zenrush defined for this store
+     *
+     * @since   1.0.0
+     * @access  private
+     * @var     array   $custom_rates The custom rates set for this store
+     */
+    private array $custom_rates = array();
+
+    /**
+     * Constructor for your shipping class
+     *
+     * @access  public
+     * @return  void
+     */
+    public function __construct( $instance_id = 0 )
+    {
+        parent::__construct();
+
+        // ID of the shipping option
+        $this->id = 'zenrush_premiumversand';
+
+        // Instance ID
+        $this->instance_id = absint( $instance_id );
+
+        // Description shown in admin
+        $this->method_description = __( 'Premium next day delivery option - Powered by Zenfulfillment.com', 'zenrush' );
+
+        // Supported features
+        $this->supports = ['shipping-zones', 'instance-settings', 'instance-settings-modal'];
+
+        // Plugin ID, used as prefix for settings
+        $this->plugin_id = ZENRUSH_PREFIX;
+
+        // Title shown in store
+        $this->title = __( 'Zenrush Premium Delivery', 'zenrush' );
+
+        // Title shown in admin backend
+        $this->method_title = __( 'Zenrush Premium Delivery', 'zenrush' );
+
+        // Initially defaults the shipping option to be enabled, could be overwritten after init()
+        $this->enabled = 'yes';
+
+        $this->init();
+    }
+
+    /**
+     * Initializes the shipping option with WooCommerce
+     *
+     * @return void
+     */
+    function init(): void
+    {
+        // Initialize WC_Shipping_Method settings API
+        $this->init_form_fields();
+        $this->init_settings();
+        
+        // Controls the availability of the shipping option via the store settings
+        $enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) !== false && get_option( ZENRUSH_PREFIX . 'zenrush' ) !== false;
+        $this->enabled = $enabled ? 'yes' : 'no';
+
+        add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
+    }
+
+    /**
+     * Fetches current configured zenrush pricing rules for the store
+     * and parses them to an array with `base_rate` and `custom_rates`
+     *
+     * @since   1.0.0
+     * @access  private
+     * @return  array
+     */
+    private function get_zenrush_rate_rules(): array
+    {
+        $storeId = get_option( ZENRUSH_PREFIX . 'store_id' );
+        $url = $this->rates_url . '&storeId=' . $storeId;
+
+        $response = wp_remote_get( $url );
+        $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
+        $status_code = wp_remote_retrieve_response_code( $response );
+        if ( is_wp_error( $response ) || $status_code !== 200 ) {
+            error_log( 'Failed to fetch zenrush premium pricing rules' );
+            return array(
+                'base_rate'     =>  699,
+                'custom_rates'  =>  array()
+            );
+        }
+
+        $data = $decoded_data['data'];
+        return array(
+            'base_rate'     =>  $data['base_rate'],
+            'custom_rates'  =>  $data['rules']
+        );
+    }
+
+    /**
+     * Calculates the shipping rate to be displayed in store frontend
+     *
+     * @access  public
+     * @param   array   $package    Package information.
+     * @return  void
+     */
+    public function calculate_shipping( $package = array() ): void
+    {
+        // total products price of the cart, includes discounts!
+        $cart_price = floatval( WC()->cart->get_cart_contents_total() );
+        // total amount of taxes
+        $cart_tax = floatval( WC()->cart->get_taxes_total() );
+        // this is the final cart price (products + taxes)
+        $cart_total = $cart_price + $cart_tax;
+
+        // Fetch store specific zenrush pricing rules
+        $raw_rates = $this->get_zenrush_rate_rules();
+        $rates = $raw_rates['custom_rates'];
+        $cost = $this->calc_cost( $raw_rates['base_rate'] );
+
+        if ( !empty($rates) ) {
+            foreach ( $rates as $rate ) {
+                $rule_definition = key( $rate['definition'] );
+                $rule_cost = reset( $rate['definition'] );
+                $rule_price = (int) $rate['price'];
+
+                switch( $rule_definition ) {
+                    case '$gte':
+                        if ( $cart_total >= $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
+                    case '$gt':
+                        if ( $cart_total > $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
+                    case '$lte':
+                        if ( $cart_total <= $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
+                    case '$lt':
+                        if ( $cart_total < $rule_cost ) {
+                            $cost = $this->calc_cost( $rule_price );
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        $rate_title = $this->title;
+
+        $rate = array(
+            'id'        =>  $this->id . $this->instance_id,
+            'label'     =>  $rate_title,
+            'cost'      =>  $cost,
+            'package'   =>  $package,
+        );
+
+        $this->add_rate( $rate );
+    }
+
+    /**
+     * Util to transform the rate price from cents to euros, e.g. 299 => 2.99
+     *
+     * @since   1.0.0
+     * @access  private
+     */
+    private function calc_cost( int $rule_price )
+    {
+        if ($rule_price === 0) {
+            return $rule_price;
+        }
+        return $rule_price / 100;
+    }
+}

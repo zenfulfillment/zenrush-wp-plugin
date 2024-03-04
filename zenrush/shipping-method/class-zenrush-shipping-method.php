@@ -27,27 +27,44 @@ if ( !defined( 'ABSPATH' ) ) {
 class Zenrush_Shipping_Method
 {
     /**
-     * Creates an instance of the zenrush shipping method
+     * Creates instances of the zenrush shipping methods (premium & standard)
      * 
      * @since   1.0.0
      */
     public function zenrush_init_shipping_method(): void
     {
         if ( !class_exists( 'WC_Zenrush_Premiumversand' ) ) {
-            include 'class-zenrush-wc-shipping-method.php';
+            include 'class-zenrush-premium.php';
+        }
+
+        if ( !class_exists( 'WC_Zenrush_Standardversand' ) ) {
+            include 'class-zenrush-standard.php';
         }
     }
 
     /**
-     * Adds the zenrush shipping method to the list of available shipping methods
+     * Adds the zenrush premium shipping method to the list of available shipping methods
      * 
      * @since   1.0.0
      */
-    public function zenrush_add_shipping_method($methods): array
+    public function zenrush_add_premium_shipping_method($methods): array
     {
         $methods['zenrush_premiumversand'] = 'WC_Zenrush_Premiumversand';
         return $methods;
     }
+
+
+    /**
+     * Adds the zenrush standard shipping methods to the list of available shipping methods
+     * 
+     * @since   1.2.15
+     */
+    public function zenrush_add_standard_shipping_method($methods): array
+    {
+        $methods['zenrush_standard'] = 'WC_Zenrush_Standardversand';
+        return $methods;
+    }
+
 
     /**
      * Checks if any of the products in cart are not available for zenrush.

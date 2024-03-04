@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The file that defines the zenrush shipping method class
+ * The file that defines the zenrush standard shipping method class
  *
- * @since      1.0.0
+ * @since      1.2.15
  *
  * @package    Zenrush
  * @subpackage Zenrush/shipping-method
@@ -14,14 +14,14 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The core shipping method class
+ * The standard shipping method class
  *
- * @since      1.0.0
+ * @since      1.2.15
  * @package    Zenrush
  * @subpackage Zenrush/admin
  * @author     Zenfulfillment <devs@zenfulfillment.com>
  */
-class WC_Zenrush_Premiumversand extends WC_Shipping_Method
+class WC_Zenrush_Standardversand extends WC_Shipping_Method
 {
     /**
      * The url to fetch custom zenrush rate rules from
@@ -30,7 +30,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access  private
      * @var     string Zenrush Rates url
      */
-    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates';
+    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates?zenrush_type=standard';
 
     /**
      * The default rate to use for Zenrush, from the pricing config
@@ -56,18 +56,18 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @access  public
      * @return  void
      */
-    public function __construct($instance_id = 0)
+    public function __construct( $instance_id = 0 )
     {
         parent::__construct();
 
         // ID of the shipping option
-        $this->id = 'zenrush_premiumversand';
+        $this->id = 'zenrush_standard';
 
         // Instance ID
         $this->instance_id = absint( $instance_id );
 
         // Description shown in admin
-        $this->method_description = __( 'Powered by Zenfulfillment.com - Ordered today, delivered tomorrow', 'zenrush' );
+        $this->method_description = __( 'Reliable 2 day delivery option - powered by Zenfulfillment.com', 'zenrush' );
 
         // Supported features
         $this->supports = ['shipping-zones', 'instance-settings', 'instance-settings-modal'];
@@ -76,10 +76,10 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $this->plugin_id = ZENRUSH_PREFIX;
 
         // Title shown in store
-        $this->title = __( 'Zenrush Premium Delivery', 'zenrush' );
+        $this->title = __( 'Zenrush Standard Delivery (2 days)', 'zenrush' );
 
         // Title shown in admin backend
-        $this->method_title = __( 'Zenrush Premium Delivery', 'zenrush' );
+        $this->method_title = __( 'Zenrush Standard Delivery (2 days)', 'zenrush' );
 
         // Initially defaults the shipping option to be enabled, could be overwritten after init()
         $this->enabled = 'yes';
@@ -98,8 +98,9 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $this->init_form_fields();
         $this->init_settings();
 
-        // If shipping option is enabled or not via option in admin backend
-        $this->enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) ? $this->get_option( 'enabled' ) : 'no';
+        // Controls the availability of the shipping option via the store settings
+        $enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) !== false && get_option( ZENRUSH_PREFIX . 'zenrush_std' ) !== false;
+        $this->enabled = $enabled ? 'yes' : 'no';
 
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
@@ -115,13 +116,13 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
     private function get_zenrush_rate_rules(): array
     {
         $storeId = get_option( ZENRUSH_PREFIX . 'store_id' );
-        $url = $this->rates_url . '?storeId=' . $storeId;
+        $url = $this->rates_url . '&storeId=' . $storeId;
 
         $response = wp_remote_get( $url );
         $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
         $status_code = wp_remote_retrieve_response_code( $response );
         if ( is_wp_error( $response ) || $status_code !== 200 ) {
-            error_log( 'Failed to fetch zenrush pricing rules' );
+            error_log( 'Failed to fetch zenrush standard pricing rules' );
             return array(
                 'base_rate'     =>  699,
                 'custom_rates'  =>  array()
@@ -142,7 +143,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @param   array   $package    Package information.
      * @return  void
      */
-    public function calculate_shipping($package = array()): void
+    public function calculate_shipping( $package = array() ): void
     {
         // total products price of the cart, includes discounts!
         $cart_price = floatval( WC()->cart->get_cart_contents_total() );
@@ -156,7 +157,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         $rates = $raw_rates['custom_rates'];
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
-        if ( !empty($rates) ) {
+        if ( !empty( $rates ) ) {
             foreach ( $rates as $rate ) {
                 $rule_definition = key( $rate['definition'] );
                 $rule_cost = reset( $rate['definition'] );
@@ -207,7 +208,7 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
      * @since   1.0.0
      * @access  private
      */
-    private function calc_cost(int $rule_price)
+    private function calc_cost( int $rule_price )
     {
         if ($rule_price === 0) {
             return $rule_price;

@@ -63,6 +63,12 @@ if ( !function_exists( 'is_plugin_active' ) ) {
 function zenrush_check_requirements(): bool
 {
     if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+        // Declare compatibility with WooCommerce HPOS
+        add_action('before_woocommerce_init', function() {
+            if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+            }
+        });
         return true;
     } else {
         add_action( 'admin_notices', 'zenrush_missing_wc_notice' );
