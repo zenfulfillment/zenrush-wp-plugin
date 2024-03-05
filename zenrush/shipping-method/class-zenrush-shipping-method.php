@@ -27,40 +27,47 @@ if ( !defined( 'ABSPATH' ) ) {
 class Zenrush_Shipping_Method
 {
     /**
-     * Creates an instance of the zenrush shipping method
+     * Creates instances of the zenrush shipping methods (premium & standard)
      * 
      * @since   1.0.0
      */
-    public function zenrush_init_shipping_method(): void
+    public function zenrush_init_shipping_methods(): void
     {
         if ( !class_exists( 'WC_Zenrush_Premiumversand' ) ) {
-            include 'class-zenrush-wc-shipping-method.php';
+            include 'class-zenrush-premium.php';
+        }
+
+        if ( !class_exists( 'WC_Zenrush_Standardversand' ) ) {
+            include 'class-zenrush-standard.php';
         }
     }
 
     /**
-     * Adds the zenrush shipping method to the list of available shipping methods
+     * Adds the zenrush premium shipping method to the list of available shipping methods
      * 
-     * @since   1.0.0
+     * @since   1.2.15
      */
-    public function zenrush_add_shipping_method($methods): array
+    public function zenrush_register_shipping_methods($methods): array
     {
+        $methods['zenrush_standard'] = 'WC_Zenrush_Standardversand';
         $methods['zenrush_premiumversand'] = 'WC_Zenrush_Premiumversand';
         return $methods;
     }
 
     /**
-     * Checks if any of the products in cart are not available for zenrush.
+     * Checks if any of the products in cart are not available for zenrush (premium).
      * If any products fails these checks the shipping method will not be available.
+     * This has no effect on the standard 2 day delivery method.
      * 
      * @since   1.0.0
      */
     public function zenrush_check_products($rates, $package)
     {
         $methods = array_keys( $rates );
-        foreach ( $methods as $haystack ) {
-            if ( substr_count($haystack, 'zenrush') > 0 ) {
-                $method_id = $needle;
+        $method_id = null;
+        foreach ( $methods as $method ) {
+            if ( substr_count($method, 'zenrush_premiumversand') > 0 ) {
+                $method_id = $method;
             }
         }
 
@@ -93,5 +100,37 @@ class Zenrush_Shipping_Method
         }
         
         return $rates;
+    }
+
+    /**
+     * Checks if this shipping method is enabled for the store
+     * 
+     * @since   1.2.15
+     * @access  public
+     * @return  bool
+     */
+    public function fetch_shipping_methods_status() {
+        $store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
+
+        $error_response = array(
+            'zenrush' => false,
+            'zenrush_std' => false
+        );
+
+        if ( !$store_id ) {
+            return $error_response;
+        }
+
+        $response = wp_remote_get( 'https://zenrush.zenfulfillment.com/api/zenrush/check-store?storeId=' . $store_id );
+
+        if ( is_wp_error( $response ) ) {
+            return $error_response;
+        } else {
+            $data = json_decode( wp_remote_retrieve_body( $response ), true );
+            if ( $data ) {
+                return $data;
+            }
+            return $error_response;
+        }
     }
 }

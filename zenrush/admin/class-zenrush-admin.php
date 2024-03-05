@@ -122,9 +122,16 @@ class Zenrush_Admin
     {
         $shipping_method = strtolower( $order->get_shipping_method() );
 
-        if( $shipping_method && str_contains($shipping_method, 'zenrush') ) {
-            $order->update_meta_data( 'is_zenrush', 'yes' );
+        if( $shipping_method ) {
+            if( $shipping_method === 'zenrush_premiumversand' ) {
+                $order->update_meta_data( 'is_zenrush', 'yes' );
+            }
+    
+            if( $shipping_method === 'zenrush_standard' ) {
+                $order->update_meta_data( 'is_zenrush_std', 'yes' );
+            }
         }
+
     }
 
     /**
@@ -138,6 +145,7 @@ class Zenrush_Admin
     {
         $data_store = WC_Data_Store::load( 'shipping-zone' );
         $raw_zones = $data_store->get_zones();
+        $zones = array();
         foreach ( $raw_zones as $raw_zone ) {
             $zones[] = new WC_Shipping_Zone( $raw_zone );
         }
@@ -178,7 +186,7 @@ class Zenrush_Admin
 
         $zone_shipping_methods = $shipping_zone->get_shipping_methods();
         foreach ( $zone_shipping_methods as $index => $method ) {
-            if( get_class( $method ) === 'WC_Zenrush_Premiumversand' ) {
+            if( get_class( $method ) === 'WC_Zenrush_Premiumversand' || get_class( $method ) === 'WC_Zenrush_Standardversand' ) {
                 return 'ZENRUSH_FOUND_FOR_DE';
             }
         }
