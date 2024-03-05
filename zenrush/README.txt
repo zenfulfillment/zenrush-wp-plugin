@@ -27,6 +27,12 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.2.15 =
+* Small bug fixes
+* Improved compatibility & support for newer WooCommerce versions
+* Improved data handling
+* Added Zenrush Standard (2day) delivery option
+
 = 1.2.11 =
 * Small bugfixes
 

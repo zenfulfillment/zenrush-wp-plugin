@@ -55,7 +55,10 @@ class Zenrush_Api extends WP_REST_Controller {
                 'relation'      => 'AND',
                 $date_filter
             ),
-            'meta_key'          => 'is_zenrush',
+            'meta_key'          => array(
+								'relation'      => 'AND',
+								'is_zenrush', 'is_zenrush_std'
+						),
             'meta_compare'      => 'EXISTS',
             'orderby'           => 'date',
             'order'             => 'ASC',
@@ -88,7 +91,10 @@ class Zenrush_Api extends WP_REST_Controller {
                 'relation'      => 'AND',
                 $date_filter
             ),
-            'meta_key'          => 'is_zenrush',
+            'meta_key'          => array(
+								'relation'      => 'AND',
+								'is_zenrush', 'is_zenrush_std'
+						),
             'meta_compare'      => 'EXISTS',
             'orderby'           => 'date',
             'order'             => 'ASC',

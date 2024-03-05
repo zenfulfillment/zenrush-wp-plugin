@@ -12,7 +12,7 @@
  * Plugin Name:       Zenrush
  * Plugin URI:        https://github.com/zenfulfillment/zenrush-wp-plugin
  * Description:       Integration Plugin for Zenrush Premium Delivery
- * Version:           1.2.14
+ * Version:           1.2.15
  * Author:            Zenfulfillment
  * Author URI:        https://zenfulfillment.com
  * License:           No License
@@ -35,7 +35,7 @@ if ( !defined( 'WPINC' ) ) {
  * 
  * @since   1.0.0
  */
-const ZENRUSH_VERSION = '1.2.14';
+const ZENRUSH_VERSION = '1.2.15';
 
 /**
  * Plugin file path.
@@ -63,6 +63,12 @@ if ( !function_exists( 'is_plugin_active' ) ) {
 function zenrush_check_requirements(): bool
 {
     if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+        // Declare compatibility with WooCommerce HPOS
+        add_action('before_woocommerce_init', function() {
+            if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+            }
+        });
         return true;
     } else {
         add_action( 'admin_notices', 'zenrush_missing_wc_notice' );

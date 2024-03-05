@@ -82,9 +82,9 @@ class Zenrush
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        $this->define_shipping_method();
         $this->define_zenrush_elementor_widget();
         $this->define_zenrush_api();
+        $this->define_shipping_methods();
     }
 
     /**
@@ -256,13 +256,15 @@ class Zenrush
      * @since   1.0.0
      * @access  private
      */
-    private function define_shipping_method(): void
+    private function define_shipping_methods(): void
     {
         $plugin_shipping = new Zenrush_Shipping_Method();
 
-        // Add Zenrush Shipping Method to WooCommerce
-        $this->loader->add_action( 'woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_method' );
-        $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_add_shipping_method' );
+        // Adds Zenrush Shipping Methods to WooCommerce
+        $this->loader->add_action( 'woocommerce_shipping_init', $plugin_shipping, 'zenrush_init_shipping_methods' );
+        // Registers Zenrush Shipping Methods (Premium & Standard)
+        $this->loader->add_filter( 'woocommerce_shipping_methods', $plugin_shipping, 'zenrush_register_shipping_methods' );
+        // Checks product for disabled SKUs (can be configured in the admin backend)
         $this->loader->add_filter( 'woocommerce_package_rates', $plugin_shipping, 'zenrush_check_products', 10, 2 );
     }
 
