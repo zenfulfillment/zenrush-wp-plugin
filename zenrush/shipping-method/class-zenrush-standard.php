@@ -13,6 +13,9 @@ if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
+// Include the Zenrush_Shipping_Method class file if not already included
+require_once 'class-zenrush-shipping-method.php';
+
 /**
  * The standard shipping method class
  *
@@ -30,7 +33,7 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
      * @access  private
      * @var     string Zenrush Rates url
      */
-    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates?zenrush_type=standard';
+    private string $rates_url = 'https://zenrush.zenfulfillment.com/api/zenrush/rates?zenrushType=standard';
 
     /**
      * The default rate to use for Zenrush, from the pricing config
@@ -39,7 +42,7 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
      * @access  private
      * @var     int $base_rate The default rate for Zenrush
      */
-    private int $base_rate = 699;
+    private int $base_rate = 399;
 
     /**
      * Array of custom pricing rates for zenrush defined for this store
@@ -81,8 +84,7 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
         // Title shown in admin backend
         $this->method_title = __( 'Zenrush Standard Delivery (2 days)', 'zenrush' );
 
-        // Initially defaults the shipping option to be enabled, could be overwritten after init()
-        $this->enabled = 'yes';
+        $this->enabled = "yes";
 
         $this->init();
     }
@@ -99,8 +101,8 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
         $this->init_settings();
 
         // Controls the availability of the shipping option via the store settings
-        $enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) !== false && get_option( ZENRUSH_PREFIX . 'zenrush_std' ) !== false;
-        $this->enabled = $enabled ? 'yes' : 'no';
+        $is_enabled = $this->is_enabled();
+        $this->enabled = get_option( ZENRUSH_PREFIX . 'store_id' ) !== false && $is_enabled === true ? 'yes' : 'no';
 
         add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
     }
@@ -113,27 +115,39 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
      * @access  private
      * @return  array
      */
-    private function get_zenrush_rate_rules(): array
+    private function get_rate_rules(): array
     {
         $storeId = get_option( ZENRUSH_PREFIX . 'store_id' );
         $url = $this->rates_url . '&storeId=' . $storeId;
+        $transient_key = $this->id . '_rate_rules';
+        $cached_rates = get_transient( $transient_key );
 
-        $response = wp_remote_get( $url );
-        $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
-        $status_code = wp_remote_retrieve_response_code( $response );
-        if ( is_wp_error( $response ) || $status_code !== 200 ) {
-            error_log( 'Failed to fetch zenrush standard pricing rules' );
-            return array(
-                'base_rate'     =>  699,
-                'custom_rates'  =>  array()
+        if ( false === $cached_rates ) {
+            // when to cached data is available
+            $response = wp_remote_get( $url );
+            $decoded_data = json_decode( wp_remote_retrieve_body( $response ), true );
+            $status_code = wp_remote_retrieve_response_code( $response );
+            if ( is_wp_error( $response ) || $status_code !== 200 ) {
+                error_log( 'Failed to fetch zenrush standard pricing rules' );
+                $default_data = array(
+                    'base_rate'     =>  $this->base_rate,
+                    'custom_rates'  =>  array()
+                );
+                set_transient( $transient_key, $default_data, 1 * MINUTE_IN_SECONDS );
+                return $default_data;
+            }
+
+            $data = $decoded_data['data'];
+            $formatted_data = array(
+                'base_rate'     =>  $data['base_rate'],
+                'custom_rates'  =>  $data['rules']
             );
+            set_transient( $transient_key, $formatted_data, 1 * HOUR_IN_SECONDS );
+            return $formatted_data;
         }
-
-        $data = $decoded_data['data'];
-        return array(
-            'base_rate'     =>  $data['base_rate'],
-            'custom_rates'  =>  $data['rules']
-        );
+    
+        // Return cached rate rules
+        return $cached_rates;
     }
 
     /**
@@ -153,7 +167,7 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
         $cart_total = $cart_price + $cart_tax;
 
         // Fetch store specific zenrush pricing rules
-        $raw_rates = $this->get_zenrush_rate_rules();
+        $raw_rates = $this->get_rate_rules();
         $rates = $raw_rates['custom_rates'];
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
@@ -214,5 +228,31 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
             return $rule_price;
         }
         return $rule_price / 100;
+    }
+
+    /**
+     * Checks if this shipping method is enabled for the store
+     * 
+     * @since   1.2.15
+     * @access  public
+     * @return  bool
+     */
+    public function is_enabled() {
+        $zenrushShippingMethod = new Zenrush_Shipping_Method();
+        $transient_key = 'zenrush_shipping_methods_enabled';
+        $cached_status = get_transient( $transient_key );
+
+        if ( false === $cached_status ) {
+            // If not in cache, fetch data from API
+            $status = $zenrushShippingMethod->fetch_shipping_methods_status();
+    
+            // Cache the status for 15min
+            set_transient( $transient_key, $status, 15 * MINUTE_IN_SECONDS );
+    
+            return $status['zenrush_std'];
+        }
+        
+        // Return cached status
+        return $cached_status['zenrush_std'];
     }
 }
