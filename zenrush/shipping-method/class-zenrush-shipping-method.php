@@ -55,9 +55,8 @@ class Zenrush_Shipping_Method
     }
 
     /**
-     * Checks if any of the products in cart are not available for zenrush (premium).
+     * Checks if any of the products in cart are not available for zenrush.
      * If any products fails these checks the shipping method will not be available.
-     * This has no effect on the standard 2 day delivery method.
      * 
      * @since   1.0.0
      */
@@ -95,6 +94,14 @@ class Zenrush_Shipping_Method
             }
     
             if ( !$all_products_available ) {
+                $this->send_beacon(
+                    array(
+                        'request_id'    =>  uniqid(),
+                        'event'         =>  'VALIDATION_FAILED',
+                        'rate_returned' =>  false,
+                        'data'          =>  $package,
+                    )
+                );
                 unset( $rates[$method_id] );
             }
         }
@@ -131,6 +138,58 @@ class Zenrush_Shipping_Method
                 return $data;
             }
             return $error_response;
+        }
+    }
+
+    /**
+     * Sends a beacon to the Zenrush API for telemetry data about the performance
+     * of the zenrush shipping options.
+     * 
+     * @since   1.2.15
+     * @access  public
+     * @return  void
+     */
+    public function send_beacon(array $data) {
+        if ( !isset( $data['request_id'] ) || !isset( $data['event'] ) || !isset( $data['rate_returned'] ) || !isset( $data['data'] ) ) {
+            return;
+        }
+
+        $store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
+        $messages = array(
+            'NEW_REQUEST'           =>  'New request received',
+            'ZENRUSH_NOT_ENABLED'   =>  'Zenrush is not enabled for this store!',
+            'VALIDATION_FAILED'     =>  'No rates returned, because of validation errors or out of stock items',
+            'SENT_RATES'            =>  'Rates returned successfully',
+            'ERROR'                 =>  'An error happened while processing the request',
+        );
+        $date = date( 'Y-m-d H:m:s' );
+
+        $request_id = $data['request_id'];
+        $event = $data['event'];
+        $message = $messages[$event];
+        $inserted_at = date( DateTime::ATOM, strtotime($date) );
+        $rate_returned = $data['rate_returned'];
+        $data = $data['data'];
+
+        $payload = array(
+            'request_id'    =>  $request_id,
+            'store_id'      =>  $store_id,
+            'event'         =>  $event,
+            'message'       =>  $message,
+            'inserted_at'   =>  $inserted_at,
+            'rate_returned' =>  $rate_returned,
+            'data'          =>  $data
+        );
+
+        $response = wp_remote_post( 'https://zenrush.zenfulfillment.com/api/telemetry/wp-plugin', array(
+            'body'      =>  json_encode( $payload ),
+            'headers'   =>  array(
+                'Content-Type'  =>  'application/json; charset=utf-8'
+            )
+        ) );
+
+        if ( is_wp_error( $response ) ) {
+            error_log( 'Failed to send beacon: ' . $response->get_error_message() );
         }
     }
 }
