@@ -192,11 +192,26 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
         // this is the final cart price (products + taxes)
         $cart_total = $cart_price + $cart_tax;
 
+        // Check products of the cart
+        $subscription_items = array();
+        foreach ( $package['contents'] as $item ) {
+            $product = $item['data'];
+            $sku = $product->get_sku();
+            $product_type = $product->get_type();
+
+            // check if the product is a subscription
+            $is_subscription = $product_type === 'subscription' || $product_type === 'subscription_variation' || $product_type === 'variable-subscription';
+            if ( $is_subscription ) {
+                $subscription_items[] = $product;
+            }
+        }
+
         // Fetch store specific zenrush pricing rules
         $raw_rates = $this->get_rate_rules();
         $rates = $raw_rates['custom_rates'];
         $cost = $this->calc_cost( $raw_rates['base_rate'] );
 
+        // Calculate the rate price based on the pricing rules
         if ( !empty($rates) ) {
             foreach ( $rates as $rate ) {
                 $rule_definition = key( $rate['definition'] );
@@ -244,7 +259,11 @@ class WC_Zenrush_Premiumversand extends WC_Shipping_Method
                 'store_id'      =>  $store_id,
                 'event'         =>  'SENT_RATES',
                 'rate_returned' =>  true,
-                'data'          =>  $rate,
+                'data'          =>  array(
+                    "rate" => $rate,
+                    "subscription_items" => $subscription_items,
+                    "package" => $package
+                )
             )
         );
 
