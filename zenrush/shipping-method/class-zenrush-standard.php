@@ -159,6 +159,32 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
      */
     public function calculate_shipping( $package = array() ): void
     {
+        $helper = new Zenrush_Shipping_Method();
+        $request_id = uniqid();
+        $store_id = get_option( ZENRUSH_PREFIX . 'store_id' );
+
+        $helper->send_beacon(
+            array(
+                'request_id'    =>  $request_id,
+                'store_id'      =>  $store_id,
+                'event'         =>  'NEW_REQUEST',
+                'rate_returned' =>  null,
+                'data'          =>  null,
+            )
+        );
+
+        if ( $this->enabled === 'no' ) {
+            $helper->send_beacon(
+                array(
+                    'request_id'    =>  uniqid(),
+                    'store_id'      =>  get_option( ZENRUSH_PREFIX . 'store_id' ),
+                    'event'         =>  'ZENRUSH_NOT_ENABLED',
+                    'rate_returned' =>  false,
+                    'data'          =>  array ( 'zenrush_std' => false ),
+                )
+            );
+        }
+
         // total products price of the cart, includes discounts!
         $cart_price = floatval( WC()->cart->get_cart_contents_total() );
         // total amount of taxes
@@ -204,13 +230,21 @@ class WC_Zenrush_Standardversand extends WC_Shipping_Method
             }
         }
 
-        $rate_title = $this->title;
-
         $rate = array(
             'id'        =>  $this->id . $this->instance_id,
-            'label'     =>  $rate_title,
+            'label'     =>  $this->title,
             'cost'      =>  $cost,
             'package'   =>  $package,
+        );
+
+        $helper->send_beacon(
+            array(
+                'request_id'    =>  $request_id,
+                'store_id'      =>  $store_id,
+                'event'         =>  'SENT_RATES',
+                'rate_returned' =>  true,
+                'data'          =>  $rate,
+            )
         );
 
         $this->add_rate( $rate );
