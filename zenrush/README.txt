@@ -27,6 +27,12 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.2.17 =
+* Added checks for subscriptions on the cart/checkout page
+
+= 1.2.16 =
+* Small bug fixes
+
 = 1.2.15 =
 * Small bug fixes
 * Improved compatibility & support for newer WooCommerce versions
