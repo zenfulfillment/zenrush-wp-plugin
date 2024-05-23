@@ -27,6 +27,9 @@ This plugin will integrate the Zenrush Premium Delivery option into your WooComm
 
 == Changelog ==
 
+= 1.2.18 =
+* Fixed a bug that caused a fatal error on plugin activation with older versions of PHP
+
 = 1.2.17 =
 * Added checks for subscriptions on the cart/checkout page
 
