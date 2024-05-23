@@ -184,11 +184,15 @@ class Zenrush_Admin
             return 'NO_DE_SHIPPING_ZONES';
         }
 
-        $zone_shipping_methods = $shipping_zone->get_shipping_methods();
-        foreach ( $zone_shipping_methods as $index => $method ) {
-            if( get_class( $method ) === 'WC_Zenrush_Premiumversand' || get_class( $method ) === 'WC_Zenrush_Standardversand' ) {
-                return 'ZENRUSH_FOUND_FOR_DE';
+        if ( function_exists( 'get_class' ) ) {
+            $zone_shipping_methods = $shipping_zone->get_shipping_methods();
+            foreach ( $zone_shipping_methods as $index => $method ) {
+                if ( get_class( $method ) === 'WC_Zenrush_Premiumversand' || get_class( $method ) === 'WC_Zenrush_Standardversand' ) {
+                    return 'ZENRUSH_FOUND_FOR_DE';
+                }
             }
+        } else {
+            return 'NOT_SUPPORTED_PHP_VERSION';
         }
 
         return 'NO_ZENRUSH_FOUND_FOR_DE';
@@ -217,7 +221,7 @@ class Zenrush_Admin
             'shipping_zone' => __( 'Enable Zenrush for the Germany shipping zone', 'zenrush' ),
         );
 
-        if( $shipping_zone_error ) {
+        if( $shipping_zone_status !== 'NOT_SUPPORTED_PHP_VERSION' && $shipping_zone_error ) {
             if( $shipping_zone_status === 'NO_DE_SHIPPING_ZONES' ) {
                 $todos['shipping_zone'] = __( 'Add a shipping zone for Germany', 'zenrush' );
             } else {
