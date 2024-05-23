@@ -35,7 +35,7 @@ if ( !defined( 'WPINC' ) ) {
  * 
  * @since   1.0.0
  */
-const ZENRUSH_VERSION = '1.2.17';
+const ZENRUSH_VERSION = '1.2.18';
 
 /**
  * Plugin file path.
